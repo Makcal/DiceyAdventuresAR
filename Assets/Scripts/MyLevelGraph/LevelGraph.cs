@@ -98,7 +98,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             if (fields.Contains(first) && fields.Contains(second))
             {
                 var edge = Instantiate(Resources.Load("Prefabs/GameObjects/Exit") as GameObject).GetComponent<LevelEdge>();
-                edge.Initialized(first, second);
+                edge.Initialize(first, second, weight);
                 first.AddEdge(edge);
                 second.AddEdge(edge);
             }

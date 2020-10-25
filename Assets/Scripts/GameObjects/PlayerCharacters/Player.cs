@@ -65,8 +65,11 @@ namespace DiceyDungeonsAR.GameObjects.Players
 
         public bool PlacePlayer(Field field)
         {
-            if (targetField != currentField)
+            if (!currentField.ConnectedFields().Contains(field))
+            {
                 return false;
+            }
+            field.MarkAdjacentFields();
 
             var targetPosition = field.transform.position;
             targetPosition.y = transform.position.y;
@@ -74,6 +77,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
 
             targetField = field;
             targetTime = Time.time + 0.3f;
+
             return true;
         }
 

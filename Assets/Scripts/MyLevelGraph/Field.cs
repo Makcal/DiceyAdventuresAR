@@ -59,11 +59,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
         }
         void ISelectableObject.OnSelectEnter()
         {
-            if (this.level.player.currentField.ConnectedFields().Contains(this))
-            {
-                if (level.player.PlacePlayer(this))
-                    MarkAdjacentFields();
-            }
+            level.player.PlacePlayer(this);
         }
 
         void ISelectableObject.OnSelectExit() { }
@@ -83,7 +79,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             var fields = new List<Field>();
             foreach (var f in Edges)
             {
-                fields.Add(f.connectedField);
+                fields.Add(f.startField.Equals(this) ? f.connectedField : f.startField);
             }
             return fields;
         }

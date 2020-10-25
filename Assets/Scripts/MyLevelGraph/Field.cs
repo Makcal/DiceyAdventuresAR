@@ -38,7 +38,6 @@ namespace DiceyDungeonsAR.MyLevelGraph
             get => attainable;
             set
             {
-                print(value);
                 attainable = value;
                 GetComponentInChildren<MeshRenderer>().material = value ? attainableMaterial : defaultMaterial;
             }

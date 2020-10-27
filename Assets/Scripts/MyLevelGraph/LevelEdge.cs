@@ -44,7 +44,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             var offsetZ = new Vector3(0, 0, scale.x / 2 * Mathf.Cos(radians));
             transform.position = startField.transform.position + offsetX + offsetZ;
 
-            transform.parent = level.transform.GetChild(0);
+            transform.parent = level.transform;
 
         }
 

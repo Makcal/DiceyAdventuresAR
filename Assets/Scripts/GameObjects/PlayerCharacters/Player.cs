@@ -65,7 +65,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
 
         public bool PlacePlayer(Field field)
         {
-            if (!currentField.ConnectedFields().Contains(field))
+            if (!currentField.ConnectedFields().Contains(field) || targetField != currentField)
             {
                 return false;
             }

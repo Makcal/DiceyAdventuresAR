@@ -57,6 +57,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             {
                 AddEdge(i, i + 1);
             }
+            
             AddEdge(1, 9);
             AddEdge(2, 10);
             AddEdge(4, 11);
@@ -65,7 +66,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         public Field AddField(float x, float z)
         {
-            var field = Instantiate(fieldPrefab, ground.transform).GetComponentInChildren<Field>();
+            var field = Instantiate(fieldPrefab, transform).GetComponentInChildren<Field>();
             field.Initialize(this, x, 0, z);
             return field;
         }

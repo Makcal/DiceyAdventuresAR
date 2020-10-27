@@ -51,7 +51,6 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
             x -= 2f; z -= 2f;
             transform.parent.localPosition = new Vector3(x, y, z) * 2f;
-            transform.parent.localScale *= 2;
         }
         private void OnMouseDown()
         {

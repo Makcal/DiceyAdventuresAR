@@ -54,7 +54,6 @@ namespace DiceyDungeonsAR.GameObjects.Players
 
         void FixedUpdate()
         {
-            print(Health);
             if (targetField != currentField)
             {
                 var offset = new Vector3(0, 1f * targetField.transform.localScale.y, 0);

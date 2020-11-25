@@ -6,6 +6,5 @@ namespace DiceyDungeonsAR.GameObjects.Players
     public class MainCube : Player
     {
         public override int MaxHealth { get; protected set; } = 24;
-        public override int UpgradeHeal { get; protected set; } = 4;
     }
 }

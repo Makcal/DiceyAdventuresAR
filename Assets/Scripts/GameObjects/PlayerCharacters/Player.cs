@@ -12,18 +12,19 @@ namespace DiceyDungeonsAR.GameObjects.Players
         Field targetField = null;
         float targetTime = -1;
         public abstract int MaxHealth { get; protected set; }
+        public abstract int UpgradeHeal { get; protected set; }
         protected int health;
         public int Health
         {
             get => health;
-            private set
+            protected set
             {
-                health = Mathf.Min(MaxHealth, value);
+                health = Mathf.Clamp(value, 0, MaxHealth);
             }
         }
         public int Level { get; private set; } = 1;
         public int Experience { get; private set; } = 0;
-        public int XPToNextLevel { get; private set; } = 2;
+        public int MaxXP { get; private set; } = 2;
 
         public void Initialize()
         {
@@ -51,6 +52,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
 
         void FixedUpdate()
         {
+            print(Health);
             if (targetField != currentField)
             {
                 var offset = new Vector3(0, 1f * targetField.transform.localScale.y, 0);
@@ -89,6 +91,27 @@ namespace DiceyDungeonsAR.GameObjects.Players
         }
 
         private void LevelUp()
+        {
+            Level += 1;
+            Experience = 0;
+            MaxXP += Level;
+            MaxHealth += UpgradeHeal;
+            Health = MaxHealth;
+        }
+
+        public void DealDamage(int damage)
+        {
+            Health -= damage;
+            if (health == 0)
+                Death();
+        }
+
+        public void Heal(int health)
+        {
+            Health += health;
+        }
+
+        private void Death()
         {
 
         }

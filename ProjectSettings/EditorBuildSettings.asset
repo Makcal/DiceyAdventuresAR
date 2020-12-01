@@ -9,6 +9,21 @@ EditorBuildSettings:
     path: Assets/Scenes/ARTest.unity
     guid: 8439e9efd38f84943a3256feb67893b5
   - enabled: 1
-    path: Assets/Scenes/Menu/0.unity
+    path: Assets/Scenes/Main.unity
+    guid: b719433e65ae7414cb2d1fee5e3ca8ae
+  - enabled: 1
+    path: Assets/Scenes/Menu/MainMenu.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Menu/Help.unity
+    guid: a3015965997512440b7562db6c5f0462
+  - enabled: 1
+    path: Assets/Scenes/Menu/Gameplay.unity
+    guid: 60ad23fd11aa3c5419ed8a97b8095077
+  - enabled: 1
+    path: Assets/Scenes/Menu/Objects.unity
+    guid: 96518b18997a8f241b40770a598e14f5
+  - enabled: 1
+    path: Assets/Scenes/Menu/Gameplay.unity
+    guid: 7835b9ea57d7f87459d4c3c7ba37d3aa
   m_configObjects: {}

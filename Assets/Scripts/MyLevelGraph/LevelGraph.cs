@@ -16,11 +16,9 @@ namespace DiceyDungeonsAR.MyLevelGraph
         [NonSerialized] public List<Field> fields = new List<Field>();
         public GameObject fieldPrefab;
         [NonSerialized] public Player player;
-        private GameObject ground;
 
         public void Start()
         {
-            ground = transform.GetChild(0).gameObject;
 
             GenerateLevel();
 

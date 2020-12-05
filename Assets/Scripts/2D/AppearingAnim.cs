@@ -16,7 +16,7 @@ public class AppearingAnim : MonoBehaviour
     {
         g = GetComponent<Graphic>();
 
-        Play();
+        //Play();
     }
 
     public void Play()

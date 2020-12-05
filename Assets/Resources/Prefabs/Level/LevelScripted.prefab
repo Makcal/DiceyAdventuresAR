@@ -44,6 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f550e158b05bec94b8b93ed41581ed82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  applePrefab: {fileID: 2446815429623328642, guid: 746634504afce9d46acd84f76681d83d,
+    type: 3}
+  chestPrefab: {fileID: -5981149880283269385, guid: 50d3d04f205f45743b936fd6504068b1,
+    type: 3}
+  shopPrefab: {fileID: -8848747739532965958, guid: 11b90539a75d08540b36d2ea345cca0e,
+    type: 3}
+  exitPrefab: {fileID: -3064379719436525237, guid: d5236b412ba19384d972092cc0a0cc8f,
+    type: 3}
   fields: []
   fieldPrefab: {fileID: 4966657414095696368, guid: f5e90f4bfb7e9fa4fb5954d42036852c,
     type: 3}

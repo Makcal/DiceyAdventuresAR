@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using DiceyDungeonsAR.GameObjects.Players;
 using DiceyDungeonsAR.GameObjects;
@@ -7,9 +8,14 @@ namespace DiceyDungeonsAR.MyLevelGraph
 {
     public class LevelGraph : MonoBehaviour
     {
-        public List<Field> fields = new List<Field>();
+        public Apple applePrefab;
+        public Chest chestPrefab;
+        public Shop shopPrefab;
+        public Exit exitPrefab;
+
+        [NonSerialized] public List<Field> fields = new List<Field>();
         public GameObject fieldPrefab;
-        public Player player;
+        [NonSerialized] public Player player;
         private GameObject ground;
 
         public void Start()
@@ -37,21 +43,21 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         public void GenerateLevel()
         {
-            //.PlaceItem(Resources.Load("Prefabs/GameObjects/Chest") as GameObject)
+            //.PlaceItem(Instantiate(chestPrefab))
             AddField(0, 1);
             AddField(1, 1);
             AddField(1, 2);
             AddField(1, 3);
             AddField(1, 4);
-            AddField(2, 4).PlaceItem(Resources.Load("Prefabs/GameObjects/Apple") as GameObject);
+            AddField(2, 4).PlaceItem(Instantiate(applePrefab));
             AddField(2, 3);
             AddField(3, 3);
-            AddField(4, 3).PlaceItem(Resources.Load("Prefabs/GameObjects/Exit") as GameObject);
+            AddField(4, 3).PlaceItem(Instantiate(exitPrefab));
 
-            AddField(2, 1).PlaceItem(Resources.Load("Prefabs/GameObjects/Chest") as GameObject);
-            AddField(0, 2).PlaceItem(Resources.Load("Prefabs/GameObjects/Apple") as GameObject);
-            AddField(0, 4).PlaceItem(Resources.Load("Prefabs/GameObjects/Chest") as GameObject);
-            AddField(2, 2).PlaceItem(Resources.Load("Prefabs/GameObjects/Shop") as GameObject);
+            AddField(2, 1).PlaceItem(Instantiate(chestPrefab));
+            AddField(0, 2).PlaceItem(Instantiate(applePrefab));
+            AddField(0, 4).PlaceItem(Instantiate(chestPrefab));
+            AddField(2, 2).PlaceItem(Instantiate(shopPrefab));
 
             for (int i = 0; i < fields.Count - 5; i++)
             {

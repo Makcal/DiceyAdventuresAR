@@ -1,16 +1,17 @@
 ﻿using DiceyDungeonsAR.MyLevelGraph;
 using System;
 using UnityEngine;
-using UnityEngine.Animations;
+using UnityEngine.UI;
 
 namespace DiceyDungeonsAR.GameObjects.Players
 {
     public abstract class Player : MonoBehaviour
     {
         LevelGraph levelGraph;
-        public Field currentField = null;
+        [NonSerialized] public Field currentField = null;
         Field targetField = null;
         float targetTime = -1;
+
         public abstract int MaxHealth { get; protected set; }
         public abstract int UpgradeHeal { get; protected set; }
         protected int health;
@@ -110,7 +111,25 @@ namespace DiceyDungeonsAR.GameObjects.Players
 
         public void Heal(int health)
         {
+            health = Mathf.Abs(health);
             Health += health;
+
+            var msg = new GameObject("HealMessage", typeof(RectTransform), typeof(CanvasRenderer), typeof(Text), typeof(AppearingAnim)) { layer = 5 };
+
+            var transf = msg.GetComponent<RectTransform>();
+            transf.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform);
+            transf.anchorMin = transf.anchorMax = Vector2.zero;
+            transf.anchoredPosition = new Vector2(250, 70);
+
+            var textComp = msg.GetComponent<Text>();
+            textComp.text = $"+{health} HP";
+            textComp.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+            textComp.fontSize = 32;
+
+            var animComp = msg.GetComponent<AppearingAnim>();
+            animComp.yOffset = 20;
+            animComp.color = new Color(0, 255, 0);
+            animComp.Play();
         }
 
         private void Death()

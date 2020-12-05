@@ -97,16 +97,5 @@ namespace DiceyDungeonsAR.MyLevelGraph
             PlacedItem = item;
             return item;
         }
-
-        public Item PlaceItem(GameObject prefab)
-        {
-            if (prefab.GetComponent<Item>() != null) 
-            {
-                Item item = Instantiate(prefab).GetComponent<Item>();
-                PlacedItem = item;
-                return item;
-            }
-            return null;
-        }
     }
 }

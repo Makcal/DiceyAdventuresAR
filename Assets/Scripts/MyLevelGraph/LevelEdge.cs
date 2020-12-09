@@ -1,18 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 namespace DiceyDungeonsAR.MyLevelGraph
 {
     public class LevelEdge : MonoBehaviour
     {
-        public Field startField;
-        public Field connectedField;
-        public int edgeWeight;
-        private bool attainable;
         public Material attainableMaterial;
         public Material defaultMaterial;
-        public string start, connected;
+
+        [NonSerialized] public Field startField;
+        [NonSerialized] public Field connectedField;
+        [NonSerialized] public int edgeWeight;
+        private bool attainable;
+        [NonSerialized] public string start, connected;
 
         public bool Attainable 
         {
@@ -45,7 +45,6 @@ namespace DiceyDungeonsAR.MyLevelGraph
             transform.position = startField.transform.position + offsetX + offsetZ;
 
             transform.parent = level.transform;
-
         }
 
         public override string ToString()

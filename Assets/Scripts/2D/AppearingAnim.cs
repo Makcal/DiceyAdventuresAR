@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-
 public class AppearingAnim : MonoBehaviour
 {
     bool started = false;
@@ -12,11 +11,28 @@ public class AppearingAnim : MonoBehaviour
     public float period = 1;
     public float yOffset = 0;
 
+    static public AppearingAnim CreateMsg(string name, Transform canvasTransform, string text="", Font font=null, int fontSize = 32)
+    {
+        GameObject msg = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Text), typeof(AppearingAnim)) { layer = 5 };
+        
+        var transf = msg.GetComponent<RectTransform>();
+        transf.SetParent(canvasTransform);
+        transf.anchorMin = transf.anchorMax = Vector2.one / 2;
+        transf.anchoredPosition = Vector2.zero;
+
+        var textComp = msg.GetComponent<Text>();
+        textComp.text = text;
+        if (font == null)
+            font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+        textComp.font = font;
+        textComp.fontSize = fontSize;
+
+        return msg.GetComponent<AppearingAnim>();
+    }
+
     private void Start()
     {
         g = GetComponent<Graphic>();
-
-        //Play();
     }
 
     public void Play()
@@ -31,12 +47,15 @@ public class AppearingAnim : MonoBehaviour
         if (!started)
             return;
 
-        float a = Mathf.Min((Time.time - startTime) / period, 2);
+        float a = Mathf.Min((Time.time - startTime) * 2 / period, 2);
 
         g.color = new Color(color.r, color.g, color.b, a>1 ? 2-a : a);
 
         var pos = transform.localPosition;
         pos.y = startHeight + yOffset * a;
         transform.localPosition = pos;
+
+        if (a == 2)
+            Destroy(gameObject);
     }
 }

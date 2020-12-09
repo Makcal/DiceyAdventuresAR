@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using DiceyDungeonsAR.GameObjects.Players;
 using DiceyDungeonsAR.GameObjects;
+using DiceyDungeonsAR.Enemies;
+using System.Collections;
+using UnityEngine.UI;
 
 namespace DiceyDungeonsAR.MyLevelGraph
 {
@@ -12,13 +15,18 @@ namespace DiceyDungeonsAR.MyLevelGraph
         public Chest chestPrefab;
         public Shop shopPrefab;
         public Exit exitPrefab;
+        public GameObject fieldPrefab;
+        public LevelEdge edgePrefab;
+        public List<EnemyItem> enemies1Level, enemies2Level, enemies3Level, bosses;
+
+        static public LevelGraph levelGraph;
 
         [NonSerialized] public List<Field> fields = new List<Field>();
-        public GameObject fieldPrefab;
         [NonSerialized] public Player player;
 
         public void Start()
         {
+            levelGraph = this;
 
             GenerateLevel();
 
@@ -43,13 +51,13 @@ namespace DiceyDungeonsAR.MyLevelGraph
         {
             //.PlaceItem(Instantiate(chestPrefab))
             AddField(0, 1);
-            AddField(1, 1);
+            AddField(1, 1).PlaceItem(Instantiate(enemies1Level[0]));
             AddField(1, 2);
             AddField(1, 3);
-            AddField(1, 4);
+            AddField(1, 4).PlaceItem(Instantiate(enemies2Level[0]));
             AddField(2, 4).PlaceItem(Instantiate(applePrefab));
-            AddField(2, 3);
-            AddField(3, 3);
+            AddField(2, 3).PlaceItem(Instantiate(enemies3Level[0]));
+            AddField(3, 3).PlaceItem(Instantiate(bosses[0]));
             AddField(4, 3).PlaceItem(Instantiate(exitPrefab));
 
             AddField(2, 1).PlaceItem(Instantiate(chestPrefab));
@@ -102,7 +110,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
         {
             if (fields.Contains(first) && fields.Contains(second))
             {
-                var edge = Instantiate(Resources.Load("Prefabs/Level/Edge") as GameObject).GetComponent<LevelEdge>();
+                LevelEdge edge = Instantiate(edgePrefab);
                 edge.Initialize(this, first, second, weight);
                 first.AddEdge(edge);
                 second.AddEdge(edge);
@@ -113,6 +121,35 @@ namespace DiceyDungeonsAR.MyLevelGraph
         {
             if (Mathf.Max(firstIndex, secondIndex) < fields.Count && Mathf.Min(firstIndex, secondIndex) >= 0)
                 AddEdge(fields[firstIndex], fields[secondIndex], weight);
+        }
+
+        public IEnumerator StartBattle(Enemy enemy)
+        {
+            AppearingAnim msg = AppearingAnim.CreateMsg("StartBattleMsg", GameObject.FindGameObjectWithTag("Canvas").transform, "Battle starts");
+            msg.GetComponent<RectTransform>().sizeDelta = new Vector2(450, 100);
+            msg.GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
+            msg.GetComponent<Text>().fontSize = 72;
+            msg.color = new Color(255, 0, 0);
+            msg.yOffset = 50;
+            msg.period = 2;
+            msg.Play();
+
+            enemy.SetUpEnemy();
+
+            for (int i = 2; i < transform.childCount-1; i++)
+                transform.GetChild(i).gameObject.SetActive(false);
+
+            player.transform.GetChild(0).gameObject.SetActive(false);
+            enemy.transform.GetChild(0).gameObject.SetActive(false);
+
+            yield return new WaitForSeconds(2.0f);
+
+            player.transform.GetChild(0).gameObject.SetActive(true);
+            enemy.transform.GetChild(0).gameObject.SetActive(true);
+
+            player.transform.localPosition = new Vector3(-4, 0, 0);
+            player.transform.rotation = Quaternion.LookRotation(Vector3.right, Vector3.up);
+            player.transform.localScale *= 2;
         }
     }
 }

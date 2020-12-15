@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1183615764001249005}
   - component: {fileID: 1183615764001248978}
+  - component: {fileID: -3272388025939004110}
   m_Layer: 0
   m_Name: LevelScripted
   m_TagString: Level
@@ -64,6 +65,33 @@ MonoBehaviour:
   - {fileID: 7732188589979046596, guid: 8d38082663e091e42a6e98c10f461596, type: 3}
   bosses:
   - {fileID: -6126131248385985984, guid: 6dbf574f1c8d0b24bb09dae92e113dcd, type: 3}
+--- !u!114 &-3272388025939004110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183615764001248979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 208801775e40c1d44808bb3a6f2e2a14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  playerTurn: 1
+  turnEnded: 0
+  cubesSprites:
+  - {fileID: 21300000, guid: 808a0b4d0e1b7b54aa19702019efb9d5, type: 3}
+  - {fileID: 21300000, guid: abd10885ccc7d394891c09868395cc40, type: 3}
+  - {fileID: 21300000, guid: e8d6c729d1e3b7843bd9bc0b979132ef, type: 3}
+  - {fileID: 21300000, guid: 379454fcedb19d9438fdea998fb4aeb3, type: 3}
+  - {fileID: 21300000, guid: ecc240a4486cabe4e8e6100dc2bdd6d1, type: 3}
+  - {fileID: 21300000, guid: 544d17294e3b1174a87c5d33c925077f, type: 3}
+  - {fileID: 21300000, guid: 2bf176992772cf6469269d56e99ab87d, type: 3}
+  cardPrefab: {fileID: 6884610883199202649, guid: 6dc8d5c83c29c1c4196c3f638e0c6376,
+    type: 3}
+  cubePrefab: {fileID: 4589797961358867247, guid: 1fcbdc64b1a8ab94982936c90482838b,
+    type: 3}
 --- !u!1001 &4794687286659238698
 PrefabInstance:
   m_ObjectHideFlags: 0

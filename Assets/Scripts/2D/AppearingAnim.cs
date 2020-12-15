@@ -11,17 +11,18 @@ public class AppearingAnim : MonoBehaviour
     public float period = 1;
     public float yOffset = 0;
 
-    static public AppearingAnim CreateMsg(string name, Transform canvasTransform, string text="", Font font=null, int fontSize = 32)
+    static public AppearingAnim CreateMsg(string name, string text="", int fontSize = 32, Font font = null)
     {
         GameObject msg = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Text), typeof(AppearingAnim)) { layer = 5 };
         
-        var transf = msg.GetComponent<RectTransform>();
-        transf.SetParent(canvasTransform);
+        var transf = (RectTransform)msg.transform;
+        transf.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform);
         transf.anchorMin = transf.anchorMax = Vector2.one / 2;
         transf.anchoredPosition = Vector2.zero;
 
         var textComp = msg.GetComponent<Text>();
         textComp.text = text;
+        textComp.alignment = TextAnchor.MiddleCenter;
         if (font == null)
             font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
         textComp.font = font;

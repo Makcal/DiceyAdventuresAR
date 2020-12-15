@@ -1,0 +1,166 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84a92b25f83d49b9bc132d206b370281, type: 3}
+  m_Name: Icons
+  m_EditorClassIdentifier: 
+  hashCode: 83117176
+  material: {fileID: 8952100521593379652}
+  materialHashCode: 0
+  m_Version: 1.1.0
+  spriteSheet: {fileID: 2800000, guid: 120cc155de6f1a64391dcb1059321e50, type: 3}
+  m_SpriteCharacterTable:
+  - m_ElementType: 2
+    m_Unicode: 0
+    m_GlyphIndex: 4
+    m_Scale: 1
+    m_Name: EmptyNumber
+    m_HashCode: -62676010
+  - m_ElementType: 2
+    m_Unicode: 0
+    m_GlyphIndex: 2
+    m_Scale: 1
+    m_Name: Sword
+    m_HashCode: 99018877
+  - m_ElementType: 2
+    m_Unicode: 0
+    m_GlyphIndex: 0
+    m_Scale: 1
+    m_Name: Icons_3
+    m_HashCode: 320288820
+  - m_ElementType: 2
+    m_Unicode: 0
+    m_GlyphIndex: 1
+    m_Scale: 1
+    m_Name: Fire
+    m_HashCode: 2629304
+  - m_ElementType: 2
+    m_Unicode: 0
+    m_GlyphIndex: 3
+    m_Scale: 1
+    m_Name: Shock
+    m_HashCode: 99895292
+  m_SpriteGlyphTable:
+  - m_Index: 4
+    m_Metrics:
+      m_Width: 61
+      m_Height: 62
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 48
+      m_HorizontalAdvance: 61
+    m_GlyphRect:
+      m_X: 38
+      m_Y: 159
+      m_Width: 61
+      m_Height: 62
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: 1161201145128540330, guid: 120cc155de6f1a64391dcb1059321e50,
+      type: 3}
+  - m_Index: 2
+    m_Metrics:
+      m_Width: 56
+      m_Height: 68
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 50
+      m_HorizontalAdvance: 56
+    m_GlyphRect:
+      m_X: 274
+      m_Y: 165
+      m_Width: 56
+      m_Height: 68
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: 5543941588292853863, guid: 120cc155de6f1a64391dcb1059321e50,
+      type: 3}
+  - m_Index: 0
+    m_Metrics:
+      m_Width: 41
+      m_Height: 50
+      m_HorizontalBearingX: -2
+      m_HorizontalBearingY: 40
+      m_HorizontalAdvance: 41
+    m_GlyphRect:
+      m_X: 228
+      m_Y: 170
+      m_Width: 41
+      m_Height: 50
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: 1202984965197363600, guid: 120cc155de6f1a64391dcb1059321e50,
+      type: 3}
+  - m_Index: 1
+    m_Metrics:
+      m_Width: 54
+      m_Height: 58
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 47
+      m_HorizontalAdvance: 54
+    m_GlyphRect:
+      m_X: 173
+      m_Y: 168
+      m_Width: 54
+      m_Height: 58
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: 184950751378207249, guid: 120cc155de6f1a64391dcb1059321e50, type: 3}
+  - m_Index: 3
+    m_Metrics:
+      m_Width: 71
+      m_Height: 60
+      m_HorizontalBearingX: -1
+      m_HorizontalBearingY: 45
+      m_HorizontalAdvance: 71
+    m_GlyphRect:
+      m_X: 103
+      m_Y: 160
+      m_Width: 71
+      m_Height: 60
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: 2130535880278150251, guid: 120cc155de6f1a64391dcb1059321e50,
+      type: 3}
+  spriteInfoList: []
+  fallbackSpriteAssets: []
+--- !u!21 &8952100521593379652
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: TextMeshPro/Sprite
+  m_Shader: {fileID: 4800000, guid: cf81c85f95fe47e1a27f6ae460cf182c, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 120cc155de6f1a64391dcb1059321e50, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}

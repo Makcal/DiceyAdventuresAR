@@ -1,7 +1,7 @@
-﻿using DiceyDungeonsAR.MyLevelGraph;
-using System;
+﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
+using DiceyDungeonsAR.MyLevelGraph;
+using DiceyDungeonsAR.Battle;
 
 namespace DiceyDungeonsAR.GameObjects.Players
 {
@@ -13,7 +13,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
         float targetTime = -1;
 
         public abstract int MaxHealth { get; protected set; }
-        public abstract int UpgradeHeal { get; protected set; }
+        public abstract int UpgradeHealth { get; protected set; }
         protected int health;
         public int Health
         {
@@ -27,11 +27,13 @@ namespace DiceyDungeonsAR.GameObjects.Players
         public int Experience { get; private set; } = 0;
         public int MaxXP { get; private set; } = 2;
         public int Coins { get; private set; } = 0;
+        public CardDescription[,] Inventory { get; } = new CardDescription[4, 2];
 
         public void Initialize()
         {
             health = MaxHealth;
-
+            FillInventory();
+            
             levelGraph = LevelGraph.levelGraph;
             currentField = levelGraph.fields[0];
             targetField = currentField;
@@ -54,9 +56,9 @@ namespace DiceyDungeonsAR.GameObjects.Players
             }
         }
 
-        public bool PlacePlayer(Field field)
+        public bool PlacePlayer(Field field, bool force = false)
         {
-            if (!currentField.ConnectedFields().Contains(field) || targetField != currentField)
+            if (!force && (!currentField.ConnectedFields().Contains(field) || targetField != currentField))
             {
                 return false;
             }
@@ -84,13 +86,24 @@ namespace DiceyDungeonsAR.GameObjects.Players
             Level += 1;
             Experience = 0;
             MaxXP += Level;
-            MaxHealth += UpgradeHeal;
+            MaxHealth += UpgradeHealth;
             Health = MaxHealth;
         }
 
         public void DealDamage(int damage)
         {
+            damage = Mathf.Abs(damage);
             Health -= damage;
+
+            var message = AppearingAnim.CreateMsg("PlayerDamage", $"- {damage} HP", 48);
+            var transf = message.GetComponent<RectTransform>();
+            transf.anchorMin = transf.anchorMax = Vector2.zero;
+            transf.anchoredPosition = new Vector2(250, 70);
+
+            message.yOffset = 20;
+            message.color = Color.red;
+            message.Play();
+
             if (health == 0)
                 Death();
         }
@@ -100,7 +113,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
             health = Mathf.Abs(health);
             Health += health;
 
-            var message = AppearingAnim.CreateMsg("HealMessage", GameObject.FindGameObjectWithTag("Canvas").transform, $"+{health} HP");
+            var message = AppearingAnim.CreateMsg("HealMessage", $"+ {health} HP", 48);
 
             var transf = message.GetComponent<RectTransform>();
             transf.anchorMin = transf.anchorMax = Vector2.zero;
@@ -113,7 +126,24 @@ namespace DiceyDungeonsAR.GameObjects.Players
 
         private void Death()
         {
+            Destroy(gameObject);
+            levelGraph.battle.EndBattle(false);
+        }
 
+        private void FillInventory()
+        {
+            Inventory[0, 0] = Inventory[2, 0] = new CardDescription()
+            {
+                slotsCount = true,
+                action = CardAction.Damage,
+            };
+            Inventory[1, 0] = new CardDescription()
+            {
+                size = false,
+                condition = new Condition() { number = 3, type = ConditionType.Max },
+                bonus = new Bonus() { type = BonusType.Freeze },
+                action = CardAction.Damage,
+            };
         }
     }
 }

@@ -54,14 +54,14 @@ namespace DiceyDungeonsAR.MyLevelGraph
         }
         private void OnMouseDown()
         {
-            (this as ISelectableObject).OnSelectEnter();
+            this.OnSelectEnter();
         }
-        void ISelectableObject.OnSelectEnter()
+        public void OnSelectEnter()
         {
             level.player.PlacePlayer(this);
         }
 
-        void ISelectableObject.OnSelectExit() { }
+        public void OnSelectExit() { }
 
         public override string ToString()
         {

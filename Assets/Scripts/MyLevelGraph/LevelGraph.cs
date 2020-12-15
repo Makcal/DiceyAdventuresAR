@@ -6,6 +6,7 @@ using DiceyDungeonsAR.GameObjects;
 using DiceyDungeonsAR.Enemies;
 using System.Collections;
 using UnityEngine.UI;
+using DiceyDungeonsAR.Battle;
 
 namespace DiceyDungeonsAR.MyLevelGraph
 {
@@ -23,10 +24,12 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         [NonSerialized] public List<Field> fields = new List<Field>();
         [NonSerialized] public Player player;
+        [NonSerialized] public BattleController battle;
 
         public void Start()
         {
             levelGraph = this;
+            battle = GetComponent<BattleController>();
 
             GenerateLevel();
 
@@ -36,7 +39,6 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 Debug.LogWarning("Player wasn't found");
                 return;
             }
-
             player = playerObject.GetComponent<Player>();
             if (player == null)
             {
@@ -125,16 +127,14 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         public IEnumerator StartBattle(Enemy enemy)
         {
-            AppearingAnim msg = AppearingAnim.CreateMsg("StartBattleMsg", GameObject.FindGameObjectWithTag("Canvas").transform, "Battle starts");
-            msg.GetComponent<RectTransform>().sizeDelta = new Vector2(450, 100);
-            msg.GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
-            msg.GetComponent<Text>().fontSize = 72;
-            msg.color = new Color(255, 0, 0);
+            AppearingAnim msg = AppearingAnim.CreateMsg("StartBattleMsg", "Битва начинается", 72);
+            msg.GetComponent<RectTransform>().sizeDelta = new Vector2(650, 200);
+            msg.color = Color.red;
             msg.yOffset = 50;
             msg.period = 2;
             msg.Play();
 
-            enemy.SetUpEnemy();
+            battle.SetUpOpponents(enemy);
 
             for (int i = 2; i < transform.childCount-1; i++)
                 transform.GetChild(i).gameObject.SetActive(false);
@@ -147,9 +147,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             player.transform.GetChild(0).gameObject.SetActive(true);
             enemy.transform.GetChild(0).gameObject.SetActive(true);
 
-            player.transform.localPosition = new Vector3(-4, 0, 0);
-            player.transform.rotation = Quaternion.LookRotation(Vector3.right, Vector3.up);
-            player.transform.localScale *= 2;
+            StartCoroutine(battle.StartBattle());
         }
     }
 }

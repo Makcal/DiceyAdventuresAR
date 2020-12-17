@@ -6,14 +6,14 @@ public class AppearingAnim : MonoBehaviour
     bool started = false;
     float startTime;
     float startHeight;
-    Graphic g;
+    Graphic grapic;
     public Color color;
     public float period = 1;
     public float yOffset = 0;
 
     static public AppearingAnim CreateMsg(string name, string text="", int fontSize = 40, Font font = null)
     {
-        GameObject msg = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Text), typeof(AppearingAnim)) { layer = 5 };
+        GameObject msg = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Text), typeof(Outline), typeof(AppearingAnim)) { layer = 5 };
         
         var transf = (RectTransform)msg.transform;
         var canvasTr = (RectTransform)GameObject.FindGameObjectWithTag("Canvas").transform;
@@ -35,7 +35,7 @@ public class AppearingAnim : MonoBehaviour
 
     private void Start()
     {
-        g = GetComponent<Graphic>();
+        grapic = GetComponent<Graphic>();
     }
 
     public void Play()
@@ -52,7 +52,7 @@ public class AppearingAnim : MonoBehaviour
 
         float a = Mathf.Min((Time.time - startTime) * 2 / period, 2);
 
-        g.color = new Color(color.r, color.g, color.b, a>1 ? 2-a : a);
+        grapic.color = new Color(color.r, color.g, color.b, a>1 ? 2-a : a);
 
         var pos = transform.localPosition;
         pos.y = startHeight + yOffset * a;

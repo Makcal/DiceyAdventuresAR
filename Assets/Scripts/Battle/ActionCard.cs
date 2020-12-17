@@ -51,8 +51,6 @@ namespace DiceyDungeonsAR.Battle
             var canvasTr = GameObject.FindGameObjectWithTag("Canvas").transform;
             tr.SetParent(canvasTr);
             tr.sizeDelta = new Vector2(200, size ? 200 : 130);
-            var width = 0.2f * ((RectTransform)canvasTr).rect.width;
-            tr.localScale *= width / tr.sizeDelta.x;
 
             color /= 255;
             color.a = 1;
@@ -67,8 +65,12 @@ namespace DiceyDungeonsAR.Battle
                 card.slots = new Cube[2];
                 for (int i = 0; i < 2; i++)
                 {
-                    Cube cube = Cube.CreateCube(card.transform, new Vector2(0.25f + 0.5f * i, 0.5f), Vector2.zero, card: card);
-                    cube.card = card;
+                    Cube cube = Cube.CreateCube(card.transform, card: card);
+
+                    var cubeTr = cube.GetComponent<RectTransform>();
+                    cubeTr.anchorMin = cubeTr.anchorMax = new Vector2(0.25f + 0.5f * i, 0.5f);
+                    cubeTr.anchoredPosition = Vector2.zero;
+
                     card.slots[i] = cube;
 
                     if (condition.type != ConditionType.None && condition.type != ConditionType.EvOd)
@@ -79,16 +81,25 @@ namespace DiceyDungeonsAR.Battle
             {
                 card.slots = new Cube[1];
 
-                Cube cube = Cube.CreateCube(card.transform, new Vector2(0.5f, 0.5f), Vector2.zero, card: card);
-                cube.card = card;
+                Cube cube = Cube.CreateCube(card.transform, card: card);
+
+                var cubeTr = cube.GetComponent<RectTransform>();
+                cubeTr.anchorMin = cubeTr.anchorMax = new Vector2(0.5f, size ? 0.5f : 0.61f);
+                cubeTr.anchoredPosition = Vector2.zero;
+
                 card.slots[0] = cube;
 
                 if (condition.type != ConditionType.None && condition.type != ConditionType.EvOd)
                     cube.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = condition.GetDesc();
             }
 
+            var width = 0.4f * ((RectTransform)canvasTr).sizeDelta.y / (size ? 1 : 1.54f);
+            tr.localScale *= width / tr.sizeDelta.y;
+
             var tmpTr = (RectTransform)tr.GetChild(0);
             tmpTr.sizeDelta = new Vector2(tr.sizeDelta.x, 0.2f * tr.sizeDelta.y);
+            if (size)
+                tmpTr.anchorMin = tmpTr.anchorMax = new Vector2(0.5f, 0.3f) ;
 
             tmpTr.GetComponent<TextMeshProUGUI>().text = text + "\n" + bonus;
 

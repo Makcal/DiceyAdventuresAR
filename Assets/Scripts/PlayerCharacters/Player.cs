@@ -2,6 +2,7 @@
 using UnityEngine;
 using DiceyDungeonsAR.MyLevelGraph;
 using DiceyDungeonsAR.Battle;
+using DiceyDungeonsAR.UI;
 
 namespace DiceyDungeonsAR.GameObjects.Players
 {
@@ -11,6 +12,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
         [NonSerialized] public Field currentField = null;
         Field targetField = null;
         float targetTime = -1;
+        [NonSerialized] public Bar playerBar;
 
         public abstract int MaxHealth { get; protected set; }
         public abstract int UpgradeHealth { get; protected set; }
@@ -33,10 +35,15 @@ namespace DiceyDungeonsAR.GameObjects.Players
         {
             health = MaxHealth;
             FillInventory();
-            
+
+            playerBar = Bar.CreateBar(GameObject.FindGameObjectWithTag("Canvas").transform, new Vector2(0.068f, 0.131f), new Vector2(0.24f, 0.185f));
+            playerBar.maxValue = MaxHealth;
+            playerBar.startValue = Health;
+
             levelGraph = LevelGraph.levelGraph;
             currentField = levelGraph.fields[0];
             targetField = currentField;
+
             transform.position = currentField.transform.position + new Vector3(0, 1f * targetField.transform.localScale.y, 0);
             currentField.MarkAttainable();
         }
@@ -94,11 +101,11 @@ namespace DiceyDungeonsAR.GameObjects.Players
         {
             damage = Mathf.Abs(damage);
             Health -= damage;
+            playerBar.CurrentValue -= damage;
 
-            var message = AppearingAnim.CreateMsg("PlayerDamage", $"- {damage} HP", 48);
+            var message = AppearingAnim.CreateMsg("PlayerDamage", $"- {damage} HP");
             var transf = message.GetComponent<RectTransform>();
-            transf.anchorMin = transf.anchorMax = Vector2.zero;
-            transf.anchoredPosition = new Vector2(250, 70);
+            transf.anchorMin = transf.anchorMax = new Vector2(0.24f, 0.13f);
 
             message.yOffset = 20;
             message.color = Color.red;
@@ -112,12 +119,12 @@ namespace DiceyDungeonsAR.GameObjects.Players
         {
             health = Mathf.Abs(health);
             Health += health;
+            playerBar.CurrentValue += health;
 
-            var message = AppearingAnim.CreateMsg("HealMessage", $"+ {health} HP", 48);
+            var message = AppearingAnim.CreateMsg("HealMessage", $"+ {health} HP");
 
             var transf = message.GetComponent<RectTransform>();
-            transf.anchorMin = transf.anchorMax = Vector2.zero;
-            transf.anchoredPosition = new Vector2(250, 70);
+            transf.anchorMin = transf.anchorMax = new Vector2(0.24f, 0.13f);
 
             message.yOffset = 20;
             message.color = new Color(0, 255, 0);
@@ -127,7 +134,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
         private void Death()
         {
             Destroy(gameObject);
-            levelGraph.battle.EndBattle(false);
+            StartCoroutine(levelGraph.battle.EndBattle(false));
         }
 
         private void FillInventory()

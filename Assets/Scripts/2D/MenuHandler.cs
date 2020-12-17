@@ -4,14 +4,18 @@ using UnityEngine.SceneManagement;
 
 public class MenuHandler : MonoBehaviour
 {
-    public String gameScene = "Main",
+    public String gameSceneDev = "Main",
+	    gameSceneAR = "AR",
         mainMenuScene = "MainMenu",
         helpScene = "Help",
         objectsScene = "Objects",
         gameplayScene = "Gameplay";
     public void StartApplication()
     {
-        SceneManager.LoadScene(gameScene);
+		if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+			SceneManager.LoadScene(gameSceneDev);
+		else
+			SceneManager.LoadScene(gameSceneAR);
     }
     
     public void BackToMenu()

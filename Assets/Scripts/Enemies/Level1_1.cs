@@ -4,6 +4,7 @@ namespace DiceyDungeonsAR.Enemies
 {
     public class Level1_1 : Enemy
     {
+        public override string Name { get; } = "Осьминожка";
         public override int Level { get; } = 1;
         public override int MaxHealth { get; } = 14;
 

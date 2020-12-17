@@ -6,6 +6,7 @@ namespace DiceyDungeonsAR.Enemies
 {
     abstract public class Enemy : MonoBehaviour
     {
+        abstract public string Name { get; }
         abstract public int Level { get; }
         abstract public int MaxHealth { get; }
         protected int health;
@@ -31,11 +32,11 @@ namespace DiceyDungeonsAR.Enemies
         {
             damage = Mathf.Abs(damage);
             Health -= damage;
+            LevelGraph.levelGraph.battle.enemyBar.CurrentValue -= damage;
 
-            var message = AppearingAnim.CreateMsg("EnemyDamage", $"- {damage} HP", 48);
+            var message = AppearingAnim.CreateMsg("EnemyDamage", $"- {damage} HP");
             var transf = message.GetComponent<RectTransform>();
-            transf.anchorMin = transf.anchorMax = Vector2.one;
-            transf.anchoredPosition = new Vector2(-250, -70);
+            transf.anchorMin = transf.anchorMax = new Vector2(0.76f, 0.87f);
 
             message.yOffset = -20;
             message.color = Color.red;
@@ -48,7 +49,7 @@ namespace DiceyDungeonsAR.Enemies
         public void Death()
         {
             Destroy(gameObject);
-            LevelGraph.levelGraph.battle.EndBattle(true);
+            StartCoroutine(LevelGraph.levelGraph.battle.EndBattle(true));
         }
     }
 }

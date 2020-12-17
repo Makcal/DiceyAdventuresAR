@@ -68,14 +68,14 @@ namespace DiceyDungeonsAR.Battle
             }
         }
 
-        static public Cube CreateCube(Transform parent, Vector2 anchors, Vector2 position, byte value = 0, ActionCard card = null)
+        static public Cube CreateCube(Transform parent, byte value = 0, ActionCard card = null)
         {
             Cube c = Instantiate(LevelGraph.levelGraph.battle.cubePrefab);
 
             var tr = (RectTransform)c.transform;
             tr.SetParent(parent);
-            tr.anchorMin = tr.anchorMax = anchors;
-            tr.anchoredPosition = position;
+            tr.anchorMin = tr.anchorMax = Vector2.zero;
+            tr.anchoredPosition = Vector2.zero;
 
             c.Value = value;
             c.card = card;
@@ -94,10 +94,10 @@ namespace DiceyDungeonsAR.Battle
                 text.alignment = TextAlignmentOptions.Center;
                 text.enableKerning = false;
             }
-
             return c;
         }
-        private void Start()
+
+        void Start()
         {
             if (value == 0 && card.condition.type != ConditionType.None && card.condition.type != ConditionType.EvOd)
             {

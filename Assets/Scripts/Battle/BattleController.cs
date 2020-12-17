@@ -167,7 +167,8 @@ namespace DiceyDungeonsAR.Battle
                     transform.GetChild(i).gameObject.SetActive(true);
 
                 player.transform.localScale /= 2;
-                player.PlacePlayer(player.currentField, true);
+                player.transform.position = player.currentField.transform.position + new Vector3(0, player.currentField.transform.localScale.y, 0);
+                player.AddXP(player.MaxXP);
             }
 
             ResetBattle();

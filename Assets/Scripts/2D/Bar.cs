@@ -1,4 +1,5 @@
-﻿using DiceyDungeonsAR.MyLevelGraph;
+﻿using System;
+using DiceyDungeonsAR.MyLevelGraph;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,11 +8,21 @@ namespace DiceyDungeonsAR.UI
 	[RequireComponent(typeof(Slider))]
 	public class Bar : MonoBehaviour
 	{
-		public float maxValue = 100;
+		[NonSerialized] public float maxValue = 100;
 		public float startValue = 0;
 		public Color mainColor = new Color(255, 110, 110);
 		public Color backgroundColor = new Color(140, 43, 43);
 		Slider slider;
+
+		public float MaxValue
+		{
+			get => slider.maxValue;
+			set
+			{
+				slider.maxValue = value;
+				GetComponentInChildren<Text>().text = $"{value} / {MaxValue}";
+			}
+		}
 
 		public float CurrentValue 
 		{
@@ -19,7 +30,7 @@ namespace DiceyDungeonsAR.UI
 			set
             {
 				slider.value = value;
-				GetComponentInChildren<Text>().text = $"{value} / {maxValue}";
+				GetComponentInChildren<Text>().text = $"{value} / {MaxValue}";
             }
 		}
 
@@ -35,7 +46,7 @@ namespace DiceyDungeonsAR.UI
 			color.a = 1;
 			slider.transform.GetChild(0).GetComponent<Image>().color = color;
 
-            slider.maxValue = maxValue;
+            MaxValue = maxValue;
 			slider.minValue = 0;
 			CurrentValue = startValue;
 		}

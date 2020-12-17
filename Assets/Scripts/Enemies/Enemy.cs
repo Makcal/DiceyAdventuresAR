@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using DiceyDungeonsAR.MyLevelGraph;
 using DiceyDungeonsAR.Battle;
+using System.Collections;
 
 namespace DiceyDungeonsAR.Enemies
 {
@@ -43,13 +44,13 @@ namespace DiceyDungeonsAR.Enemies
             message.Play();
 
             if (health == 0)
-                Death();
+                StartCoroutine(Death());
         }
 
-        public void Death()
+        public IEnumerator Death()
         {
+            yield return StartCoroutine(LevelGraph.levelGraph.battle.EndBattle(true));
             Destroy(gameObject);
-            StartCoroutine(LevelGraph.levelGraph.battle.EndBattle(true));
         }
     }
 }

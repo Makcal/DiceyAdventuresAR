@@ -3,6 +3,7 @@ using UnityEngine;
 using DiceyDungeonsAR.MyLevelGraph;
 using DiceyDungeonsAR.Battle;
 using DiceyDungeonsAR.UI;
+using System.Collections;
 
 namespace DiceyDungeonsAR.GameObjects.Players
 {
@@ -14,7 +15,17 @@ namespace DiceyDungeonsAR.GameObjects.Players
         float targetTime = -1;
         [NonSerialized] public Bar playerBar;
 
-        public abstract int MaxHealth { get; protected set; }
+        public abstract int StartHealth { get; }
+        private int maxHealth;
+        public int MaxHealth
+        {
+            get => maxHealth;
+            private set
+            {
+                maxHealth = value;
+                playerBar.MaxValue = value;
+            }
+        }
         public abstract int UpgradeHealth { get; protected set; }
         protected int health;
         public int Health
@@ -23,6 +34,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
             protected set
             {
                 health = Mathf.Clamp(value, 0, MaxHealth);
+                playerBar.CurrentValue = health;
             }
         }
         public int Level { get; private set; } = 1;
@@ -33,7 +45,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
 
         public void Initialize()
         {
-            health = MaxHealth;
+            health = maxHealth = StartHealth;
             FillInventory();
 
             playerBar = Bar.CreateBar(GameObject.FindGameObjectWithTag("Canvas").transform, new Vector2(0.068f, 0.131f), new Vector2(0.24f, 0.185f));
@@ -63,9 +75,9 @@ namespace DiceyDungeonsAR.GameObjects.Players
             }
         }
 
-        public bool PlacePlayer(Field field, bool force = false)
+        public bool PlacePlayer(Field field)
         {
-            if (!force && (!currentField.ConnectedFields().Contains(field) || targetField != currentField))
+            if (!currentField.ConnectedFields().Contains(field) || targetField != currentField)
             {
                 return false;
             }
@@ -83,9 +95,12 @@ namespace DiceyDungeonsAR.GameObjects.Players
 
         public void AddXP(int experience)
         {
-            if (experience <= 0)
-                throw new ArgumentException();
             Experience += experience;
+
+            while (Experience >= MaxXP)
+            {
+                LevelUp();
+            }
         }
 
         private void LevelUp()
@@ -101,7 +116,6 @@ namespace DiceyDungeonsAR.GameObjects.Players
         {
             damage = Mathf.Abs(damage);
             Health -= damage;
-            playerBar.CurrentValue -= damage;
 
             var message = AppearingAnim.CreateMsg("PlayerDamage", $"- {damage} HP");
             var transf = message.GetComponent<RectTransform>();
@@ -112,14 +126,13 @@ namespace DiceyDungeonsAR.GameObjects.Players
             message.Play();
 
             if (health == 0)
-                Death();
+                StartCoroutine(Death());
         }
 
         public void Heal(int health)
         {
             health = Mathf.Abs(health);
             Health += health;
-            playerBar.CurrentValue += health;
 
             var message = AppearingAnim.CreateMsg("HealMessage", $"+ {health} HP");
 
@@ -131,10 +144,10 @@ namespace DiceyDungeonsAR.GameObjects.Players
             message.Play();
         }
 
-        private void Death()
+        private IEnumerator Death()
         {
+            yield return StartCoroutine(levelGraph.battle.EndBattle(false));
             Destroy(gameObject);
-            StartCoroutine(levelGraph.battle.EndBattle(false));
         }
 
         private void FillInventory()

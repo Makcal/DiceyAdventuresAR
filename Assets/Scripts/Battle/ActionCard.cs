@@ -6,22 +6,11 @@ using TMPro;
 
 namespace DiceyDungeonsAR.Battle
 {
+    //public delegate bool Condition(int value);
+
     public abstract class ActionCard : MonoBehaviour
     {
         public Cube[] slots;
-        public byte Uses
-        {
-            get
-            {
-                var tmpTr = (RectTransform)transform.GetChild(2);
-                return Byte.Parse(tmpTr.GetComponent<TextMeshProUGUI>().text.Replace(" осталось", ""));
-            }
-            set
-            {
-                var tmpTr = (RectTransform)transform.GetChild(2);
-                tmpTr.GetComponent<TextMeshProUGUI>().text = $"{value} осталось";
-            }
-        }
         public Color Color
         {
             get => GetComponent<Image>().color;
@@ -39,9 +28,7 @@ namespace DiceyDungeonsAR.Battle
         {
             byte sum = 0;
             foreach (var c in slots)
-            {
                 sum += c.Value;
-            }
             return sum;
         }
 
@@ -51,21 +38,14 @@ namespace DiceyDungeonsAR.Battle
                 if (c.Value == 0)
                     return false;
 
-            Uses--;
             DoAction();
-            foreach (var c in slots)
-                c.Value = 0;
-
-            if (Uses == 0)
-            {
-                if (GameObject.FindObjectsOfType(typeof(ActionCard)).Length == 1)
-                    LevelGraph.levelGraph.battle.turnEnded = true;
-                Destroy(gameObject);
-            }
+            if (GameObject.FindObjectsOfType(typeof(ActionCard)).Length == 1)
+                LevelGraph.levelGraph.battle.turnEnded = true;
+            Destroy(gameObject);
             return true;
         }
 
-        static T CreateCard<T>(bool size, bool slotsCount, Condition condition, byte uses, Color color, string text, string bonus) where T : ActionCard
+        static T CreateCard<T>(bool size, bool slotsCount, Condition condition, Color color, string text, string bonus) where T : ActionCard
         {
             RectTransform tr = Instantiate(LevelGraph.levelGraph.battle.cardPrefab);
             var canvasTr = GameObject.FindGameObjectWithTag("Canvas").transform;
@@ -79,7 +59,6 @@ namespace DiceyDungeonsAR.Battle
             T card = tr.gameObject.AddComponent<T>();
             card.size = size;
             card.condition = condition;
-            card.Uses = uses;
 
             if (slotsCount)
             {
@@ -118,30 +97,25 @@ namespace DiceyDungeonsAR.Battle
             tr.localScale *= width / tr.sizeDelta.y;
 
             var tmpTr = (RectTransform)tr.GetChild(0);
-            tmpTr.anchorMin = tmpTr.anchorMax = new Vector2(0.5f, 0.31f);
-            tmpTr.GetComponent<TextMeshProUGUI>().text = text;
+            tmpTr.sizeDelta = new Vector2(tr.sizeDelta.x, 0.2f * tr.sizeDelta.y);
+            if (size)
+                tmpTr.anchorMin = tmpTr.anchorMax = new Vector2(0.5f, 0.3f) ;
 
-            tmpTr = (RectTransform)tr.GetChild(1);
-            tmpTr.anchorMin = tmpTr.anchorMax = new Vector2(0.5f, 0.23f);
-            tmpTr.GetComponent<TextMeshProUGUI>().text = bonus;
-
-            tmpTr = (RectTransform)tr.GetChild(2);
-            tmpTr.anchorMin = tmpTr.anchorMax = new Vector2(0.5f, 0.15f);
-            tmpTr.GetComponent<TextMeshProUGUI>().text = $"{uses} осталось";
+            tmpTr.GetComponent<TextMeshProUGUI>().text = text + "\n" + bonus;
 
             return card;
         }
-        static public DamageCard CreateDamageCard(CardDescription description)
+        static public ActionCard CreateCard(CardDescription description)
         {
-            var card = CreateCard<DamageCard>(description.size, description.slotsCount, description.condition, description.uses, description.bonus.GetColor(), "Нанести <sprite index=0> урона", "");
-            card.bonus = description.bonus;
-            return card;
-        }
-
-        static public ChangeDiceCard CreateChangeDiceCard(byte uses = 3)
-        {
-            var diceCard = CreateCard<ChangeDiceCard>(true, false, Condition.TrueCond, uses, new Color(123, 123, 123), "Перебросить кубик", "");
-            return diceCard;
+            switch (description.action)
+            {
+                case CardAction.Damage:
+                    var card = CreateCard<DamageCard>(description.size, description.slotsCount, description.condition, description.bonus.GetColor(), "Нанести <sprite index=0> урона", "");
+                    card.bonus = description.bonus;
+                    return card;
+                default:
+                    return null;
+            }
         }
     }
 }

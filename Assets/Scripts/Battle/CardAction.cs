@@ -3,7 +3,6 @@
     public enum CardAction
     {
         Damage,
-        DoubleDamage,
         ChangeDice,
         Curse,
         Thorns,

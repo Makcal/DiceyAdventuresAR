@@ -1,8 +1,9 @@
-﻿using DiceyDungeonsAR.MyLevelGraph;
+﻿using System;
+using DiceyDungeonsAR.MyLevelGraph;
 
 namespace DiceyDungeonsAR.Battle
 {
-    public class DamageCard : ActionCard
+    class DamageCard : ActionCard
     {
         public Bonus bonus;
 

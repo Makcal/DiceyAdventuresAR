@@ -15,7 +15,6 @@ namespace DiceyDungeonsAR.Battle
         [NonSerialized] public Enemy enemy;
         [NonSerialized] public Player player;
         [NonSerialized] public Bar enemyBar;
-        [NonSerialized] public List<Cube> cubes;
         bool battle = false;
         public bool playerTurn = true, turnEnded = false;
 
@@ -39,6 +38,25 @@ namespace DiceyDungeonsAR.Battle
             player.transform.localScale *= 2;
         }
 
+        public List<Cube> CreateCubes(int count, bool toPlayer, RectTransform canvasTr)
+        {
+            var cubes = new List<Cube>();
+            for (int i = 0; i < count; i++)
+            {
+                var c = Cube.CreateCube(canvasTr, (byte)(UnityEngine.Random.Range(0, 6) + 1));
+
+                var tr = c.GetComponent<RectTransform>();
+                tr.localScale *= 0.12f * canvasTr.sizeDelta.y / tr.sizeDelta.y;
+                var anchors = toPlayer ? new Vector2(0.4f, 0.1f) : new Vector2(0.6f, 0.9f);
+                var xOffset = tr.sizeDelta.x * tr.localScale.x * 1.3f * i * (toPlayer ? 1 : -1);
+                var pos = new Vector2(xOffset + canvasTr.sizeDelta.x * anchors.x, canvasTr.sizeDelta.y * anchors.y);
+                tr.anchoredPosition = pos;
+
+                cubes.Add(c);
+            }
+            return cubes;
+        }
+
         public IEnumerator StartBattle()
         {
             battle = true;
@@ -57,12 +75,12 @@ namespace DiceyDungeonsAR.Battle
                 if (playerTurn)
                 {
                     CreateCards(player.Inventory);
-                    cubes = CreateCubes(Mathf.Min(player.Level + 2, 5), true, canvasTr);
+                    CreateCubes(Mathf.Min(player.Level + 2, 5), true, canvasTr);
                 }
                 else
                 {
                     CreateCards(enemy.Cards);
-                    cubes = CreateCubes(Mathf.Min(enemy.Level + 2, 5), false, canvasTr);
+                    CreateCubes(Mathf.Min(enemy.Level + 2, 5), false, canvasTr);
                 }
 
                 yield return new WaitUntil(() => LevelGraph.levelGraph.battle.turnEnded);
@@ -84,43 +102,13 @@ namespace DiceyDungeonsAR.Battle
             Destroy(button.gameObject);
         }
 
-        public List<Cube> CreateCubes(int count, bool toPlayer, RectTransform canvasTr)
-        {
-            var cubes = new List<Cube>();
-            for (int i = 0; i < count; i++)
-            {
-                var c = Cube.CreateCube(canvasTr, (byte)(UnityEngine.Random.Range(0, 6) + 1));
-
-                var tr = c.GetComponent<RectTransform>();
-                tr.localScale *= 0.12f * canvasTr.sizeDelta.y / tr.sizeDelta.y;
-                var anchors = toPlayer ? new Vector2(0.4f, 0.1f) : new Vector2(0.6f, 0.9f);
-                var xOffset = tr.sizeDelta.x * tr.localScale.x * 1.3f * i * (toPlayer ? 1 : -1);
-                var pos = new Vector2(xOffset + canvasTr.sizeDelta.x * anchors.x, canvasTr.sizeDelta.y * anchors.y);
-                tr.anchoredPosition = pos;
-
-                cubes.Add(c);
-            }
-            return cubes;
-        }
-
         void CreateCards(CardDescription[,] cards)
         {
             for (byte j = 0; j < 2; j++)
                 for (byte i = 0; i < cards.GetUpperBound(0) + 1; i++)
                     if (cards[i, j] != null)
                     {
-                        ActionCard card;
-                        switch (cards[i, j].action) {
-                            case CardAction.Damage:
-                                card = ActionCard.CreateDamageCard(cards[i, j]);
-                                break;
-                            case CardAction.ChangeDice:
-                                card = ActionCard.CreateChangeDiceCard(cards[i, j].uses);
-                                break;
-                            default:
-                                card = null;
-                                break;
-                        }
+                        var card = ActionCard.CreateCard(cards[i, j]);
 
                         var tr = (RectTransform)card.transform;
                         var width = tr.rect.width * tr.localScale.x;

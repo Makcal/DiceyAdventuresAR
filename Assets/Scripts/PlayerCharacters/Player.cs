@@ -55,6 +55,8 @@ namespace DiceyDungeonsAR.GameObjects.Players
             levelGraph = LevelGraph.levelGraph;
             currentField = levelGraph.fields[0];
             targetField = currentField;
+            transform.parent = levelGraph.transform;
+            transform.SetSiblingIndex(1);
 
             transform.position = currentField.transform.position + new Vector3(0, 1f * targetField.transform.localScale.y, 0);
             currentField.MarkAttainable();
@@ -152,7 +154,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
 
         private void FillInventory()
         {
-            Inventory[0, 0] = Inventory[2, 0] = new CardDescription()
+            Inventory[0, 0] = new CardDescription()
             {
                 slotsCount = true,
                 action = CardAction.Damage,
@@ -163,6 +165,11 @@ namespace DiceyDungeonsAR.GameObjects.Players
                 condition = new Condition() { number = 3, type = ConditionType.Max },
                 bonus = new Bonus() { type = BonusType.Freeze },
                 action = CardAction.Damage,
+            };
+            Inventory[3, 0] = new CardDescription()
+            {
+                uses = 3,
+                action = CardAction.ChangeDice,
             };
         }
     }

@@ -61,7 +61,11 @@ namespace DiceyDungeonsAR.Battle
                 if (cubes == 1)
                     LevelGraph.levelGraph.battle.turnEnded = true;
 
-                Destroy(collision.gameObject);
+                for (int i = 0; i < LevelGraph.levelGraph.battle.cubes.Count; i++)
+                    if (LevelGraph.levelGraph.battle.cubes[i] == cube)
+                        LevelGraph.levelGraph.battle.cubes[i] = null;
+
+                Destroy(cube.gameObject);
                 if (transform.childCount != 0)
                     Destroy(transform.GetChild(0).gameObject);
                 card.TryAction();

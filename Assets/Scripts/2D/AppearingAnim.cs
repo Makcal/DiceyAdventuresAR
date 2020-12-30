@@ -7,6 +7,9 @@ public class AppearingAnim : MonoBehaviour
     float startTime;
     float startHeight;
     Graphic grapic;
+    RectTransform transf;
+    float canvasHeight;
+
     public Color color;
     public float period = 1;
     public float yOffset = 0;
@@ -36,8 +39,11 @@ public class AppearingAnim : MonoBehaviour
 
     private void Start()
     {
-        var transf = (RectTransform)transform;
+        transf = (RectTransform)transform;
         transf.offsetMin = transf.offsetMax = Vector2.zero;
+
+        canvasHeight = ((RectTransform)GameObject.FindGameObjectWithTag("Canvas").transform).sizeDelta.y;
+
         grapic = GetComponent<Graphic>();
     }
 
@@ -57,9 +63,8 @@ public class AppearingAnim : MonoBehaviour
 
         grapic.color = new Color(color.r, color.g, color.b, a>1 ? 2-a : a);
 
-        var transf = (RectTransform)transform;
         var pos = new Vector2(0, 0);
-        pos.y = yOffset * a / 2;
+        pos.y = yOffset * canvasHeight / 515 * a / 2;
         transf.offsetMin = transf.offsetMax = pos;
 
         if (a == 2)

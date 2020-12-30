@@ -54,13 +54,6 @@ namespace DiceyDungeonsAR.Battle
             {
                 Value = cube.Value;
 
-                int cubes = 0;
-                foreach (var c in GameObject.FindObjectsOfType<Cube>())
-                    if (c.card == null)
-                        cubes++;
-                if (cubes == 1)
-                    LevelGraph.levelGraph.battle.turnEnded = true;
-
                 for (int i = 0; i < LevelGraph.levelGraph.battle.cubes.Count; i++)
                     if (LevelGraph.levelGraph.battle.cubes[i] == cube)
                         LevelGraph.levelGraph.battle.cubes[i] = null;

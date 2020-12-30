@@ -9,7 +9,7 @@
         { 
             get
             {
-                return new Condition() { type = ConditionType.None };
+                return new Condition();
             }
         }
 

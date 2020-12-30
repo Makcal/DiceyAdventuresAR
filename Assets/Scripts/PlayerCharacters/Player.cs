@@ -4,6 +4,7 @@ using DiceyDungeonsAR.MyLevelGraph;
 using DiceyDungeonsAR.Battle;
 using DiceyDungeonsAR.UI;
 using System.Collections;
+using UnityEngine.UI;
 
 namespace DiceyDungeonsAR.GameObjects.Players
 {
@@ -14,6 +15,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
         Field targetField = null;
         float targetTime = -1;
         [NonSerialized] public Bar playerBar;
+        Text playerText;
 
         public abstract int StartHealth { get; }
         private int maxHealth;
@@ -48,9 +50,11 @@ namespace DiceyDungeonsAR.GameObjects.Players
             health = maxHealth = StartHealth;
             FillInventory();
 
-            playerBar = Bar.CreateBar(GameObject.FindGameObjectWithTag("Canvas").transform, new Vector2(0.068f, 0.131f), new Vector2(0.24f, 0.185f));
+            var canvasTr = GameObject.FindGameObjectWithTag("Canvas").transform;
+            playerBar = Bar.CreateBar(canvasTr, new Vector2(0.068f, 0.131f), new Vector2(0.24f, 0.185f));
             playerBar.maxValue = MaxHealth;
             playerBar.startValue = Health;
+            playerText = BattleController.CreateText(canvasTr, new Vector2(0.068f, 0.185f), new Vector2(0.177f, 0.251f), "Ты");
 
             levelGraph = LevelGraph.levelGraph;
             currentField = levelGraph.fields[0];
@@ -119,9 +123,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
             damage = Mathf.Abs(damage);
             Health -= damage;
 
-            var message = AppearingAnim.CreateMsg("PlayerDamage", $"- {damage} HP");
-            var transf = message.GetComponent<RectTransform>();
-            transf.anchorMin = transf.anchorMax = new Vector2(0.24f, 0.13f);
+            var message = AppearingAnim.CreateMsg("PlayerDamage", new Vector2(0.17f, 0.08f), new Vector2(0.31f, 0.15f), $"- {damage} HP");
 
             message.yOffset = 20;
             message.color = Color.red;
@@ -136,10 +138,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
             health = Mathf.Abs(health);
             Health += health;
 
-            var message = AppearingAnim.CreateMsg("HealMessage", $"+ {health} HP");
-
-            var transf = message.GetComponent<RectTransform>();
-            transf.anchorMin = transf.anchorMax = new Vector2(0.24f, 0.13f);
+            var message = AppearingAnim.CreateMsg("HealMessage", new Vector2(0.17f, 0.08f), new Vector2(0.31f, 0.15f), $"+ {health} HP");
 
             message.yOffset = 20;
             message.color = new Color(0, 255, 0);

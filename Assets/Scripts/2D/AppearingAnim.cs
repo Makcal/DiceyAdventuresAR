@@ -11,16 +11,15 @@ public class AppearingAnim : MonoBehaviour
     public float period = 1;
     public float yOffset = 0;
 
-    static public AppearingAnim CreateMsg(string name, string text="", int fontSize = 40, Font font = null)
+    static public AppearingAnim CreateMsg(string name, Vector2 anchorsMin, Vector2 anchorsMax, string text ="", Font font = null)
     {
         GameObject msg = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Text), typeof(Outline), typeof(AppearingAnim)) { layer = 5 };
         
         var transf = (RectTransform)msg.transform;
         var canvasTr = (RectTransform)GameObject.FindGameObjectWithTag("Canvas").transform;
         transf.SetParent(canvasTr);
-        transf.anchorMin = transf.anchorMax = Vector2.one / 2;
-        transf.anchoredPosition = Vector2.zero;
-        transf.sizeDelta = new Vector2(1000, 500);
+        transf.anchorMin = anchorsMin;
+        transf.anchorMax = anchorsMax;
 
         var textComp = msg.GetComponent<Text>();
         textComp.text = text;
@@ -28,13 +27,17 @@ public class AppearingAnim : MonoBehaviour
         if (font == null)
             font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
         textComp.font = font;
-        textComp.fontSize = (int)(fontSize * canvasTr.sizeDelta.y / 516.25f);
+        textComp.resizeTextForBestFit = true;
+        textComp.resizeTextMinSize = 2;
+        textComp.resizeTextMaxSize = 300;
 
         return msg.GetComponent<AppearingAnim>();
     }
 
     private void Start()
     {
+        var transf = (RectTransform)transform;
+        transf.offsetMin = transf.offsetMax = Vector2.zero;
         grapic = GetComponent<Graphic>();
     }
 
@@ -54,9 +57,10 @@ public class AppearingAnim : MonoBehaviour
 
         grapic.color = new Color(color.r, color.g, color.b, a>1 ? 2-a : a);
 
-        var pos = transform.localPosition;
-        pos.y = startHeight + yOffset * a;
-        transform.localPosition = pos;
+        var transf = (RectTransform)transform;
+        var pos = new Vector2(0, 0);
+        pos.y = yOffset * a / 2;
+        transf.offsetMin = transf.offsetMax = pos;
 
         if (a == 2)
             Destroy(gameObject);

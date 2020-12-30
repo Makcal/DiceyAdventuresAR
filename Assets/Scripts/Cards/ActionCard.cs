@@ -14,7 +14,8 @@ namespace DiceyDungeonsAR.Battle
             get
             {
                 var tmpTr = (RectTransform)transform.GetChild(2);
-                return Byte.Parse(tmpTr.GetComponent<TextMeshProUGUI>().text.Replace(" осталось", ""));
+                var text = tmpTr.GetComponent<TextMeshProUGUI>().text;
+                return text != "" ? Byte.Parse(text.Replace(" осталось", "")) : (byte)1;
             }
             set
             {
@@ -127,7 +128,7 @@ namespace DiceyDungeonsAR.Battle
 
             tmpTr = (RectTransform)tr.GetChild(2);
             tmpTr.anchorMin = tmpTr.anchorMax = new Vector2(0.5f, 0.15f);
-            tmpTr.GetComponent<TextMeshProUGUI>().text = $"{uses} осталось";
+            tmpTr.GetComponent<TextMeshProUGUI>().text = uses > 1 ? $"{uses} осталось" : "";
 
             return card;
         }

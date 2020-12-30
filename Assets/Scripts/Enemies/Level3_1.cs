@@ -13,8 +13,15 @@ namespace DiceyDungeonsAR.Enemies
             Cards[0, 0] = new CardDescription()
             {
                 action = CardAction.Damage,
-                bonus = new Bonus() { type = BonusType.Shock },
-                condition = new Condition() { type = ConditionType.Even },
+                bonus = new Bonus() { type = BonusType.Poison },
+                condition = new Condition() { type = ConditionType.Min, number = 4 },
+            };
+
+            Cards[1, 0] = new CardDescription()
+            {
+                action = CardAction.Damage,
+                bonus = new Bonus() { type = BonusType.Poison },
+                condition = new Condition(),
             };
         }
     }

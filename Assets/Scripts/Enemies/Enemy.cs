@@ -35,9 +35,7 @@ namespace DiceyDungeonsAR.Enemies
             Health -= damage;
             LevelGraph.levelGraph.battle.enemyBar.CurrentValue -= damage;
 
-            var message = AppearingAnim.CreateMsg("EnemyDamage", $"- {damage} HP");
-            var transf = message.GetComponent<RectTransform>();
-            transf.anchorMin = transf.anchorMax = new Vector2(0.76f, 0.87f);
+            var message = AppearingAnim.CreateMsg("EnemyDamage", new Vector2(0.71f, 0.83f), new Vector2(0.85f, 0.9f), $"- {damage} HP");
 
             message.yOffset = -20;
             message.color = Color.red;

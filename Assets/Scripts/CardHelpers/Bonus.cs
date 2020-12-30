@@ -33,6 +33,6 @@ namespace DiceyDungeonsAR.Battle
             }
         }
 
-        public static Bonus NoneBonus => new Bonus() { type = BonusType.None, condition = Condition.TrueCond };
+        public static Bonus NoneBonus => new Bonus();
     }
 }

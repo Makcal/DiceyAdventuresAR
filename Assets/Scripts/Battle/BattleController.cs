@@ -15,6 +15,7 @@ namespace DiceyDungeonsAR.Battle
         [NonSerialized] public Enemy enemy;
         [NonSerialized] public Player player;
         [NonSerialized] public Bar enemyBar;
+        Text enemyText;
         [NonSerialized] public List<Cube> cubes;
         bool battle = false;
         public bool playerTurn = true, turnEnded = false;
@@ -49,8 +50,7 @@ namespace DiceyDungeonsAR.Battle
             enemyBar = Bar.CreateBar(canvasTr, new Vector2(0.758f, 0.828f), new Vector2(0.930f, 0.883f));
             enemyBar.maxValue = enemy.MaxHealth;
             enemyBar.startValue = enemy.Health;
-
-            Text[] texts = CreateTexts(canvasTr);
+            enemyText = CreateText(canvasTr, new Vector2(0.758f, 0.883f), new Vector2(0.897f, 0.950f), enemy.Name);
 
             while (battle)
             {
@@ -79,8 +79,7 @@ namespace DiceyDungeonsAR.Battle
             }
 
             Destroy(enemyBar.gameObject);
-            foreach (var t in texts)
-                Destroy(t.gameObject);
+            Destroy(enemyText);
             Destroy(button.gameObject);
         }
 
@@ -129,15 +128,7 @@ namespace DiceyDungeonsAR.Battle
                     }
         }
 
-        Text[] CreateTexts(Transform canvasTr)
-        {
-            var texts = new Text[2];
-            texts[0] = CreateText(canvasTr, new Vector2(0.068f, 0.185f), new Vector2(0.177f, 0.251f), "Ты:");
-            texts[1] = CreateText(canvasTr, new Vector2(0.758f, 0.883f), new Vector2(0.897f, 0.950f), enemy.Name);
-            return texts;
-        }
-
-        Text CreateText(Transform canvasTr, Vector2 anchorMin, Vector2 anchorMax, string text)
+        static public Text CreateText(Transform canvasTr, Vector2 anchorMin, Vector2 anchorMax, string text)
         {
             var obj = new GameObject(text, typeof(Outline));
             var tr = obj.AddComponent<RectTransform>();
@@ -163,8 +154,7 @@ namespace DiceyDungeonsAR.Battle
             battle = false;
             turnEnded = true;
 
-            var message = AppearingAnim.CreateMsg("WinMessage", win ? "Ты победил!" : "Ты проиграл", 72);
-            message.GetComponent<RectTransform>().sizeDelta = new Vector2(650, 200);
+            var message = AppearingAnim.CreateMsg("WinMessage", new Vector2(0.29f, 0.37f), new Vector2(0.7f, 0.68f), win ? "Ты победил!" : "Ты проиграл");
 
             message.yOffset = 20;
             message.color = win ? Color.green : Color.red;
@@ -181,6 +171,13 @@ namespace DiceyDungeonsAR.Battle
                 player.transform.localScale /= 2;
                 player.transform.position = player.currentField.transform.position + new Vector3(0, player.currentField.transform.localScale.y, 0);
                 player.AddXP(player.MaxXP);
+
+                if (player.Inventory[2, 0] == null)
+                    player.Inventory[2, 0] = new CardDescription()
+                    {
+                        action = CardAction.Damage,
+                        bonus = new Bonus() { type = BonusType.Thorns },
+                    };
             }
 
             ResetBattle();

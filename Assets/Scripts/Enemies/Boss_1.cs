@@ -6,7 +6,7 @@ namespace DiceyDungeonsAR.Enemies
     {
         public override string Name { get; } = "Кристаллина";
         public override int Level { get; } = 6;
-        public override int MaxHealth { get; } = 150;
+        public override int MaxHealth { get; } = 55;
 
         public override void FillInventory()
         {

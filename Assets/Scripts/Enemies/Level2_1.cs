@@ -13,8 +13,9 @@ namespace DiceyDungeonsAR.Enemies
             Cards[0, 0] = new CardDescription()
             {
                 action = CardAction.Damage,
+                slotsCount = true,
                 bonus = new Bonus() { type = BonusType.Fire },
-                condition = new Condition() { type = ConditionType.None },
+                condition = new Condition() { type = ConditionType.Doubles },
             };
         }
     }

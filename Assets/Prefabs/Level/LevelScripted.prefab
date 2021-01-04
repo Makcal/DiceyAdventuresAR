@@ -77,7 +77,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 208801775e40c1d44808bb3a6f2e2a14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   playerTurn: 1
   turnEnded: 0
   cubesSprites:
@@ -92,7 +91,7 @@ MonoBehaviour:
     type: 3}
   cubePrefab: {fileID: 4589797961358867247, guid: 1fcbdc64b1a8ab94982936c90482838b,
     type: 3}
-  skipButton: {fileID: 6282289270218520053, guid: f35124370d3c98644bc40970d4f947a6,
+  skipButtonPrefab: {fileID: 6282289270218520053, guid: f35124370d3c98644bc40970d4f947a6,
     type: 3}
   barPrefab: {fileID: 751831617411775811, guid: 876838f745bbb324d948674b12aa1694,
     type: 3}

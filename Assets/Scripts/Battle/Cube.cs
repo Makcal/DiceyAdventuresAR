@@ -4,6 +4,8 @@ using UnityEngine.EventSystems;
 using DiceyDungeonsAR.MyLevelGraph;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace DiceyDungeonsAR.Battle
 {
@@ -26,20 +28,20 @@ namespace DiceyDungeonsAR.Battle
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (card == null)
+            if (card == null && LevelGraph.levelGraph.battle.playerTurn)
             {
                 Vector2 pos = eventData.position;
                 GetComponent<RectTransform>().anchoredPosition = pos;
             }
         }
 
-        void OnTriggerEnter2D(Collider2D collision)
+        IEnumerator OnTriggerEnter2D(Collider2D collision)
         {
             if (Value != 0)
-                return;
+                yield break;
             var cube = collision.gameObject.GetComponent<Cube>();
             if (cube == null)
-                return;
+                yield break;
 
             bool accept;
             if (card.slots.Length == 1)
@@ -54,14 +56,23 @@ namespace DiceyDungeonsAR.Battle
             {
                 Value = cube.Value;
 
-                for (int i = 0; i < LevelGraph.levelGraph.battle.cubes.Count; i++)
-                    if (LevelGraph.levelGraph.battle.cubes[i] == cube)
-                        LevelGraph.levelGraph.battle.cubes[i] = null;
+                BattleController battle = LevelGraph.levelGraph.battle;
+                for (int i = 0; i < battle.cubes.Count; i++)
+                    if (battle.cubes[i] == cube)
+                        battle.cubes[i] = null;
 
                 Destroy(cube.gameObject);
                 if (transform.childCount != 0)
-                    Destroy(transform.GetChild(0).gameObject);
+                    Destroy(transform.GetChild(0).gameObject); // delete condition description
+
+                if (!battle.playerTurn)
+                    yield return new WaitForSeconds(0.5f); // wait instead of anim [temp]
+                else
+                    yield return null; // wait for destroying cube
+
                 card.TryAction();
+                if (new List<Cube>(FindObjectsOfType<Cube>()).FindAll(c => c.card == null).Count == 0)
+                    battle.turnEnded = true;
             }
         }
 
@@ -76,7 +87,7 @@ namespace DiceyDungeonsAR.Battle
 
             c.Value = value;
             c.card = card;
-            if (value == 0 && card.condition.type != ConditionType.None && card.condition.type != ConditionType.EvOd)
+            if (value == 0 && card.condition.type != (ConditionType.None | ConditionType.EvOd | ConditionType.Doubles))
             {
                 var textObj = new GameObject("Condition");
 
@@ -96,7 +107,7 @@ namespace DiceyDungeonsAR.Battle
 
         void Start()
         {
-            if (value == 0 && card.condition.type != ConditionType.None && card.condition.type != ConditionType.EvOd)
+            if (value == 0 && card.condition.type != (ConditionType.None | ConditionType.EvOd | ConditionType.Doubles))
             {
                 var tr = (RectTransform)transform;
                 ((RectTransform)tr.GetChild(0)).sizeDelta = new Vector2(tr.sizeDelta.x, tr.sizeDelta.y * 2 / 3);

@@ -127,8 +127,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         public IEnumerator StartBattle(Enemy enemy)
         {
-            AppearingAnim msg = AppearingAnim.CreateMsg("StartBattleMsg", new Vector2(0.21f, 0.44f), new Vector2(0.78f, 0.7f), "Битва начинается");
-            msg.GetComponent<RectTransform>().sizeDelta = new Vector2(650, 200);
+            AppearingAnim msg = AppearingAnim.CreateMsg("StartBattleMsg", new Vector2(0.21f, 0.37f), new Vector2(0.78f, 0.68f), "Битва начинается");
             msg.color = Color.red;
             msg.yOffset = 50;
             msg.period = 2;

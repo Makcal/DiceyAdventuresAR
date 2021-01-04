@@ -2,6 +2,8 @@
 using DiceyDungeonsAR.MyLevelGraph;
 using DiceyDungeonsAR.Battle;
 using System.Collections;
+using System;
+using DiceyDungeonsAR.UI;
 
 namespace DiceyDungeonsAR.Enemies
 {
@@ -19,6 +21,7 @@ namespace DiceyDungeonsAR.Enemies
                 health = Mathf.Clamp(value, 0, MaxHealth);
             }
         }
+        [NonSerialized] public Bar healthBar;
         public CardDescription[,] Cards { get; } = new CardDescription[4, 2];
 
         void Start()
@@ -33,7 +36,7 @@ namespace DiceyDungeonsAR.Enemies
         {
             damage = Mathf.Abs(damage);
             Health -= damage;
-            LevelGraph.levelGraph.battle.enemyBar.CurrentValue -= damage;
+            healthBar.CurrentValue -= damage;
 
             var message = AppearingAnim.CreateMsg("EnemyDamage", new Vector2(0.71f, 0.83f), new Vector2(0.85f, 0.9f), $"- {damage} HP");
 

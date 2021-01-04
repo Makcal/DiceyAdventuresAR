@@ -7,6 +7,7 @@ using DiceyDungeonsAR.Enemies;
 using DiceyDungeonsAR.GameObjects.Players;
 using UnityEngine.UI;
 using DiceyDungeonsAR.UI;
+using UnityEngine.SceneManagement;
 
 namespace DiceyDungeonsAR.Battle
 {
@@ -14,8 +15,6 @@ namespace DiceyDungeonsAR.Battle
     {
         [NonSerialized] public Enemy enemy;
         [NonSerialized] public Player player;
-        [NonSerialized] public Bar enemyBar;
-        Text enemyText;
         [NonSerialized] public List<Cube> cubes;
         bool battle = false;
         public bool playerTurn = true, turnEnded = false;
@@ -23,7 +22,7 @@ namespace DiceyDungeonsAR.Battle
         public Sprite[] cubesSprites;
         public RectTransform cardPrefab;
         public Cube cubePrefab;
-        public SkipTurn skipButton;
+        public SkipTurn skipButtonPrefab;
         public Bar barPrefab;
 
         public void SetUpOpponents(Enemy enemy)
@@ -45,40 +44,49 @@ namespace DiceyDungeonsAR.Battle
             battle = true;
             var canvasTr = (RectTransform)GameObject.FindGameObjectWithTag("Canvas").transform;
 
-            SkipTurn button = Instantiate(skipButton, canvasTr);
+            SkipTurn button = Instantiate(skipButtonPrefab, canvasTr);
 
-            enemyBar = Bar.CreateBar(canvasTr, new Vector2(0.758f, 0.828f), new Vector2(0.930f, 0.883f));
-            enemyBar.maxValue = enemy.MaxHealth;
-            enemyBar.startValue = enemy.Health;
-            enemyText = CreateText(canvasTr, new Vector2(0.758f, 0.883f), new Vector2(0.897f, 0.950f), enemy.Name);
+            enemy.healthBar = Bar.CreateBar(canvasTr, new Vector2(0.758f, 0.828f), new Vector2(0.930f, 0.883f));
+            enemy.healthBar.maxValue = enemy.MaxHealth;
+            enemy.healthBar.startValue = enemy.Health;
+            Text enemyText = CreateText(canvasTr, new Vector2(0.758f, 0.883f), new Vector2(0.897f, 0.950f), enemy.Name);
 
             while (battle)
             {
                 if (playerTurn)
                 {
+                    button.GetComponent<Button>().interactable = true;
                     CreateCards(player.Inventory);
                     cubes = CreateCubes(Mathf.Min(player.Level + 2, 5), true, canvasTr);
+
+                    yield return new WaitUntil(() => LevelGraph.levelGraph.battle.turnEnded);
                 }
                 else
                 {
+                    button.GetComponent<Button>().interactable = false;
                     CreateCards(enemy.Cards);
                     cubes = CreateCubes(Mathf.Min(enemy.Level + 2, 5), false, canvasTr);
+
+                    var cor = StartCoroutine(EnemyTurn());
+                    yield return new WaitUntil(() => LevelGraph.levelGraph.battle.turnEnded);
+                    StopCoroutine(cor);
                 }
 
-                yield return new WaitUntil(() => LevelGraph.levelGraph.battle.turnEnded);
 
                 turnEnded = false;
                 playerTurn = !playerTurn;
 
-                foreach (var c in GameObject.FindObjectsOfType<Cube>())
+                foreach (var c in FindObjectsOfType<Cube>())
                     if (c.card == null)
                         Destroy(c.gameObject);
-                foreach (var im in GameObject.FindObjectsOfType<Image>())
+                foreach (var im in FindObjectsOfType<Image>())
                     if (im.GetComponent<ActionCard>() != null)
                         Destroy(im.gameObject);
+
+                yield return null;
             }
 
-            Destroy(enemyBar.gameObject);
+            Destroy(enemy.healthBar.gameObject);
             Destroy(enemyText);
             Destroy(button.gameObject);
         }
@@ -156,7 +164,7 @@ namespace DiceyDungeonsAR.Battle
 
             var message = AppearingAnim.CreateMsg("WinMessage", new Vector2(0.29f, 0.37f), new Vector2(0.7f, 0.68f), win ? "Ты победил!" : "Ты проиграл");
 
-            message.yOffset = 20;
+            message.yOffset = 50;
             message.color = win ? Color.green : Color.red;
             message.period = 2;
             message.Play();
@@ -170,14 +178,21 @@ namespace DiceyDungeonsAR.Battle
 
                 player.transform.localScale /= 2;
                 player.transform.position = player.currentField.transform.position + new Vector3(0, player.currentField.transform.localScale.y, 0);
-                player.AddXP(player.MaxXP);
+                //player.AddXP(player.MaxXP);
 
                 if (player.Inventory[2, 0] == null)
                     player.Inventory[2, 0] = new CardDescription()
                     {
                         action = CardAction.Damage,
+                        condition = new Condition() { type = ConditionType.Doubles },
+                        slotsCount = true,
                         bonus = new Bonus() { type = BonusType.Thorns },
                     };
+            }
+            else
+            {
+                yield return new WaitForSeconds(1);
+                SceneManager.LoadScene(MenuHandler.mainMenuScene_);
             }
 
             ResetBattle();
@@ -189,6 +204,74 @@ namespace DiceyDungeonsAR.Battle
             battle = false;
             playerTurn = true;
             turnEnded = false;
+            cubes = null;
+        }
+
+        IEnumerator EnemyTurn()
+        {
+            var cards = new List<ActionCard>(FindObjectsOfType<ActionCard>());
+            cards.Sort((c1, c2) => c1.condition.GetPriority() - c2.condition.GetPriority());
+
+            yield return new WaitForSeconds(0.75f);
+
+            foreach (var card in cards)
+            {
+                var cubes = new List<Cube>(FindObjectsOfType<Cube>());
+                cubes = GetActiveCubes(cubes);
+                var suitableCubes = new List<Cube>();
+
+                if (card.condition.type == ConditionType.Doubles && card.slotsCount)
+                {
+                    for (byte i = 6; i > 0; i--)
+                        if (cubes.FindAll(c => c.Value == i).Count >= 2)
+                            suitableCubes.AddRange(cubes.FindAll(c => c.Value == i).GetRange(0, 2));
+                    if (suitableCubes.Count == 0)
+                        continue;
+                }
+                else if (card.slotsCount)
+                {
+                    if (cubes.Count >= 2)
+                        suitableCubes.AddRange(cubes.GetRange(0, 2));
+                    else
+                        continue;
+                }
+                else
+                {
+                    var cube = cubes.Find(c => card.condition.Check(c.Value));
+                    if (cube == null)
+                        continue;
+                    suitableCubes.Add(cube);
+                }
+
+                List<Vector3> startPoses = suitableCubes.ConvertAll<Vector3>(c => c.transform.position);
+                for (var i = 0; i < suitableCubes.Count; i++)
+                {
+                    float startTime = Time.time;
+                    while (suitableCubes[i])
+                    {
+                        if (suitableCubes[i] && card)
+                            suitableCubes[i].transform.position = Vector3.Lerp(
+                                startPoses[i],
+                                new List<Cube>(card.slots).FindAll(c => c.Value == 0)[0].transform.position,
+                                (Time.time - startTime) / 1.0f
+                            );
+                        yield return null;
+                    }
+                }
+
+                yield return new WaitForSeconds(0.5f);
+            }
+
+            yield return new WaitForSeconds(0.75f);
+            turnEnded = true;
+        }
+
+        List<Cube> GetActiveCubes(List<Cube> cubes)
+        {
+            cubes = new List<Cube>(cubes);
+            cubes.RemoveAll(c => c.card != null || c == null);
+            cubes.Sort((c1, c2) => c2.Value - c1.Value);
+            return cubes;
         }
     }
 }

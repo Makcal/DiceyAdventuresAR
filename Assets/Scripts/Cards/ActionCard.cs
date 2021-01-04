@@ -3,12 +3,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using DiceyDungeonsAR.MyLevelGraph;
 using TMPro;
+using System.Collections.Generic;
 
 namespace DiceyDungeonsAR.Battle
 {
     public abstract class ActionCard : MonoBehaviour
     {
         public Cube[] slots;
+        public bool slotsCount = false;
         public byte Uses
         {
             get
@@ -38,12 +40,7 @@ namespace DiceyDungeonsAR.Battle
 
         public byte GetSum()
         {
-            byte sum = 0;
-            foreach (var c in slots)
-            {
-                sum += c.Value;
-            }
-            return sum;
+            return (byte)(slots[0].Value + (slotsCount ? slots[1].Value : 0));
         }
 
         public bool TryAction()
@@ -57,12 +54,15 @@ namespace DiceyDungeonsAR.Battle
             foreach (var c in slots)
                 c.Value = 0;
 
+            var battle = LevelGraph.levelGraph.battle;
             if (Uses == 0)
             {
-                if (GameObject.FindObjectsOfType(typeof(ActionCard)).Length == 1)
-                    LevelGraph.levelGraph.battle.turnEnded = true;
+                if (FindObjectsOfType(typeof(ActionCard)).Length == 1)
+                    battle.turnEnded = true;
+
                 Destroy(gameObject);
             }
+
             return true;
         }
 
@@ -81,38 +81,37 @@ namespace DiceyDungeonsAR.Battle
             card.size = size;
             card.condition = condition;
             card.Uses = uses;
+            card.slotsCount = slotsCount;
 
-            if (slotsCount)
+            card.slots = slotsCount ? new Cube[2] : new Cube[1];
+            for (int i = 0; i < card.slots.Length; i++)
             {
-                card.slots = new Cube[2];
-                for (int i = 0; i < 2; i++)
-                {
-                    Cube cube = Cube.CreateCube(card.transform, card: card);
-
-                    var cubeTr = cube.GetComponent<RectTransform>();
-                    cubeTr.anchorMin = cubeTr.anchorMax = new Vector2(0.25f + 0.5f * i, 0.5f);
-                    cubeTr.anchoredPosition = Vector2.zero;
-
-                    card.slots[i] = cube;
-
-                    if (condition.type != ConditionType.None && condition.type != ConditionType.EvOd)
-                        cube.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = condition.GetDesc();
-                }
-            }
-            else
-            {
-                card.slots = new Cube[1];
-
                 Cube cube = Cube.CreateCube(card.transform, card: card);
 
                 var cubeTr = cube.GetComponent<RectTransform>();
-                cubeTr.anchorMin = cubeTr.anchorMax = new Vector2(0.5f, size ? 0.5f : 0.61f);
+                cubeTr.anchorMin = cubeTr.anchorMax = slotsCount ? new Vector2(0.25f + 0.5f * i, 0.5f) : new Vector2(0.5f, size ? 0.5f : 0.61f);
                 cubeTr.anchoredPosition = Vector2.zero;
 
-                card.slots[0] = cube;
+                card.slots[i] = cube;
 
-                if (condition.type != ConditionType.None && condition.type != ConditionType.EvOd)
+                if(condition.type != (ConditionType.None | ConditionType.EvOd | ConditionType.Doubles))
                     cube.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = condition.GetDesc();
+            }
+
+            if (condition.type == ConditionType.Doubles && slotsCount)
+            {
+                var textObj = new GameObject("Condition");
+
+                var textTr = textObj.AddComponent<RectTransform>();
+                textTr.SetParent(tr);
+                textTr.anchorMin = textTr.anchorMax = Vector2.one / 2;
+                textTr.anchoredPosition = Vector2.zero;
+
+                var doublesText = textObj.AddComponent<TextMeshProUGUI>();
+                doublesText.text = "=";
+                doublesText.fontSize = 50;
+                doublesText.alignment = TextAlignmentOptions.Center;
+                doublesText.enableKerning = false;
             }
 
             var width = 0.4f * ((RectTransform)canvasTr).sizeDelta.y / (size ? 1 : 1.54f);

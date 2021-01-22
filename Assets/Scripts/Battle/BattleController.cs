@@ -65,7 +65,7 @@ namespace DiceyDungeonsAR.Battle
                 {
                     button.GetComponent<Button>().interactable = false;
                     CreateCards(enemy.Cards);
-                    cubes = CreateCubes(Mathf.Min(enemy.Level + 2, 5), false, canvasTr);
+                    cubes = CreateCubes(enemy.Level == 6 ? 4 : 3, false, canvasTr);
 
                     var cor = StartCoroutine(EnemyTurn());
                     yield return new WaitUntil(() => LevelGraph.levelGraph.battle.turnEnded);
@@ -124,9 +124,11 @@ namespace DiceyDungeonsAR.Battle
                             case CardAction.ChangeDice:
                                 card = ActionCard.CreateChangeDiceCard(cards[i, j].uses);
                                 break;
-                            default:
-                                card = null;
+                            case CardAction.DoubleDamage:
+                                card = ActionCard.CreateDoubleDamageCard(cards[i, j]);
                                 break;
+                            default:
+                                throw new NotImplementedException($"{cards[i, j].action} action hasn't been implemented yet");
                         }
 
                         var tr = (RectTransform)card.transform;
@@ -178,12 +180,12 @@ namespace DiceyDungeonsAR.Battle
 
                 player.transform.localScale /= 2;
                 player.transform.position = player.currentField.transform.position + new Vector3(0, player.currentField.transform.localScale.y, 0);
-                //player.AddXP(player.MaxXP);
+                StartCoroutine(player.AddXP(enemy.Level));
 
                 if (player.Inventory[2, 0] == null)
                     player.Inventory[2, 0] = new CardDescription()
                     {
-                        action = CardAction.Damage,
+                        action = CardAction.DoubleDamage,
                         condition = new Condition() { type = ConditionType.Doubles },
                         slotsCount = true,
                         bonus = new Bonus() { type = BonusType.Thorns },

@@ -20,7 +20,7 @@ namespace DiceyDungeonsAR.UI
 			set
 			{
 				slider.maxValue = value;
-				GetComponentInChildren<Text>().text = $"{value} / {MaxValue}";
+				GetComponentInChildren<Text>().text = $"{CurrentValue} / {MaxValue}";
 			}
 		}
 

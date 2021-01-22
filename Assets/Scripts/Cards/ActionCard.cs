@@ -143,5 +143,11 @@ namespace DiceyDungeonsAR.Battle
             var diceCard = CreateCard<ChangeDiceCard>(true, false, Condition.TrueCond, uses, new Color(123, 123, 123), "Перебросить кубик", "");
             return diceCard;
         }
+        static public DoubleDamageCard CreateDoubleDamageCard(CardDescription description)
+        {
+            var card = CreateCard<DoubleDamageCard>(description.size, description.slotsCount, description.condition, description.uses, description.bonus.GetColor(), "Нанести 2x<sprite index=0> урона", "");
+            card.bonus = description.bonus;
+            return card;
+        }
     }
 }

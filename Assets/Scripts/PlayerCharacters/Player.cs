@@ -10,12 +10,13 @@ namespace DiceyDungeonsAR.GameObjects.Players
 {
     public abstract class Player : MonoBehaviour
     {
+        public Sprite healthSprite, XPSprite;
+
         LevelGraph levelGraph;
         [NonSerialized] public Field currentField = null;
         Field targetField = null;
         float targetTime = -1;
-        [NonSerialized] public Bar playerBar;
-        Text playerText;
+        [NonSerialized] public Bar playerHealthBar, playerXPBar;
 
         public abstract int StartHealth { get; }
         private int maxHealth;
@@ -25,7 +26,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
             private set
             {
                 maxHealth = value;
-                playerBar.MaxValue = value;
+                playerHealthBar.MaxValue = value;
             }
         }
         public abstract int UpgradeHealth { get; protected set; }
@@ -36,11 +37,19 @@ namespace DiceyDungeonsAR.GameObjects.Players
             protected set
             {
                 health = Mathf.Clamp(value, 0, MaxHealth);
-                playerBar.CurrentValue = health;
+                playerHealthBar.CurrentValue = health;
             }
         }
         public int Level { get; private set; } = 1;
-        public int Experience { get; private set; } = 0;
+        private int experience = 0;
+        public int Experience
+        {
+            get => experience;
+            private set {
+                experience = value;
+                playerXPBar.CurrentValue = value;
+            }
+        }
         public int MaxXP { get; private set; } = 2;
         public int Coins { get; private set; } = 0;
         public CardDescription[,] Inventory { get; } = new CardDescription[4, 2];
@@ -51,10 +60,40 @@ namespace DiceyDungeonsAR.GameObjects.Players
             FillInventory();
 
             var canvasTr = GameObject.FindGameObjectWithTag("Canvas").transform;
-            playerBar = Bar.CreateBar(canvasTr, new Vector2(0.068f, 0.131f), new Vector2(0.24f, 0.185f));
-            playerBar.maxValue = MaxHealth;
-            playerBar.startValue = Health;
-            playerText = BattleController.CreateText(canvasTr, new Vector2(0.068f, 0.185f), new Vector2(0.177f, 0.251f), "Ты");
+            playerHealthBar = Bar.CreateBar(canvasTr, new Vector2(0.068f, 0.131f), new Vector2(0.24f, 0.185f));
+            playerHealthBar.maxValue = MaxHealth;
+            playerHealthBar.startValue = Health;
+
+            var img = new GameObject("Health icon");
+            var imgTr = img.AddComponent<RectTransform>();
+            imgTr.SetParent(canvasTr);
+            imgTr.offsetMin = imgTr.offsetMax = Vector2.zero;
+            imgTr.anchorMin = new Vector2(0.033f, 0.131f);
+            imgTr.anchorMax = new Vector2(0.064f, 0.185f);
+            img.AddComponent<Image>().sprite = healthSprite;
+
+            playerXPBar = Bar.CreateBar(canvasTr, new Vector2(0.068f, 0.067f), new Vector2(0.24f, 0.121f));
+            playerXPBar.maxValue = MaxXP;
+            playerXPBar.startValue = 0;
+            playerXPBar.backgroundColor = new Color(35, 97, 28);
+            playerXPBar.mainColor = new Color(88, 255, 23);
+
+            img = new GameObject("XP icon");
+            imgTr = img.AddComponent<RectTransform>();
+            imgTr.SetParent(canvasTr);
+            imgTr.offsetMin = imgTr.offsetMax = Vector2.zero;
+            imgTr.anchorMin = new Vector2(0.003f, 0.067f);
+            imgTr.anchorMax = new Vector2(0.064f, 0.121f);
+            var textComp = img.AddComponent<Text>();
+            textComp.text = "Опыт:";
+            textComp.alignment = TextAnchor.MiddleCenter;
+            textComp.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+            textComp.resizeTextForBestFit = true;
+            textComp.resizeTextMinSize = 2;
+            textComp.resizeTextMaxSize = 300;
+            img.AddComponent<Outline>();
+
+            BattleController.CreateText(canvasTr, new Vector2(0.068f, 0.185f), new Vector2(0.177f, 0.251f), "Ты");
 
             levelGraph = LevelGraph.levelGraph;
             currentField = levelGraph.fields[0];
@@ -99,23 +138,31 @@ namespace DiceyDungeonsAR.GameObjects.Players
             return true;
         }
 
-        public void AddXP(int experience)
+        public IEnumerator AddXP(int experience)
         {
             Experience += experience;
 
             while (Experience >= MaxXP)
             {
                 LevelUp();
+                yield return new WaitForSeconds(0.5f);
             }
         }
 
         private void LevelUp()
         {
             Level += 1;
-            Experience = 0;
+            Experience -= MaxXP;
             MaxXP += Level;
             MaxHealth += UpgradeHealth;
             Health = MaxHealth;
+
+            playerXPBar.MaxValue = MaxXP;
+            var msg = AppearingAnim.CreateMsg($"LevelUpTo{Level}", new Vector2(0.055f, 0.251f), new Vector2(0.255f, 0.305f), "Уровень повышен!");
+            msg.color = Color.green;
+            msg.period = 2;
+            msg.yOffset = 20;
+            msg.Play();
         }
 
         public void DealDamage(int damage)

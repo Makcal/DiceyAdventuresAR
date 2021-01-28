@@ -102,6 +102,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
             transform.SetSiblingIndex(1);
 
             transform.position = currentField.transform.position + new Vector3(0, 1f * targetField.transform.localScale.y, 0);
+            transform.localRotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0);
             currentField.MarkAttainable();
         }
 
@@ -198,20 +199,13 @@ namespace DiceyDungeonsAR.GameObjects.Players
             Destroy(gameObject);
         }
 
-        private void FillInventory()
+        protected virtual void FillInventory()
         {
             Inventory[0, 0] = new CardDescription()
             {
-                slotsCount = true,
                 action = CardAction.Damage,
             };
-            Inventory[1, 0] = new CardDescription()
-            {
-                size = false,
-                condition = new Condition() { number = 3, type = ConditionType.Max },
-                bonus = new Bonus() { type = BonusType.Freeze },
-                action = CardAction.Damage,
-            };
+
             Inventory[3, 0] = new CardDescription()
             {
                 uses = 3,

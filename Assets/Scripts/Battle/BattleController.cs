@@ -181,15 +181,6 @@ namespace DiceyDungeonsAR.Battle
                 player.transform.localScale /= 2;
                 player.transform.position = player.currentField.transform.position + new Vector3(0, player.currentField.transform.localScale.y, 0);
                 StartCoroutine(player.AddXP(enemy.Level));
-
-                if (player.Inventory[2, 0] == null)
-                    player.Inventory[2, 0] = new CardDescription()
-                    {
-                        action = CardAction.DoubleDamage,
-                        condition = new Condition() { type = ConditionType.Doubles },
-                        slotsCount = true,
-                        bonus = new Bonus() { type = BonusType.Thorns },
-                    };
             }
             else
             {

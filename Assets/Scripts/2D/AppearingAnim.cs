@@ -61,7 +61,7 @@ public class AppearingAnim : MonoBehaviour
 
         grapic.color = new Color(color.r, color.g, color.b, a > 1 ? 2 - a : a);
 
-        var pos = new Vector2(0, 0);
+        var pos = new Vector2();
         pos.y = yOffset * canvasHeight / 515 * a / 2;
         transf.offsetMin = transf.offsetMax = pos;
 

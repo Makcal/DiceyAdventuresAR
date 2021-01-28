@@ -5,7 +5,6 @@ using DiceyDungeonsAR.GameObjects.Players;
 using DiceyDungeonsAR.GameObjects;
 using DiceyDungeonsAR.Enemies;
 using System.Collections;
-using UnityEngine.UI;
 using DiceyDungeonsAR.Battle;
 
 namespace DiceyDungeonsAR.MyLevelGraph
@@ -33,16 +32,10 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
             GenerateLevel();
 
-            var playerObject = GameObject.FindWithTag("Player");
-            if (playerObject == null)
-            {
-                Debug.LogWarning("Player wasn't found");
-                return;
-            }
-            player = playerObject.GetComponent<Player>();
+            var player = FindObjectOfType<Player>();
             if (player == null)
             {
-                Debug.LogWarning("Player component wasn't found");
+                Debug.LogWarning("Player wasn't found");
                 return;
             }
 
@@ -52,20 +45,20 @@ namespace DiceyDungeonsAR.MyLevelGraph
         public void GenerateLevel()
         {
             //.PlaceItem(Instantiate(chestPrefab))
-            AddField(0, 1);
-            AddField(1, 1).PlaceItem(Instantiate(enemies1Level[0]));
-            AddField(1, 2);
-            AddField(1, 3);
-            AddField(1, 4).PlaceItem(Instantiate(enemies2Level[0]));
-            AddField(2, 4).PlaceItem(Instantiate(applePrefab));
-            AddField(2, 3).PlaceItem(Instantiate(enemies3Level[0]));
-            AddField(3, 3).PlaceItem(Instantiate(bosses[0]));
-            AddField(4, 3).PlaceItem(Instantiate(exitPrefab));
-
-            AddField(2, 1).PlaceItem(Instantiate(chestPrefab));
+            AddField(-2, -1);
+            AddField(-1, -1).PlaceItem(Instantiate(enemies1Level[0]));
+            AddField(-1, 0);
+            AddField(-1, 1);
+            AddField(-1, 2).PlaceItem(Instantiate(enemies2Level[0]));
             AddField(0, 2).PlaceItem(Instantiate(applePrefab));
-            AddField(0, 4).PlaceItem(Instantiate(chestPrefab));
-            AddField(2, 2).PlaceItem(Instantiate(shopPrefab));
+            AddField(0, 1).PlaceItem(Instantiate(enemies3Level[0]));
+            AddField(1, 1).PlaceItem(Instantiate(bosses[0]));
+            AddField(2, 1).PlaceItem(Instantiate(exitPrefab));
+
+            AddField(0, -1).PlaceItem(Instantiate(chestPrefab));
+            AddField(-2, 0).PlaceItem(Instantiate(applePrefab));
+            AddField(-2, 2).PlaceItem(Instantiate(chestPrefab));
+            AddField(0, 0).PlaceItem(Instantiate(shopPrefab));
 
             for (int i = 0; i < fields.Count - 5; i++)
             {

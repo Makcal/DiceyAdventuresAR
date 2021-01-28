@@ -48,7 +48,6 @@ namespace DiceyDungeonsAR.MyLevelGraph
             name = (level.fields.Count() + 1).ToString();
             level.fields.Add(this);
 
-            x -= 2f; z -= 2f;
             transform.parent.localPosition = new Vector3(x, y, z) * 2f;
         }
         private void OnMouseDown()

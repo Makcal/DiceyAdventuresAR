@@ -5,7 +5,6 @@ public class AppearingAnim : MonoBehaviour
 {
     bool started = false;
     float startTime;
-    float startHeight;
     Graphic grapic;
     RectTransform transf;
     float canvasHeight;
@@ -51,7 +50,6 @@ public class AppearingAnim : MonoBehaviour
     {
         started = true;
         startTime = Time.time;
-        startHeight = transform.localPosition.y;
     }
 
     void Update()
@@ -61,7 +59,7 @@ public class AppearingAnim : MonoBehaviour
 
         float a = Mathf.Min((Time.time - startTime) * 2 / period, 2);
 
-        grapic.color = new Color(color.r, color.g, color.b, a>1 ? 2-a : a);
+        grapic.color = new Color(color.r, color.g, color.b, a > 1 ? 2 - a : a);
 
         var pos = new Vector2(0, 0);
         pos.y = yOffset * canvasHeight / 515 * a / 2;

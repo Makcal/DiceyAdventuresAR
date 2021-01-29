@@ -32,7 +32,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
             GenerateLevel();
 
-            var player = FindObjectOfType<Player>();
+            player = FindObjectOfType<Player>();
             if (player == null)
             {
                 Debug.LogWarning("Player wasn't found");

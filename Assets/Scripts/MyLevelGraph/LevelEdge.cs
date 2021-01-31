@@ -5,14 +5,12 @@ namespace DiceyDungeonsAR.MyLevelGraph
 {
     public class LevelEdge : MonoBehaviour
     {
-        public Material attainableMaterial;
-        public Material defaultMaterial;
+        public Material attainableMaterial, defaultMaterial;
 
         [NonSerialized] public Field startField;
         [NonSerialized] public Field connectedField;
         [NonSerialized] public int edgeWeight;
         private bool attainable;
-        [NonSerialized] public string start, connected;
 
         public bool Attainable 
         {
@@ -26,14 +24,11 @@ namespace DiceyDungeonsAR.MyLevelGraph
  
         public void Initialize(LevelGraph level, Field startField, Field connectedField, int weight)
         {
-            start = startField.name;
-            connected = connectedField.name;
-
             this.startField = startField;
             this.connectedField = connectedField;
             edgeWeight = weight;
 
-            var scale = transform.localScale;
+            Vector3 scale = transform.localScale;
             scale.z *= (connectedField.transform.position - startField.transform.position).magnitude;
             transform.localScale = scale;
 

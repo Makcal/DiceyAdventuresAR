@@ -101,7 +101,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
             transform.parent = levelGraph.transform;
             transform.SetSiblingIndex(1);
 
-            transform.position = currentField.transform.position + new Vector3(0, 1f * targetField.transform.localScale.y, 0);
+            transform.position = currentField.transform.position + new Vector3(0, 1f * currentField.transform.localScale.y, 0);
             transform.localRotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0);
             currentField.MarkAttainable();
         }

@@ -38,7 +38,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             set
             {
                 attainable = value;
-                GetComponentInChildren<MeshRenderer>().material = value ? attainableMaterial : defaultMaterial;
+                GetComponent<MeshRenderer>().material = value ? attainableMaterial : defaultMaterial;
             }
         }
 
@@ -50,7 +50,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
             transform.parent.localPosition = new Vector3(x, y, z) * 2f;
         }
-        private void OnMouseDown()
+        void OnMouseDown()
         {
             this.OnSelectEnter();
         }
@@ -63,7 +63,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         public override string ToString()
         {
-            return "Field #" + name;
+            return "Field " + name;
         }
 
         public void AddEdge(LevelEdge newEdge)
@@ -74,9 +74,9 @@ namespace DiceyDungeonsAR.MyLevelGraph
         public List<Field> ConnectedFields()
         {
             var fields = new List<Field>();
-            foreach (var f in Edges)
+            foreach (var e in Edges)
             {
-                fields.Add(f.startField.Equals(this) ? f.connectedField : f.startField);
+                fields.Add(e.startField.Equals(this) ? e.connectedField : e.startField);
             }
             return fields;
         }

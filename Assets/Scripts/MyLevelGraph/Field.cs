@@ -14,7 +14,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
         public Material defaultMaterial, attainableMaterial;
         LevelGraph level;
         public List<LevelEdge> Edges = new List<LevelEdge>();
-        bool ISelectableObject.IsSelected { get; set; } = false;
+        public bool IsSelected { get; set; } = false;
 
         public Item PlacedItem
         {

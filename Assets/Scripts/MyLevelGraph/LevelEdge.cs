@@ -7,8 +7,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
     {
         public Material attainableMaterial, defaultMaterial;
 
-        [NonSerialized] public Field startField;
-        [NonSerialized] public Field connectedField;
+        [NonSerialized] public Field startField, connectedField;
         [NonSerialized] public int edgeWeight;
         private bool attainable;
 

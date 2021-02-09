@@ -29,7 +29,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
                 playerHealthBar.MaxValue = value;
             }
         }
-        public abstract int UpgradeHealth { get; protected set; }
+        public abstract int UpgradeHealth { get; }
         protected int health;
         public int Health
         {
@@ -96,8 +96,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
             BattleController.CreateText(canvasTr, new Vector2(0.068f, 0.185f), new Vector2(0.177f, 0.251f), "Ты");
 
             levelGraph = LevelGraph.levelGraph;
-            currentField = levelGraph.fields[0];
-            targetField = currentField;
+            currentField = targetField = levelGraph.fields[0];
             transform.parent = levelGraph.transform;
             transform.SetSiblingIndex(1);
 

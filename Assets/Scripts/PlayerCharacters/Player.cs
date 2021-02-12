@@ -69,7 +69,9 @@ namespace DiceyDungeonsAR.GameObjects.Players
             imgTr.SetParent(canvasTr);
             imgTr.offsetMin = imgTr.offsetMax = Vector2.zero;
             imgTr.anchorMin = new Vector2(0.033f, 0.131f);
-            imgTr.anchorMax = new Vector2(0.064f, 0.185f);
+            imgTr.anchorMax = new Vector2(0.033f, 0.185f);
+            imgTr.pivot = new Vector2(1, 0.5f);
+            imgTr.offsetMin = new Vector2(imgTr.rect.height, 0);
             img.AddComponent<Image>().sprite = healthSprite;
 
             playerXPBar = Bar.CreateBar(canvasTr, new Vector2(0.068f, 0.067f), new Vector2(0.24f, 0.121f));

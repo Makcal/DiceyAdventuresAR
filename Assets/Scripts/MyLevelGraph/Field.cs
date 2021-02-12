@@ -27,7 +27,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 value.field = this;
                 value.transform.parent = transform.parent;
                 value.transform.localScale = Vector3.one;
-                value.transform.localPosition = new Vector3(0, 1f * transform.localScale.y, 0);
+                value.transform.localPosition = new Vector3(0, 2 * transform.localScale.y, 0);
                 value.transform.localRotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
             }
         }

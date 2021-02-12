@@ -29,7 +29,6 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
             Vector3 scale = transform.localScale;
             scale.z *= (connectedField.transform.position - startField.transform.position).magnitude;
-            transform.localScale = scale;
 
             transform.rotation = Quaternion.LookRotation(connectedField.transform.position - startField.transform.position);
             var radians = transform.rotation.eulerAngles.y * Mathf.PI / 180;
@@ -37,8 +36,12 @@ namespace DiceyDungeonsAR.MyLevelGraph
             var offsetX = new Vector3(scale.z / 2 * Mathf.Sin(radians), 0, 0);
             var offsetZ = new Vector3(0, 0, scale.z / 2 * Mathf.Cos(radians));
             transform.position = startField.transform.position + offsetX + offsetZ;
+            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
 
             transform.parent = level.transform;
+
+            transform.localScale = scale;
+
         }
 
         public override string ToString()

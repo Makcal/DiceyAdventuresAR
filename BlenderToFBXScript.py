@@ -3,8 +3,8 @@ import math
 import os
 
 PROJECT = 'D:\\Mine\\UnityProjects\\Dicey Dungeons AR\\Assets\\'
-PATH = 'Models\\MainCube\\'
-FILE = 'MainCube.fbx'
+PATH = 'Models\\CubesForPres\\'
+FILE = 'Ground.fbx'
 
 obj = bpy.context.object
 obj.data.use_auto_smooth = 1
@@ -16,6 +16,6 @@ bpy.ops.export_scene.fbx(
     filepath=PROJECT + PATH + FILE,
 )
 
-for file in os.listdir(PROJECT + PATH):
-    if FILE not in file:
-        os.remove(PROJECT + PATH + file)
+#for file in os.listdir(PROJECT + PATH):
+#    if FILE not in file:
+#        os.remove(PROJECT + PATH + file)

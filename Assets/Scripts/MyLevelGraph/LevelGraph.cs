@@ -45,20 +45,20 @@ namespace DiceyDungeonsAR.MyLevelGraph
         public void GenerateLevel()
         {
             //.PlaceItem(Instantiate(chestPrefab))
-            AddField(-2, -1);
-            AddField(-1, -1).PlaceItem(Instantiate(enemies1Level[0]));
-            AddField(-1, 0);
-            AddField(-1, 1);
-            AddField(-1, 2).PlaceItem(Instantiate(enemies2Level[0]));
-            AddField(0, 2).PlaceItem(Instantiate(applePrefab));
-            AddField(0, 1).PlaceItem(Instantiate(enemies3Level[0]));
-            AddField(1, 1).PlaceItem(Instantiate(bosses[0]));
-            AddField(2, 1).PlaceItem(Instantiate(exitPrefab));
+            AddField(-1.60f, -1.00f);
+            AddField(-0.56f, -1.24f).PlaceItem(Instantiate(enemies1Level[0]));
+            AddField(-0.58f, -0.37f);
+            AddField(-0.82f, 0.63f);
+            AddField(-0.76f, 1.54f).PlaceItem(Instantiate(enemies2Level[0]));
+            AddField(0.10f, 1.64f).PlaceItem(Instantiate(applePrefab));
+            AddField(0.18f, 0.55f).PlaceItem(Instantiate(enemies3Level[0]));
+            AddField(1.00f, 1.00f).PlaceItem(Instantiate(bosses[0]));
+            AddField(1.56f, 0.13f).PlaceItem(Instantiate(exitPrefab));
 
-            AddField(0, -1).PlaceItem(Instantiate(chestPrefab));
-            AddField(-2, 0).PlaceItem(Instantiate(applePrefab));
-            AddField(-2, 2).PlaceItem(Instantiate(chestPrefab));
-            AddField(0, 0).PlaceItem(Instantiate(shopPrefab));
+            AddField(0.29f, -1.57f).PlaceItem(Instantiate(chestPrefab));
+            AddField(-1.52f, -0.04f).PlaceItem(Instantiate(applePrefab));
+            AddField(-1.46f, 0.99f).PlaceItem(Instantiate(chestPrefab));
+            AddField(0.33f, -0.43f).PlaceItem(Instantiate(shopPrefab));
 
             for (int i = 0; i < fields.Count - 5; i++)
             {

@@ -50,10 +50,18 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
             transform.parent.localPosition = new Vector3(x, y, z) * 1f;
         }
+
         void OnMouseDown()
         {
-            this.OnSelectEnter();
+            OnSelectEnter();
         }
+
+        void OnTriggerEnter(Collider triger)
+        {
+            if (triger)
+                OnSelectEnter();
+        }
+
         public void OnSelectEnter()
         {
             level.player.PlacePlayer(this);

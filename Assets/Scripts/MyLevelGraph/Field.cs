@@ -3,17 +3,22 @@ using DiceyDungeonsAR.AR;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.Collections;
 
 namespace DiceyDungeonsAR.MyLevelGraph
 {
     public class Field : MonoBehaviour, ISelectableObject
     {
         new public string name;
+        public List<LevelEdge> Edges = new List<LevelEdge>();
+
+        LevelGraph level;
         private bool attainable = false;
         private Item placedItem = null;
-        public Material defaultMaterial, attainableMaterial;
-        LevelGraph level;
-        public List<LevelEdge> Edges = new List<LevelEdge>();
+        [SerializeField] Material defaultMaterial, attainableMaterial, unattainableMaterial;
+        MeshRenderer meshRenderer;
+        float unattainableTime = 0;
+
         public bool IsSelected { get; set; } = false;
 
         public Item PlacedItem
@@ -38,8 +43,13 @@ namespace DiceyDungeonsAR.MyLevelGraph
             set
             {
                 attainable = value;
-                GetComponent<MeshRenderer>().material = value ? attainableMaterial : defaultMaterial;
+                meshRenderer.material = value ? attainableMaterial : defaultMaterial;
             }
+        }
+
+        private void Start()
+        {
+            meshRenderer = GetComponent<MeshRenderer>();
         }
 
         public void Initialize(LevelGraph level, float x, float y, float z)
@@ -50,16 +60,21 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
             transform.parent.localPosition = new Vector3(x, y, z) * 1f;
         }
+
         void OnMouseDown()
         {
-            this.OnSelectEnter();
+            OnSelectEnter();
         }
+
         public void OnSelectEnter()
         {
             level.player.PlacePlayer(this);
         }
 
-        public void OnSelectExit() { }
+        public void OnSelectExit()
+        {
+            MarkAsUnattainable(false);
+        }
 
         public override string ToString()
         {
@@ -98,6 +113,23 @@ namespace DiceyDungeonsAR.MyLevelGraph
         {
             PlacedItem = item;
             return item;
+        }
+
+        public void MarkAsUnattainable(bool value)
+        {
+            StopCoroutine(nameof(ToUnattainable));
+            StartCoroutine(ToUnattainable(value));
+        }
+
+        IEnumerator ToUnattainable(bool value)
+        {
+            var newMaterial = new Material(defaultMaterial);
+            for (; value ? unattainableTime < 0.5f : unattainableTime > 0; unattainableTime += (value ? 2 : -1) * Time.deltaTime)
+            {
+                newMaterial.Lerp(defaultMaterial, unattainableMaterial, unattainableTime / 0.5f);
+                meshRenderer.material = newMaterial;
+                yield return null;
+            }
         }
     }
 }

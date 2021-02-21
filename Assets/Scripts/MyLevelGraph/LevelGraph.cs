@@ -25,7 +25,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
         [NonSerialized] public Player player;
         [NonSerialized] public BattleController battle;
 
-        public void Start()
+        IEnumerator Start()
         {
             levelGraph = this;
             battle = GetComponent<BattleController>();
@@ -36,9 +36,10 @@ namespace DiceyDungeonsAR.MyLevelGraph
             if (player == null)
             {
                 Debug.LogWarning("Player wasn't found");
-                return;
+                yield break;
             }
 
+            yield return null;
             player.Initialize();
         }
 

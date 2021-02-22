@@ -30,12 +30,12 @@ namespace DiceyDungeonsAR.Battle
             this.enemy = enemy;
             enemy.transform.parent = LevelGraph.levelGraph.transform;
             enemy.transform.localPosition = new Vector3(1.6f, 0, 0);
-            enemy.transform.rotation = Quaternion.LookRotation(Vector3.left, Vector3.up);
+            enemy.transform.localRotation = Quaternion.LookRotation(Vector3.left, Vector3.up);
             enemy.transform.localScale *= 2;
 
             player = LevelGraph.levelGraph.player;
             player.transform.localPosition = new Vector3(-1.6f, 0, 0);
-            player.transform.rotation = Quaternion.LookRotation(Vector3.right, Vector3.up);
+            player.transform.localRotation = Quaternion.LookRotation(Vector3.right, Vector3.up);
             player.transform.localScale *= 2;
         }
 

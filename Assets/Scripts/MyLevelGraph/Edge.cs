@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DiceyDungeonsAR.MyLevelGraph
 {
-    public class LevelEdge : MonoBehaviour
+    public class Edge : MonoBehaviour
     {
         public Material attainableMaterial, defaultMaterial;
 

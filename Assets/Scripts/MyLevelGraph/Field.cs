@@ -1,16 +1,16 @@
-﻿using DiceyDungeonsAR.GameObjects;
-using DiceyDungeonsAR.AR;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using DiceyDungeonsAR.GameObjects;
+using DiceyDungeonsAR.AR;
 
 namespace DiceyDungeonsAR.MyLevelGraph
 {
     public class Field : MonoBehaviour, ISelectableObject
     {
-        new public string name;
-        public List<LevelEdge> Edges = new List<LevelEdge>();
+        [NonSerialized] new public string name;
+        readonly List<Edge> Edges = new List<Edge>();
 
         LevelGraph level;
         private bool attainable = false;
@@ -33,7 +33,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 value.transform.parent = transform.parent;
                 value.transform.localScale = Vector3.one;
                 value.transform.localPosition = new Vector3(0, 2 * transform.localScale.y, 0);
-                value.transform.localRotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+                value.transform.localRotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0);
             }
         }
 
@@ -55,7 +55,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
         public void Initialize(LevelGraph level, float x, float y, float z)
         {
             this.level = level;
-            name = (level.fields.Count() + 1).ToString();
+            name = (level.fields.Count + 1).ToString();
             level.fields.Add(this);
 
             transform.parent.localPosition = new Vector3(x, y, z) * 1f;
@@ -81,7 +81,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             return "Field " + name;
         }
 
-        public void AddEdge(LevelEdge newEdge)
+        public void AddEdge(Edge newEdge)
         {
             Edges.Add(newEdge);
         }

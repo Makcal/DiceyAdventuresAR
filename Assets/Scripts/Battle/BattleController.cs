@@ -17,7 +17,8 @@ namespace DiceyDungeonsAR.Battle
         [NonSerialized] public Player player;
         [NonSerialized] public List<Cube> cubes;
         bool battle = false;
-        public bool playerTurn = true, turnEnded = false;
+        [NonSerialized] public bool playerTurn = true;
+        [NonSerialized] public bool turnEnded = false;
 
         public Sprite[] cubesSprites;
         public RectTransform cardPrefab;

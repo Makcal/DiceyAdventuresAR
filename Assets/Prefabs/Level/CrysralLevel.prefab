@@ -45,6 +45,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f550e158b05bec94b8b93ed41581ed82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_LEAF_SIZE: 1.25
+  MIN_LEAF_SIZE: 0.7
+  mapCorner: {x: -2.2, y: -2.07}
+  mapSize: {x: 4.4, y: 4.14}
   applePrefab: {fileID: 2446815429623328642, guid: 746634504afce9d46acd84f76681d83d,
     type: 3}
   chestPrefab: {fileID: -5981149880283269385, guid: 50d3d04f205f45743b936fd6504068b1,
@@ -77,8 +81,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 208801775e40c1d44808bb3a6f2e2a14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTurn: 1
-  turnEnded: 0
   cubesSprites:
   - {fileID: 21300000, guid: 808a0b4d0e1b7b54aa19702019efb9d5, type: 3}
   - {fileID: 21300000, guid: abd10885ccc7d394891c09868395cc40, type: 3}

@@ -11,11 +11,11 @@ namespace DiceyDungeonsAR.MyLevelGraph
 {
     public class LevelGraph : MonoBehaviour
     {
-        public float MAX_LEAF_SIZE = 2f, MIN_LEAF_SIZE = 1f;
+        public float MAX_LEAF_SIZE = 2f, MIN_LEAF_SIZE = 1f; // константы для размеров деления листов
         public Vector2 mapCorner, mapSize; // левый "нижний" угол карты и её размер
         readonly List<Leaf> leaves = new List<Leaf>(); // список всех листьев
 
-        [SerializeField] Apple applePrefab;
+        [SerializeField] Apple applePrefab; // префабы всех объектов уровня
         [SerializeField] Chest chestPrefab;
         [SerializeField] Shop shopPrefab;
         [SerializeField] Exit exitPrefab;
@@ -23,11 +23,11 @@ namespace DiceyDungeonsAR.MyLevelGraph
         [SerializeField] Edge edgePrefab;
         [SerializeField] List<EnemyItem> enemies1Level, enemies2Level, enemies3Level, bosses;
 
-        static public LevelGraph levelGraph;
+        static public LevelGraph levelGraph; // статическая переменная для более быстрого обращения к главному скрипту (LevelGraph.levelGraph = this)
 
-        [NonSerialized] public readonly List<Field> fields = new List<Field>();
-        [NonSerialized] public Player player;
-        [NonSerialized] public BattleController battle;
+        [NonSerialized] public readonly List<Field> fields = new List<Field>(); // список полей
+        [NonSerialized] public Player player; // ссылка на игрока
+        [NonSerialized] public BattleController battle; // ссылка на контроллер битвы
 
         IEnumerator Start()
         {

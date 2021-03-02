@@ -19,6 +19,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             this.y = y;
             this.width = width;
             this.length = length;
+
             LevelGraph l = LevelGraph.levelGraph;
             Vector3 start = l.transform.position + new Vector3(x, 0, y);
             Debug.DrawLine(start, start + new Vector3(width, 0, 0), Color.red, 100000);
@@ -79,7 +80,34 @@ namespace DiceyDungeonsAR.MyLevelGraph
             return true; // разрезание выполнено!
         }
 
-        public Vector2 GetField()
+        public void CalculateFieldPosition()
+        {
+            // эта функция рекурсивно генерирует все комнаты и коридоры для этого листа и всех его дочерних листьев.
+
+            if (leftChild != null || rightChild != null)
+            {
+                // этот лист был разрезан, поэтому переходим к его дочерним листьям
+                if (leftChild != null)
+                {
+                    leftChild.CalculateFieldPosition();
+                }
+                if (rightChild != null)
+                {
+                    rightChild.CalculateFieldPosition();
+                }
+            }
+            else
+            {
+                // этот лист готов к созданию комнаты
+                // центр платформы может находиться в промежутке от половины минимума листа до всей стороны минус полминимума
+                // располагаем комнату внутри листа, но не помещаем её прямо 
+                // рядом со стороной листа (иначе комнаты сольются)
+                Vector2 roomPos = new Vector2(Random.Range(MIN_SIZE / 2, width - MIN_SIZE / 2), Random.Range(MIN_SIZE / 2, length - MIN_SIZE / 2));
+                //fieldPos = new Vector2(x + roomPos.x, y + roomPos.y, roomSize.x, roomSize.y);
+            }
+        }
+
+        public Vector2 GetFieldPosition()
         {
             if (fieldPos != null)
                 return fieldPos;

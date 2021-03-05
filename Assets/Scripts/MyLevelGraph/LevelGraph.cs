@@ -61,24 +61,35 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 doSplit = false; // сбрасываем флаг
                 var copy = new List<Leaf>(toBeChecked); // создаём копию, так как нельзя менять список во время его цикла
                 toBeChecked.Clear(); // очищаем очередь
-                foreach (var l in copy)
+                foreach (var leaf in copy)
                 {
-                    if (l.leftChild == null && l.rightChild == null) // если лист ещё не разрезан...
-                        if (l.width > MAX_LEAF_SIZE || l.length > MAX_LEAF_SIZE || UnityEngine.Random.value > 0.25)
+                    if (leaf.leftChild == null && leaf.rightChild == null) // если лист ещё не разрезан...
+                        if (leaf.width > MAX_LEAF_SIZE || leaf.length > MAX_LEAF_SIZE || UnityEngine.Random.value > 0.25)
                         // если этот лист слишком велик, или есть вероятность 75%...
                         {
-                            if (l.Split()) // пытаемя разрезаеть лист
+                            if (leaf.Split()) // пытаемя разрезаеть лист
                             {
                                 // если получилось, добавляем обе части в список, чтобы в дальнейшем можно было в цикле проверить и их
-                                toBeChecked.Add(l.leftChild);
-                                toBeChecked.Add(l.rightChild);
-                                leaves.Add(l.leftChild); // добавляем в общий список листев
-                                leaves.Add(l.rightChild);
-                                doSplit = true; // включаем следующую итерацию для проверки полученных частей
+                                toBeChecked.Add(leaf.leftChild);
+                                toBeChecked.Add(leaf.rightChild);
+                                leaves.Add(leaf.leftChild); // добавляем в общий список листев
+                                leaves.Add(leaf.rightChild);
+                                doSplit = true; // включаем следующую итерацию, чтобы проверить полученные части
                             }
                         }
                 }
             }
+
+            // затем рекурсивно проходим по каждому листу и создаём в каждом комнату.
+            root.CalculateFieldPositions();
+
+            foreach (var leaf in leaves)
+            {
+                if (leaf.rightChild == null && leaf.leftChild == null)
+                    if (leaf.fieldPos != null)
+                        AddField((Vector2)leaf.fieldPos);
+            }
+
             //print(leaves.Count);
 
             //.PlaceItem(Instantiate(chestPrefab))
@@ -97,15 +108,20 @@ namespace DiceyDungeonsAR.MyLevelGraph
             //AddField(-1.46f, 0.99f).PlaceItem(Instantiate(chestPrefab));
             //AddField(0.33f, -0.43f).PlaceItem(Instantiate(shopPrefab));
 
-            for (int i = 0; i < fields.Count - 5; i++)
-            {
-                AddEdge(i, i + 1);
-            }
+            //for (int i = 0; i < fields.Count - 5; i++)
+            //{
+            //    AddEdge(i, i + 1);
+            //}
 
-            AddEdge(1, 9);
-            AddEdge(2, 10);
-            AddEdge(4, 11);
-            AddEdge(6, 12);
+            //AddEdge(1, 9);
+            //AddEdge(2, 10);
+            //AddEdge(4, 11);
+            //AddEdge(6, 12);
+        }
+
+        public Field AddField(Vector2 pos)
+        {
+            return AddField(pos.x, pos.y);
         }
 
         public Field AddField(float x, float z)

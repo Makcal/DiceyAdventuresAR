@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f550e158b05bec94b8b93ed41581ed82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MAX_LEAF_SIZE: 1.25
-  MIN_LEAF_SIZE: 0.7
+  MAX_LEAF_SIZE: 1.75
+  MIN_LEAF_SIZE: 0.8
   mapCorner: {x: -2.2, y: -2.07}
   mapSize: {x: 4.4, y: 4.14}
   applePrefab: {fileID: 2446815429623328642, guid: 746634504afce9d46acd84f76681d83d,

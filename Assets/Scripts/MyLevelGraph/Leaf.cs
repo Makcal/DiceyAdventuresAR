@@ -9,8 +9,8 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         public readonly float x, y, width, length; // положение и размер этого листа относительно земли
         public Leaf leftChild, rightChild; // дочерние листы
-        public Vector2 fieldPos; // позиция поля, находящегося внутри листа
-        public List<Vector2> connections = new List<Vector2>(); // позиции другими полям
+        public Vector2? fieldPos; // позиция поля, находящегося внутри листа
+        public readonly List<Leaf> connections = new List<Leaf>(); // позиции другими полям
 
         public Leaf(float x, float y, float width, float length)
         {
@@ -80,7 +80,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             return true; // разрезание выполнено!
         }
 
-        public void CalculateFieldPosition()
+        public void CalculateFieldPositions()
         {
             // эта функция рекурсивно генерирует все комнаты и коридоры для этого листа и всех его дочерних листьев.
 
@@ -89,30 +89,60 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 // этот лист был разрезан, поэтому переходим к его дочерним листьям
                 if (leftChild != null)
                 {
-                    leftChild.CalculateFieldPosition();
+                    leftChild.CalculateFieldPositions();
                 }
                 if (rightChild != null)
                 {
-                    rightChild.CalculateFieldPosition();
+                    rightChild.CalculateFieldPositions();
+                }
+
+                // если у этого листа есть и левый, и правый дочерние листья, то создаём между ними коридор
+                if (leftChild != null && rightChild != null)
+                {
+                    leftChild.connections.Add(rightChild);
+                    rightChild.connections.Add(leftChild);
                 }
             }
             else
             {
                 // этот лист готов к созданию комнаты
-                // центр платформы может находиться в промежутке от половины минимума листа до всей стороны минус полминимума
-                // располагаем комнату внутри листа, но не помещаем её прямо 
-                // рядом со стороной листа (иначе комнаты сольются)
-                Vector2 roomPos = new Vector2(Random.Range(MIN_SIZE / 2, width - MIN_SIZE / 2), Random.Range(MIN_SIZE / 2, length - MIN_SIZE / 2));
-                //fieldPos = new Vector2(x + roomPos.x, y + roomPos.y, roomSize.x, roomSize.y);
+                // располагаем центр платформы внутри листа, но не помещаем её прямо рядом со стороной листа (иначе комнаты сольются)
+                // центр платформы может находиться в промежутке от половины минимума листа до длины стороны минус полминимума,
+                // так как минимум - два минимальных расстояния центра от сторон
+                var localPos = new Vector2(Random.Range(MIN_SIZE / 2, width - MIN_SIZE / 2), Random.Range(MIN_SIZE / 2, length - MIN_SIZE / 2)); 
+                // localPos относительно левого нижнего (-x, -z) угла листа!!!
+                fieldPos = new Vector2(x, y) + localPos; // прибавляем вектор угла комнаты, чтобы получить позицию относительно LevelGraph
             }
         }
 
-        public Vector2 GetFieldPosition()
+        public Vector2? GetFieldPosition()
         {
+            // рекурсивно проходим весь путь по этим листьям, чтобы найти комнату, если она существует.
             if (fieldPos != null)
                 return fieldPos;
+            else
+            {
+                Vector2? leftField = null, rightField = null;
+                if (leftChild != null)
+                {
+                    leftField = leftChild.GetFieldPosition();
+                }
+                if (rightChild != null)
+                {
+                    rightField = rightChild.GetFieldPosition();
+                }
 
-            return Vector2.zero;
+                if (leftField == null && rightField == null)
+                    return null;
+                else if (rightField == null)
+                    return leftField;
+                else if (leftField == null)
+                    return rightField;
+                else if (Random.value > 0.5)
+                    return leftField;
+                else
+                    return rightField;
+            }
         }
     }
 }

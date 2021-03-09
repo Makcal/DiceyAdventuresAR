@@ -10,6 +10,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
         public readonly float x, y, width, length; // положение и размер этого листа относительно земли
         public Leaf leftChild, rightChild; // дочерние листы
         public Vector2? fieldPos; // позиция поля, находящегося внутри листа
+        public Field field = null; // поле на листе
         public readonly List<Leaf> connections = new List<Leaf>(); // позиции другими полям
 
         public Leaf(float x, float y, float width, float length)
@@ -117,7 +118,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         public Vector2? GetFieldPosition()
         {
-            // рекурсивно проходим весь путь по этим листьям, чтобы найти комнату, если она существует.
+            // рекурсивно проходим весь путь по этим листьям, чтобы найти одну из комнат, если она существует.
             if (fieldPos != null)
                 return fieldPos;
             else
@@ -138,7 +139,8 @@ namespace DiceyDungeonsAR.MyLevelGraph
                     return leftField;
                 else if (leftField == null)
                     return rightField;
-                else if (Random.value > 0.5)
+
+                else if (Random.value > 0.5) // случайно
                     return leftField;
                 else
                     return rightField;

@@ -10,9 +10,9 @@ namespace DiceyDungeonsAR.MyLevelGraph
     public class Field : MonoBehaviour, ISelectableObject
     {
         [NonSerialized] new public string name;
-        readonly List<Edge> Edges = new List<Edge>();
-
+        public readonly List<Edge> Edges = new List<Edge>();
         LevelGraph level;
+
         private bool attainable = false;
         private Item placedItem = null;
         [SerializeField] Material defaultMaterial, attainableMaterial, unattainableMaterial;

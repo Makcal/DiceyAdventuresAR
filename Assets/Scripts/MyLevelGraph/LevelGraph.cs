@@ -82,12 +82,18 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
             // затем рекурсивно проходим по каждому листу и создаём в каждом комнату.
             root.CalculateFieldPositions();
-
+            
             foreach (var leaf in leaves)
             {
                 if (leaf.rightChild == null && leaf.leftChild == null)
                     if (leaf.fieldPos != null)
-                        AddField((Vector2)leaf.fieldPos);
+                    {
+                        leaf.field = AddField((Vector2)leaf.fieldPos); // создаём поле
+                        foreach (var conn in leaf.connections)
+                        {
+                            AddEdge(leaf.field, conn.field); // перебираем связи и создаём рёбра
+                        }
+                    }
             }
 
             //print(leaves.Count);
@@ -156,7 +162,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
         
         public void AddEdge(Field first, Field second, int weight = 0)
         {
-            if (fields.Contains(first) && fields.Contains(second))
+            if (fields.Contains(first) && fields.Contains(second) && second.Edges.ConvertAll<bool>(e => e.HasField(first)) && first.Edges.ConvertAll<bool>(e => e.HasField()))
             {
                 Edge edge = Instantiate(edgePrefab);
                 edge.Initialize(this, first, second, weight);

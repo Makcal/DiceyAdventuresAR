@@ -42,6 +42,11 @@ namespace DiceyDungeonsAR.MyLevelGraph
             transform.localPosition -= new Vector3(0, transform.localPosition.y, 0);
         }
 
+        public bool HasField(Field field)
+        {
+            return startField == field || connectedField == field;
+        }
+
         public override string ToString()
         {
             return $"Edge from {startField} to {connectedField}";

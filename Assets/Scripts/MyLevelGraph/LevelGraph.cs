@@ -12,7 +12,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
     public class LevelGraph : MonoBehaviour
     {
         public float MAX_LEAF_SIZE = 2f, MIN_LEAF_SIZE = 1f; // константы для размеров деления листов
-        public Vector2 mapCorner, mapSize; // левый "нижний" угол карты и её размер
+        public float MAP_RADIUS; // радиус карты
         readonly List<Leaf> leaves = new List<Leaf>(); // список всех листьев
 
         [SerializeField] Apple applePrefab; // префабы всех объектов уровня
@@ -50,7 +50,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
         public void GenerateLevel()
         {
             Leaf.MIN_SIZE = MIN_LEAF_SIZE;
-            var root = new Leaf(mapCorner, mapSize); // "корень" для всех остальных листьев
+            var root = new Leaf(new Vector2(-MAP_RADIUS), new Vector2(MAP_RADIUS * 2)); // "корень" для всех остальных листьев
             leaves.Add(root);
 
             // снова и снова проходим по каждому листу, пока больше не останется листьев, которые можно разрезать
@@ -88,39 +88,12 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 if (leaf.rightChild == null && leaf.leftChild == null && leaf.fieldPos != null)
                      leaf.field = AddField((Vector2)leaf.fieldPos); // создаём поле
             }
+
             foreach (var leaf in leaves)
                 foreach (var conn in leaf.connections)
                 {
-                    AddEdge(leaf.GetField(), conn.GetField()); // перебираем связи листов и создаём рёбра
+                    AddEdge(leaf.GetNearestField(conn), conn.GetNearestField(leaf)); // перебираем связи листов и создаём рёбра
                 }
-
-            //print(leaves.Count);
-
-            //.PlaceItem(Instantiate(chestPrefab))
-            //AddField(-1.60f, -1.00f);
-            //AddField(-0.56f, -1.24f).PlaceItem(Instantiate(enemies1Level[0]));
-            //AddField(-0.58f, -0.37f);
-            //AddField(-0.82f, 0.63f);
-            //AddField(-0.76f, 1.54f).PlaceItem(Instantiate(enemies2Level[0]));
-            //AddField(0.10f, 1.64f).PlaceItem(Instantiate(applePrefab));
-            //AddField(0.18f, 0.55f).PlaceItem(Instantiate(enemies3Level[0]));
-            //AddField(1.00f, 1.00f).PlaceItem(Instantiate(bosses[0]));
-            //AddField(1.56f, 0.13f).PlaceItem(Instantiate(exitPrefab));
-
-            //AddField(0.29f, -1.57f).PlaceItem(Instantiate(chestPrefab));
-            //AddField(-1.52f, -0.04f).PlaceItem(Instantiate(applePrefab));
-            //AddField(-1.46f, 0.99f).PlaceItem(Instantiate(chestPrefab));
-            //AddField(0.33f, -0.43f).PlaceItem(Instantiate(shopPrefab));
-
-            //for (int i = 0; i < fields.Count - 5; i++)
-            //{
-            //    AddEdge(i, i + 1);
-            //}
-
-            //AddEdge(1, 9);
-            //AddEdge(2, 10);
-            //AddEdge(4, 11);
-            //AddEdge(6, 12);
         }
 
         public Field AddField(Vector2 pos)
@@ -160,7 +133,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
         
         public void AddEdge(Field first, Field second, int weight = 0)
         {
-            if (fields.Contains(first) && fields.Contains(second) && !  first.ConnectedFields().Contains(second))
+            if (fields.Contains(first) && fields.Contains(second) && ! first.ConnectedFields().Contains(second))
             {
                 Edge edge = Instantiate(edgePrefab);
                 edge.Initialize(this, first, second, weight);

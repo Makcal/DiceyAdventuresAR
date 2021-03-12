@@ -43,7 +43,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 yield break;
             }
 
-            yield return null; // подождать инициализацию полей
+            yield return null; // подождать инициализацию полей, чтобы покрасить цвет первых полей (= meshRenderer, ждать Start один кадр)
             player.Initialize();
         }
 
@@ -85,16 +85,14 @@ namespace DiceyDungeonsAR.MyLevelGraph
             
             foreach (var leaf in leaves)
             {
-                if (leaf.rightChild == null && leaf.leftChild == null)
-                    if (leaf.fieldPos != null)
-                    {
-                        leaf.field = AddField((Vector2)leaf.fieldPos); // создаём поле
-                        foreach (var conn in leaf.connections)
-                        {
-                            AddEdge(leaf.field, conn.field); // перебираем связи и создаём рёбра
-                        }
-                    }
+                if (leaf.rightChild == null && leaf.leftChild == null && leaf.fieldPos != null)
+                     leaf.field = AddField((Vector2)leaf.fieldPos); // создаём поле
             }
+            foreach (var leaf in leaves)
+                foreach (var conn in leaf.connections)
+                {
+                    AddEdge(leaf.GetField(), conn.GetField()); // перебираем связи листов и создаём рёбра
+                }
 
             //print(leaves.Count);
 
@@ -162,7 +160,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
         
         public void AddEdge(Field first, Field second, int weight = 0)
         {
-            if (fields.Contains(first) && fields.Contains(second) && second.Edges.ConvertAll<bool>(e => e.HasField(first)) && first.Edges.ConvertAll<bool>(e => e.HasField()))
+            if (fields.Contains(first) && fields.Contains(second) && !  first.ConnectedFields().Contains(second))
             {
                 Edge edge = Instantiate(edgePrefab);
                 edge.Initialize(this, first, second, weight);

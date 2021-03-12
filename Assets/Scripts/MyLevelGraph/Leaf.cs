@@ -97,7 +97,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
                     rightChild.CalculateFieldPositions();
                 }
 
-                // если у этого листа есть и левый, и правый дочерние листья, то создаём между ними коридор
+                // если у этого листа есть и левый, и правый дочерние листья, то создаём между ними связь
                 if (leftChild != null && rightChild != null)
                 {
                     leftChild.connections.Add(rightChild);
@@ -106,7 +106,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             }
             else
             {
-                // этот лист готов к созданию комнаты
+                // этот лист готов к созданию поля
                 // располагаем центр платформы внутри листа, но не помещаем её прямо рядом со стороной листа (иначе комнаты сольются)
                 // центр платформы может находиться в промежутке от половины минимума листа до длины стороны минус полминимума,
                 // так как минимум - два минимальных расстояния центра от сторон
@@ -116,21 +116,21 @@ namespace DiceyDungeonsAR.MyLevelGraph
             }
         }
 
-        public Vector2? GetFieldPosition()
+        public Field GetField()
         {
             // рекурсивно проходим весь путь по этим листьям, чтобы найти одну из комнат, если она существует.
-            if (fieldPos != null)
-                return fieldPos;
+            if (field != null)
+                return field;
             else
             {
-                Vector2? leftField = null, rightField = null;
+                Field leftField = null, rightField = null;
                 if (leftChild != null)
                 {
-                    leftField = leftChild.GetFieldPosition();
+                    leftField = leftChild.GetField();
                 }
                 if (rightChild != null)
                 {
-                    rightField = rightChild.GetFieldPosition();
+                    rightField = rightChild.GetField();
                 }
 
                 if (leftField == null && rightField == null)

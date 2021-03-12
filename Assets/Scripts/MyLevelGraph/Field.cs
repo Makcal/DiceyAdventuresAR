@@ -91,7 +91,8 @@ namespace DiceyDungeonsAR.MyLevelGraph
             var fields = new List<Field>();
             foreach (var e in Edges)
             {
-                fields.Add(e.startField.Equals(this) ? e.connectedField : e.startField);
+                fields.Add(e.startField == this ? e.connectedField : e.startField); // если первое поле равно этому, то взять второе,
+                // иначе первое (противоположное этому полю)
             }
             return fields;
         }

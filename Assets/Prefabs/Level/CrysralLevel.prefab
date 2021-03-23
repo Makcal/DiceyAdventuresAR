@@ -47,8 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MAX_LEAF_SIZE: 2
   MIN_LEAF_SIZE: 1
-  mapCorner: {x: -2.2, y: -2.07}
-  mapSize: {x: 4.4, y: 4.14}
+  MAP_RADIUS: 2.1
   applePrefab: {fileID: 2446815429623328642, guid: 746634504afce9d46acd84f76681d83d,
     type: 3}
   chestPrefab: {fileID: -5981149880283269385, guid: 50d3d04f205f45743b936fd6504068b1,

@@ -50,7 +50,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
         public void GenerateLevel()
         {
             Leaf.MIN_SIZE = MIN_LEAF_SIZE;
-            var root = new Leaf(new Vector2(-MAP_RADIUS), new Vector2(MAP_RADIUS * 2)); // "корень" для всех остальных листьев
+            var root = new Leaf(new Vector2(-MAP_RADIUS, -MAP_RADIUS), new Vector2(MAP_RADIUS * 2, MAP_RADIUS * 2)); // "корень" для всех остальных листьев
             leaves.Add(root);
 
             // снова и снова проходим по каждому листу, пока больше не останется листьев, которые можно разрезать

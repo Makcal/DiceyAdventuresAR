@@ -80,7 +80,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 }
             }
 
-            // затем рекурсивно проходим по каждому листу и создаём в каждом комнату.
+            // затем рекурсивно проходим по каждому листу и создаём в каждом поле
             root.CalculateFieldPositions();
             
             foreach (var leaf in leaves)
@@ -92,7 +92,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             foreach (var leaf in leaves)
                 foreach (var conn in leaf.connections)
                 {
-                    AddEdge(leaf.GetNearestField(conn), conn.GetNearestField(leaf)); // перебираем связи листов и создаём рёбра
+                    AddEdge(leaf.GetNearestField(conn), conn.GetNearestField(leaf));// перебираем связи листов и создаём рёбра
                 }
         }
 
@@ -121,17 +121,15 @@ namespace DiceyDungeonsAR.MyLevelGraph
             return null;
         }
  
-        public void AddEdge(string firstName, string secondName, int weight = 0)
+        public Edge AddEdge(string firstName, string secondName, int weight = 0)
         {
             var f1 = FindField(firstName);
             var f2 = FindField(secondName);
-            if (f2 != null && f1 != null)
-            {
-                AddEdge(f1, f2, weight);
-            }
+
+            return AddEdge(f1, f2, weight);
         }
         
-        public void AddEdge(Field first, Field second, int weight = 0)
+        public Edge AddEdge(Field first, Field second, int weight = 0)
         {
             if (fields.Contains(first) && fields.Contains(second) && ! first.ConnectedFields().Contains(second))
             {
@@ -139,13 +137,17 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 edge.Initialize(this, first, second, weight);
                 first.AddEdge(edge);
                 second.AddEdge(edge);
+                return edge;
             }
+            return null;
         }
 
-        public void AddEdge(int firstIndex, int secondIndex, int weight = 0)
+        public Edge AddEdge(int firstIndex, int secondIndex, int weight = 0)
         {
             if (Mathf.Max(firstIndex, secondIndex) < fields.Count && Mathf.Min(firstIndex, secondIndex) >= 0)
-                AddEdge(fields[firstIndex], fields[secondIndex], weight);
+                return AddEdge(fields[firstIndex], fields[secondIndex], weight);
+            else
+                return null;
         }
 
         public IEnumerator StartBattle(Enemy enemy)

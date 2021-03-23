@@ -83,7 +83,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         public void CalculateFieldPositions()
         {
-            // эта функция рекурсивно генерирует все комнаты и коридоры для этого листа и всех его дочерних листьев.
+            // эта функция рекурсивно высчитывает позиции полей и коридоры для этого листа и всех его дочерних листьев.
 
             if (leftChild != null || rightChild != null)
             {
@@ -106,25 +106,36 @@ namespace DiceyDungeonsAR.MyLevelGraph
             }
             else
             {
-                // этот лист готов к созданию поля
-                // располагаем центр платформы внутри листа, но не помещаем её прямо рядом со стороной листа (иначе комнаты сольются)
-                // центр платформы может находиться в промежутке от половины минимума листа до длины стороны минус полминимума,
-                // так как минимум - два минимальных расстояния центра от сторон
-                var localPos = new Vector2(Random.Range(MIN_SIZE / 2, width - MIN_SIZE / 2), Random.Range(MIN_SIZE / 2, length - MIN_SIZE / 2)); 
-                // localPos относительно левого нижнего (-x, -z) угла листа!!!
-                fieldPos = new Vector2(x, z) + localPos; // прибавляем вектор угла комнаты, чтобы получить позицию относительно LevelGraph
+                for (int i = 0; i < 200; i++) // 200 попыток
+                {
+                    // этот лист готов к созданию поля
+                    // располагаем центр платформы внутри листа, но не помещаем её прямо рядом со стороной листа (иначе полябудут стоять вплотную)
+                    // центр платформы может находиться в промежутке от половины минимума листа до длины стороны минус полминимума,
+                    // так как минимум - два минимальных расстояния центра от сторон
+                    var localPos = new Vector2(Random.Range(MIN_SIZE / 2, width - MIN_SIZE / 2), Random.Range(MIN_SIZE / 2, length - MIN_SIZE / 2));
+                    // localPos относительно левого нижнего (-x, -z) угла листа!!!
+                    fieldPos = new Vector2(x, z) + localPos; // прибавляем вектор угла листа, чтобы получить позицию относительно LevelGraph
+
+                    if (((Vector2)fieldPos).magnitude + 0.25f <= LevelGraph.levelGraph.MAP_RADIUS) // если отрезок от цента до поля + полрадиуса поля меньше радиуса уровня
+                        break; // (поле не выходит за границы), то прекращаем перебор
+                }
+                if (((Vector2)fieldPos).magnitude + 0.25f > LevelGraph.levelGraph.MAP_RADIUS) // если за все попытки не найдено подходящего места
+                    fieldPos = null;
             }
         }
 
         public Field GetNearestField(Leaf otherLeaf)
         {
-            // рекурсивно проходим весь путь по этим листьям, чтобы найти одну из комнат, если она существует.
+            // рекурсивно проходим весь путь по этим листьям, чтобы найти ближайшее поле, если оно существует.
             if (field != null)
                 return field;
             else
             {
                 float border;
                 List<Field> fields = GetAllFields();
+                if (fields.Count == 0)
+                    return null; // полей нет (например, в этом листе нет места)
+
                 if (x == otherLeaf.x)
                 {
                     border = Mathf.Max(z, otherLeaf.z); // z горизонтальной границы между листами
@@ -144,7 +155,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             }
         }
 
-        List<Field> GetAllFields() // получить все поля у листа и его дочерних листов
+        List<Field> GetAllFields() // собрать список всех полей у листа и его дочерних листов
         {
             var fields = new List<Field>();
 

@@ -8,164 +8,176 @@ using UnityEngine.UI;
 
 namespace DiceyDungeonsAR.GameObjects.Players
 {
-    public abstract class Player : MonoBehaviour
+    public abstract class Player : Character
     {
-        public Sprite healthSprite, XPSprite;
+        protected abstract int UpgradeHealth { get; } // общий параметр у каждого наследника (повышение максимума здоровья)
 
-        LevelGraph levelGraph;
-        [NonSerialized] public Field currentField = null;
-        Field targetField = null;
-        float targetTime = -1;
-        [NonSerialized] public Bar playerHealthBar, playerXPBar;
+        public Sprite XPSprite; // иконка и шкала опыта
+        Bar XPBar;
 
-        public abstract int StartHealth { get; }
-        private int maxHealth;
-        public int MaxHealth
-        {
-            get => maxHealth;
-            private set
-            {
-                maxHealth = value;
-                playerHealthBar.MaxValue = value;
-            }
-        }
-        public abstract int UpgradeHealth { get; }
-        protected int health;
-        public int Health
-        {
-            get => health;
-            protected set
-            {
-                health = Mathf.Clamp(value, 0, MaxHealth);
-                playerHealthBar.CurrentValue = health;
-            }
-        }
-        public int Level { get; private set; } = 1;
+        [NonSerialized] public Field currentField = null; // текущее поле
+        Field targetField = null; // поле, на которое сейчас игрок идёт
+        float targetTime = -1; // время, к которому игрок придёт на целевое поле
+
+        // опыт и уровень
+        public int Level { get; private set; } = 1; // уровень
         private int experience = 0;
-        public int Experience
+        public int Experience // свойство опыта
         {
             get => experience;
             private set {
                 experience = value;
-                playerXPBar.CurrentValue = value;
+                XPBar.CurrentValue = value; // обновить шкалу
             }
         }
-        public int MaxXP { get; private set; } = 2;
-        public int Coins { get; private set; } = 0;
-        public CardDescription[,] Inventory { get; } = new CardDescription[4, 2];
-
-        public void Initialize()
+        public int maxXP = 2;
+        public int MaxXP // свойство максимального опыта
         {
-            health = maxHealth = StartHealth;
-            FillInventory();
-
-            var canvasTr = GameObject.FindGameObjectWithTag("Canvas").transform;
-            playerHealthBar = Bar.CreateBar(canvasTr, new Vector2(0.068f, 0.131f), new Vector2(0.24f, 0.185f));
-            playerHealthBar.maxValue = MaxHealth;
-            playerHealthBar.startValue = Health;
-
-            var img = new GameObject("Health icon");
-            var imgTr = img.AddComponent<RectTransform>();
-            imgTr.SetParent(canvasTr);
-            imgTr.offsetMin = imgTr.offsetMax = Vector2.zero;
-            imgTr.anchorMin = new Vector2(0.033f, 0.131f);
-            imgTr.anchorMax = new Vector2(0.033f, 0.185f);
-            imgTr.pivot = new Vector2(0, 0.5f);
-            imgTr.sizeDelta = new Vector2(imgTr.rect.height, 0);
-            img.AddComponent<Image>().sprite = healthSprite;
-
-            playerXPBar = Bar.CreateBar(canvasTr, new Vector2(0.068f, 0.067f), new Vector2(0.24f, 0.121f));
-            playerXPBar.maxValue = MaxXP;
-            playerXPBar.startValue = 0;
-            playerXPBar.backgroundColor = new Color(35, 97, 28);
-            playerXPBar.mainColor = new Color(88, 255, 23);
-
-            img = new GameObject("XP icon");
-            imgTr = img.AddComponent<RectTransform>();
-            imgTr.SetParent(canvasTr);
-            imgTr.offsetMin = imgTr.offsetMax = Vector2.zero;
-            imgTr.anchorMin = new Vector2(0.003f, 0.067f);
-            imgTr.anchorMax = new Vector2(0.064f, 0.121f);
-            var textComp = img.AddComponent<Text>();
-            textComp.text = "Опыт:";
-            textComp.alignment = TextAnchor.MiddleCenter;
-            textComp.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-            textComp.resizeTextForBestFit = true;
-            textComp.resizeTextMinSize = 2;
-            textComp.resizeTextMaxSize = 300;
-            img.AddComponent<Outline>();
-
-            BattleController.CreateText(canvasTr, new Vector2(0.068f, 0.185f), new Vector2(0.177f, 0.251f), "Ты");
-
-            levelGraph = LevelGraph.levelGraph;
-            currentField = targetField = levelGraph.fields[0];
-            transform.parent = levelGraph.transform;
-            transform.SetSiblingIndex(1);
-
-            transform.position = currentField.transform.position + new Vector3(0, 1f * currentField.transform.localScale.y, 0);
-            transform.localRotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0);
-            currentField.MarkAttainable();
+            get => maxXP;
+            private set
+            {
+                maxXP = value;
+                XPBar.MaxValue = value; // обновить шкалу
+            }
         }
 
-        void FixedUpdate()
+        int coins;
+        public int Coins  // монеты (не реализованы)
         {
-            if (targetField != currentField)
+            get => coins;
+            set
             {
-                var offset = new Vector3(0, 1f * targetField.transform.localScale.y, 0);
-                transform.position = Vector3.Lerp(currentField.transform.position, targetField.transform.position, Mathf.Min(1 - (targetTime - Time.time) / 0.3f, 1)) + offset;
-                if (Time.time >= targetTime)
+                coins = value;
+            }
+        }
+        
+        // методы
+        public override void Initialize() // дополняем инициализатор
+        {
+            base.Initialize(); // сначала инициализируем игрока как персонажа в целом
+
+            // создаём надпись героя
+            CreateNameText(new Vector2(0.068f, 0.185f), new Vector2(0.177f, 0.251f));
+
+            // создаём полоску и иконку здоровья
+            CreateHealthBar(new Vector2(0.068f, 0.131f), new Vector2(0.24f, 0.185f));
+            CreateHealthIcon(new Vector2(0.033f, 0.131f), new Vector2(0.033f, 0.185f));
+
+            // создаём полоску и иконку опыта
+            CreateXPBar(new Vector2(0.068f, 0.067f), new Vector2(0.24f, 0.121f));
+            CreateXPIcon(new Vector2(0.003f, 0.067f), new Vector2(0.064f, 0.121f));
+
+            currentField = targetField = levelGraph.fields[0]; // устанавливаем игрока на первое место
+            transform.parent = levelGraph.transform; // игрок принадлежит уровню
+            transform.SetSiblingIndex(1); // объект земли и игрока должны стоять первыми (после идут поля и рёбра)
+
+            // позиция игрока над его полем (стоит на поле)
+            transform.position = currentField.transform.position + new Vector3(0, 1f * currentField.transform.localScale.y, 0);
+            transform.localRotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0); // случайный поворот
+            currentField.MarkAttainable(); // покрасить соседние поля
+        }
+
+        void CreateXPBar(Vector2 lowerLeftBarCornerPos, Vector2 topRightBarCornerPos)
+        {
+            // создаём полоску на нужных якорях (доля относительно всего экрана)
+            XPBar = Bar.CreateBar(canvasTr, lowerLeftBarCornerPos, topRightBarCornerPos);
+
+            XPBar.maxValue = MaxXP; // параметры полосок
+            XPBar.startValue = 0;
+            XPBar.backgroundColor = new Color32(35, 97, 28, 255); // цвета полосок
+            XPBar.mainColor = new Color32(88, 255, 23, 255);
+        }
+
+        void CreateXPIcon(Vector2 lowerLeftIconCornerPos, Vector2 topRightIconCornerPos)
+        {
+            healthIcon = new GameObject("XP icon"); // создаём новый объект иконки
+
+            var imgTr = healthIcon.AddComponent<RectTransform>(); // компонент 2d трансформа
+            imgTr.SetParent(canvasTr); // вся 2d графика принадлежит канвасу
+
+            imgTr.anchorMin = lowerLeftIconCornerPos; // устанавливаем якоря (координаты углов как доля (0-1) от всего экрана)
+            imgTr.anchorMax = topRightIconCornerPos;
+            imgTr.offsetMin = imgTr.offsetMax = Vector2.zero; // сдвиги прямоугольника от якорей - 0
+
+            var textComp = healthIcon.AddComponent<Text>(); // настройка текста (временно вместо иконки)
+            textComp.text = "Опыт:";
+            textComp.alignment = TextAnchor.MiddleCenter;
+            textComp.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font; // получить шрифт
+            textComp.resizeTextForBestFit = true; // автоподбор максимального размера
+            textComp.resizeTextMinSize = 2;
+            textComp.resizeTextMaxSize = 300;
+
+            healthIcon.AddComponent<Outline>(); // обводка для лучшей читаемости
+        }
+
+        void FixedUpdate() // бесконечная проверка
+        {
+            if (targetField != currentField) // цель отличается от текущего поля (есть куда идти)
+            {
+                var offset = new Vector3(0, 1f * targetField.transform.localScale.y, 0); // сдвиг вверх, чтобы стоять НА поле
+
+                transform.position = Vector3.Lerp(
+                    targetField.transform.position,
+                    currentField.transform.position,
+                    (targetTime - Time.time) / 0.3f // 0.3 - выделенное время на весь путь, разница - времени осталось времени идти
+                    // в самом начале осталось идти 0.3, отношение - 1, берём текущее положение
+                    // с течение времени отношение уменьшается и, позиция игрока сближается с целью и достигает при отношении, равном 0
+                ) + offset; // смешиваем целевую позицию с текущей на основании пройденного времени
+
+                if (Time.time >= targetTime) // если время настало
                 {
-                    currentField = targetField;
+                    currentField = targetField; // цели бьльше нет
                     if (targetField.PlacedItem != null)
-                        targetField.PlacedItem.UseByPlayer(this);
+                        targetField.PlacedItem.UseByPlayer(this); // используем предмет на поле, если он есть
                 }
             }
         }
 
-        public bool PlacePlayer(Field field)
+        public bool TryToPlacePlayer(Field field) // поставить игрока на поле
         {
             if (targetField != currentField)
-                return false;
+                return false; // нельзя, если игрок ещё в движении (есть текущая цель)
 
             if (!currentField.ConnectedFields().Contains(field))
             {
                 if (field != currentField)
-                    field.MarkAsUnattainable(true);
-                return false;
+                    field.MarkAsUnattainable(true); // покрасить красным, если пытаемя перейти на другое поле, кроме текущего же
+                return false; // нельзя, если пытаемя перейти НЕ на соседнее поле
             }
 
-            field.MarkAttainable();
+            field.MarkAttainable(); // покрасить новые соседние поля
 
             var targetPosition = field.transform.position;
-            targetPosition.y = transform.position.y;
+            targetPosition.y = transform.position.y; // целевая позиция, но y текущий
+            // смотреть по направлению текущая позиция -> целевая позиция
             transform.rotation = Quaternion.LookRotation(targetPosition - transform.position);
 
-            targetField = field;
-            targetTime = Time.time + 0.3f;
+            targetField = field; // целевое поле
+            targetTime = Time.time + 0.3f; // надо прийти ко времени через 0.3 секунды
 
-            return true;
+            return true; // удалось поставить игрока
         }
 
         public IEnumerator AddXP(int experience)
         {
-            Experience += experience;
+            Experience += experience; // получить опыт
 
-            while (Experience >= MaxXP)
+            while (Experience >= MaxXP) // пока есть лишний опыт
             {
-                LevelUp();
-                yield return new WaitForSeconds(0.5f);
+                LevelUp(); // повышаем уровень
+                yield return new WaitForSeconds(0.5f); // через каждые полсекунды. Не всё же сразу
             }
         }
 
-        private void LevelUp()
+        private void LevelUp() // повышаем уровень
         {
-            Level += 1;
-            Experience -= MaxXP;
-            MaxXP += Level;
-            MaxHealth += UpgradeHealth;
-            Health = MaxHealth;
+            Level += 1; // плюс 1
+            Experience -= MaxXP; // тратим опыт
+            MaxXP += Level; // новый порог - на число уровня больше, чем предыдущий
+            MaxHealth += UpgradeHealth; // повышаем живучесть :)
+            Health = MaxHealth; // регенирируем
 
-            playerXPBar.MaxValue = MaxXP;
+            // всплывающее сообщение
             var msg = AppearingAnim.CreateMsg($"LevelUpTo{Level}", new Vector2(0.055f, 0.251f), new Vector2(0.255f, 0.305f), "Уровень повышен!");
             msg.color = Color.green;
             msg.period = 2;
@@ -173,50 +185,45 @@ namespace DiceyDungeonsAR.GameObjects.Players
             msg.Play();
         }
 
-        public void DealDamage(int damage)
+        public override void GetDamage(int damage) // расширяем метод
         {
-            damage = Mathf.Abs(damage);
-            Health -= damage;
-
+            // всплывающее сообщение
             var message = AppearingAnim.CreateMsg("PlayerDamage", new Vector2(0.17f, 0.08f), new Vector2(0.31f, 0.15f), $"- {damage} HP");
-
             message.yOffset = 20;
             message.color = Color.red;
             message.Play();
 
-            if (health == 0)
-                StartCoroutine(Death());
+            base.GetDamage(damage);
         }
 
-        public void Heal(int health)
+        public override void Heal(int health) // расширяем метод
         {
-            health = Mathf.Abs(health);
-            Health += health;
-
-            var message = AppearingAnim.CreateMsg("HealMessage", new Vector2(0.17f, 0.08f), new Vector2(0.31f, 0.15f), $"+ {health} HP");
-
+            // всплывающее сообщение
+            var message = AppearingAnim.CreateMsg("PlayerDamage", new Vector2(0.17f, 0.08f), new Vector2(0.31f, 0.15f), $"+ {health} HP");
             message.yOffset = 20;
-            message.color = new Color(0, 255, 0);
+            message.color = Color.green;
             message.Play();
+
+            base.Heal(health);
         }
 
-        private IEnumerator Death()
+        public override IEnumerator Death() // смерть
         {
-            yield return StartCoroutine(levelGraph.battle.EndBattle(false));
-            Destroy(gameObject);
+            yield return StartCoroutine(levelGraph.battle.EndBattle(false)); // битва окончена поражением
+            StartCoroutine(base.Death());
         }
 
-        protected virtual void FillInventory()
+        protected override void FillInventory() // описания карточек
         {
-            Inventory[0, 0] = new CardDescription()
+            inventory[0, 0] = new CardDescription()
             {
-                action = CardAction.Damage,
+                action = CardAction.Damage, // простой урон
             };
 
-            Inventory[3, 0] = new CardDescription()
+            inventory[3, 0] = new CardDescription()
             {
                 uses = 3,
-                action = CardAction.ChangeDice,
+                action = CardAction.ChangeDice, // 3 переброска
             };
         }
     }

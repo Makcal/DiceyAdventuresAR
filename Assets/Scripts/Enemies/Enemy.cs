@@ -1,57 +1,53 @@
 ﻿using UnityEngine;
 using DiceyDungeonsAR.MyLevelGraph;
-using DiceyDungeonsAR.Battle;
 using System.Collections;
-using System;
-using DiceyDungeonsAR.UI;
+using DiceyDungeonsAR.GameObjects;
 
 namespace DiceyDungeonsAR.Enemies
 {
-    abstract public class Enemy : MonoBehaviour
+    abstract public class Enemy : Character
     {
-        abstract public string Name { get; }
-        abstract public int Level { get; }
-        abstract public int MaxHealth { get; }
-        protected int health;
-        public int Health
-        {
-            get => health;
-            set
-            {
-                health = Mathf.Clamp(value, 0, MaxHealth);
-            }
-        }
-        [NonSerialized] public Bar healthBar;
-        public CardDescription[,] Cards { get; } = new CardDescription[4, 2];
+        public abstract int CubesCount { get; } // кол-во кубиков
+        public abstract int Level { get; } // уровень сложности врага (определяется в наследниках)
 
-        void Start()
+        public override void Initialize()
         {
-            health = MaxHealth;
-            FillInventory();
+            base.Initialize(); // сначала инициализируем игрока как персонажа в целом
+
+            // создаём UI
+            CreateNameText(new Vector2(0.758f, 0.883f), new Vector2(0.897f, 0.950f));
+            CreateHealthBar(new Vector2(0.758f, 0.828f), new Vector2(0.930f, 0.883f));
+            CreateHealthIcon(new Vector2(0.723f, 0.828f), new Vector2(0.723f, 0.883f));
         }
 
-        public abstract void FillInventory();
-
-        public void DealDamage(int damage)
+        public override void GetDamage(int damage) // расширяем метод
         {
-            damage = Mathf.Abs(damage);
-            Health -= damage;
-            healthBar.CurrentValue -= damage;
-
+            // всплывающее сообщение
             var message = AppearingAnim.CreateMsg("EnemyDamage", new Vector2(0.71f, 0.83f), new Vector2(0.85f, 0.9f), $"- {damage} HP");
-
             message.yOffset = -20;
             message.color = Color.red;
             message.Play();
 
-            if (health == 0)
-                StartCoroutine(Death());
+            // стандартная версия
+            base.GetDamage(damage);
         }
 
-        public IEnumerator Death()
+        public override void Heal(int health) // расширяем метод
         {
-            yield return StartCoroutine(LevelGraph.levelGraph.battle.EndBattle(true));
-            Destroy(gameObject);
+            // всплывающее сообщение
+            var message = AppearingAnim.CreateMsg("EnemyDamage", new Vector2(0.71f, 0.83f), new Vector2(0.85f, 0.9f), $"+ {health} HP");
+            message.yOffset = -20;
+            message.color = Color.green;
+            message.Play();
+
+            // стандартная версия
+            base.Heal(health);
+        }
+
+        public override IEnumerator Death()
+        {
+            yield return StartCoroutine(LevelGraph.levelGraph.battle.EndBattle(true)); // окончить битву
+            StartCoroutine(base.Death());
         }
     }
 }

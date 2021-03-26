@@ -13,158 +13,147 @@ namespace DiceyDungeonsAR.Battle
 {
     public class BattleController : MonoBehaviour
     {
-        [NonSerialized] public Enemy enemy;
-        [NonSerialized] public Player player;
-        [NonSerialized] public List<Cube> cubes;
-        bool battle = false;
-        [NonSerialized] public bool playerTurn = true;
-        [NonSerialized] public bool turnEnded = false;
+        RectTransform canvasTr; // быстрая ссылка на трансформ канваса
 
-        public Sprite[] cubesSprites;
-        public RectTransform cardPrefab;
-        public Cube cubePrefab;
-        public SkipTurn skipButtonPrefab;
-        public Bar barPrefab;
+        [NonSerialized] public Enemy enemy; // враг
+        [NonSerialized] public Player player; // игрок
 
-        public void SetUpOpponents(Enemy enemy)
+        [NonSerialized] public List<Cube> cubes; // кубики
+
+        bool battle = false; // идёт ли битва
+        [NonSerialized] public bool playerTurn = true; // ход игрока?
+        [NonSerialized] public bool turnEnded = false; // текущий ход окончен?
+
+        // для Юнити
+        public Sprite[] cubesSprites; // спрайты кубиков
+        public RectTransform cardPrefab; // префаб карточки
+        public Cube cubePrefab; // префаб кубика
+        public SkipTurn skipButtonPrefab; // префаб кнопки пропуска хода
+        public Bar barPrefab; // префаб полоски для скрипта Bar.cs
+
+        // методы
+        public void SetUpOpponents(Enemy enemy) // подготовка
         {
-            this.enemy = enemy;
+            this.enemy = enemy; // ссылка на врага
             enemy.transform.parent = LevelGraph.levelGraph.transform;
             enemy.transform.localPosition = new Vector3(1.6f, 0, 0);
-            enemy.transform.localRotation = Quaternion.LookRotation(Vector3.left, Vector3.up);
+            enemy.transform.localRotation = Quaternion.LookRotation(Vector3.left, Vector3.up); // смотреть на игрока
             enemy.transform.localScale *= 2;
 
-            player = LevelGraph.levelGraph.player;
+            player = LevelGraph.levelGraph.player; // ссылка на игрока
             player.transform.localPosition = new Vector3(-1.6f, 0, 0);
-            player.transform.localRotation = Quaternion.LookRotation(Vector3.right, Vector3.up);
-            player.transform.localScale *= 2;
+            player.transform.localRotation = Quaternion.LookRotation(Vector3.right, Vector3.up); // смотреть на врага
+            player.transform.localScale *= 2; // сделать большими
         }
 
         public IEnumerator StartBattle()
         {
-            battle = true;
-            var canvasTr = (RectTransform)GameObject.FindGameObjectWithTag("Canvas").transform;
+            battle = true; // битва началась
+            canvasTr = (RectTransform)GameObject.FindGameObjectWithTag("Canvas").transform; // трансформ канваса для UI
 
-            SkipTurn button = Instantiate(skipButtonPrefab, canvasTr);
+            SkipTurn button = Instantiate(skipButtonPrefab, canvasTr); // создать кнопку пропуска
 
-            enemy.healthBar = Bar.CreateBar(canvasTr, new Vector2(0.758f, 0.828f), new Vector2(0.930f, 0.883f));
-            enemy.healthBar.maxValue = enemy.MaxHealth;
-            enemy.healthBar.startValue = enemy.Health;
-            Text enemyText = CreateText(canvasTr, new Vector2(0.758f, 0.883f), new Vector2(0.897f, 0.950f), enemy.Name);
+            enemy.Initialize(); // инициализация врага
 
-            while (battle)
+            while (battle) // пока идёт битва
             {
-                if (playerTurn)
+                if (playerTurn) // ход игрока
                 {
-                    button.GetComponent<Button>().interactable = true;
-                    CreateCards(player.Inventory);
-                    cubes = CreateCubes(Mathf.Min(player.Level + 2, 5), true, canvasTr);
+                    button.GetComponent<Button>().interactable = true; // можно нажать на кнопку
 
-                    yield return new WaitUntil(() => LevelGraph.levelGraph.battle.turnEnded);
+                    CreateCards(player.inventory); // создаём карточки из инвентаря игрока
+                    cubes = CreateCubes(Mathf.Min(player.Level + 2, 5), true); // кубики для игрока по формуле, но не больше 5
+
+                    yield return new WaitUntil(() => LevelGraph.levelGraph.battle.turnEnded); // ждать окончания хода
                 }
-                else
+                else // ход врага
                 {
-                    button.GetComponent<Button>().interactable = false;
-                    CreateCards(enemy.Cards);
-                    cubes = CreateCubes(enemy.Level == 6 ? 4 : 3, false, canvasTr);
+                    button.GetComponent<Button>().interactable = false; // нельзя нажать на кнопку (не твой ход)
 
-                    var cor = StartCoroutine(EnemyTurn());
-                    yield return new WaitUntil(() => LevelGraph.levelGraph.battle.turnEnded);
-                    StopCoroutine(cor);
+                    CreateCards(enemy.inventory); // создаём карточки из инвентаря врага
+                    cubes = CreateCubes(enemy.CubesCount, false); // кубики для врага
+
+                    var cor = StartCoroutine(EnemyTurn()); // начать ход врага
+                    yield return new WaitUntil(() => LevelGraph.levelGraph.battle.turnEnded); // ждать окончания хода
+                    StopCoroutine(cor); // принудительно закончить ход врага
                 }
 
+                turnEnded = false; // сбрасываем переменную
+                playerTurn = !playerTurn; // смена хода
 
-                turnEnded = false;
-                playerTurn = !playerTurn;
-
+                foreach (var с in FindObjectsOfType<ActionCard>())
+                    Destroy(с.gameObject); // уничтожить все карточки
                 foreach (var c in FindObjectsOfType<Cube>())
-                    if (c.card == null)
-                        Destroy(c.gameObject);
-                foreach (var im in FindObjectsOfType<Image>())
-                    if (im.GetComponent<ActionCard>() != null)
-                        Destroy(im.gameObject);
+                    Destroy(c.gameObject); // уничтожить все кубики
 
                 yield return null;
             }
 
-            Destroy(enemy.healthBar.gameObject);
-            Destroy(enemyText);
-            Destroy(button.gameObject);
+            Destroy(button.gameObject); // уничтожить кнопку
         }
 
-        public List<Cube> CreateCubes(int count, bool toPlayer, RectTransform canvasTr)
+        public List<Cube> CreateCubes(int count, bool toPlayer) // создать n кубиков
         {
             var cubes = new List<Cube>();
             for (int i = 0; i < count; i++)
             {
-                var c = Cube.CreateCube(canvasTr, (byte)(UnityEngine.Random.Range(0, 6) + 1));
+                var c = Cube.CreateCube(canvasTr, (byte)(UnityEngine.Random.Range(0, 6) + 1)); // создать кубик со случайным числом
 
-                var tr = c.GetComponent<RectTransform>();
-                tr.localScale *= 0.12f * canvasTr.sizeDelta.y / tr.sizeDelta.y;
-                var anchors = toPlayer ? new Vector2(0.4f, 0.1f) : new Vector2(0.6f, 0.9f);
-                var xOffset = tr.sizeDelta.x * tr.localScale.x * 1.3f * i * (toPlayer ? 1 : -1);
+                var tr = c.GetComponent<RectTransform>(); // трансформ 2d графики
+                // во сколько раз 0.12 от высоты экрана (кубик по формуле) больше стандартной высоты куба
+                tr.localScale *= (0.12f * canvasTr.sizeDelta.y) / tr.sizeDelta.y;
+
+                var anchors = toPlayer ? new Vector2(0.4f, 0.1f) : new Vector2(0.6f, 0.9f); // якорь (точка отсчёта координат)
+                var xOffset = tr.localScale.x * (tr.rect.width * 1.3f) * i * (toPlayer ? 1 : -1); // сдвиг кубика от якоря
+                // (tr.rect.width * 1.3f) - ширина кубика с небольшим пробелом, i раз отступ, localScale - множитель размера
+                // у врага порядок справа налево
                 var pos = new Vector2(xOffset + canvasTr.sizeDelta.x * anchors.x, canvasTr.sizeDelta.y * anchors.y);
                 tr.anchoredPosition = pos;
+                // устанавливаем позицию кубика относительно якорей на канвасе плюс отступ
 
                 cubes.Add(c);
             }
             return cubes;
         }
 
-        void CreateCards(CardDescription[,] cards)
+        void CreateCards(CardDescription[,] cards) // создать карточки из массива описаний
         {
-            for (byte j = 0; j < 2; j++)
-                for (byte i = 0; i < cards.GetUpperBound(0) + 1; i++)
-                    if (cards[i, j] != null)
+            for (byte j = 0; j < 2; j++) // 0 - основной инвентарь, 1 - ряд маленьких карточек (если на 0 стоит тоже маленькая)
+                for (byte i = 0; i < cards.GetUpperBound(0) + 1; i++) // проход по ряду
+                    if (cards[i, j] != null) // есть описание
                     {
                         ActionCard card;
-                        switch (cards[i, j].action) {
+                        switch (cards[i, j].action) // зависит от действия карточки
+                        {
                             case CardAction.Damage:
-                                card = ActionCard.CreateDamageCard(cards[i, j]);
+                                card = ActionCard.CreateDamageCard(cards[i, j]); // урон
                                 break;
                             case CardAction.ChangeDice:
-                                card = ActionCard.CreateChangeDiceCard(cards[i, j].uses);
+                                card = ActionCard.CreateChangeDiceCard(cards[i, j].uses); // перебросить
                                 break;
                             case CardAction.DoubleDamage:
-                                card = ActionCard.CreateDoubleDamageCard(cards[i, j]);
+                                card = ActionCard.CreateDoubleDamageCard(cards[i, j]); // двойной урон
                                 break;
-                            default:
+                            default: // не реализовано
                                 throw new NotImplementedException($"{cards[i, j].action} action hasn't been implemented yet");
                         }
 
-                        var tr = (RectTransform)card.transform;
-                        var width = tr.rect.width * tr.localScale.x;
-                        var canvasWidth = ((RectTransform)tr.parent).sizeDelta.x;
+                        var tr = (RectTransform)card.transform; // трансформ карточки
+                        var width = tr.rect.width * tr.localScale.x; // ширина карточки с учётом масштаба
+                        var canvasWidth = ((RectTransform)tr.parent).sizeDelta.x; // ширина экрана
+                        // сдвиг от якоря (карточки в ряд)
+                        // width + 0.04f*canvasWidth - ширина карточки плюс расстояние между карточками, i раз отступ (для i-ого места)
+                        // 0.04f*canvasWidth + width*0.5f - общий сдвиг от края экрана
                         tr.anchoredPosition = new Vector2(0.04f*canvasWidth + width*0.5f + (width + 0.04f*canvasWidth)*i, 0);
                     }
         }
 
-        static public Text CreateText(Transform canvasTr, Vector2 anchorMin, Vector2 anchorMax, string text)
-        {
-            var obj = new GameObject(text, typeof(Outline));
-            var tr = obj.AddComponent<RectTransform>();
-            tr.SetParent(canvasTr);
-            tr.anchorMin = anchorMin;
-            tr.anchorMax = anchorMax;
-            tr.anchoredPosition = Vector2.zero;
-            tr.sizeDelta = anchorMax - anchorMin;
-
-            var textComp = obj.AddComponent<Text>();
-            textComp.text = text;
-            textComp.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            textComp.alignment = TextAnchor.LowerLeft;
-            textComp.resizeTextForBestFit = true;
-            textComp.resizeTextMaxSize = 300;
-            textComp.resizeTextMinSize = 2;
-
-            return textComp;
-        }
-
-        public IEnumerator EndBattle(bool win)
+        public IEnumerator EndBattle(bool win) // конец битвы
         {
             battle = false;
             turnEnded = true;
 
+            // всплывающее сообщение
             var message = AppearingAnim.CreateMsg("WinMessage", new Vector2(0.29f, 0.37f), new Vector2(0.7f, 0.68f), win ? "Ты победил!" : "Ты проиграл");
 
             message.yOffset = 50;
@@ -172,27 +161,27 @@ namespace DiceyDungeonsAR.Battle
             message.period = 2;
             message.Play();
 
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(2); // пауза
 
             if (win)
             {
                 for (int i = 2; i < transform.childCount; i++)
-                    transform.GetChild(i).gameObject.SetActive(true);
+                    transform.GetChild(i).gameObject.SetActive(true); // включаем поля и рёбра уровня
 
-                player.transform.localScale /= 2;
+                player.transform.localScale /= 2; // возврат игрока на место
                 player.transform.position = player.currentField.transform.position + new Vector3(0, player.currentField.transform.localScale.y, 0);
-                StartCoroutine(player.AddXP(enemy.Level));
+                StartCoroutine(player.AddXP(enemy.Level)); // дать опыт
             }
             else
             {
                 yield return new WaitForSeconds(1);
-                SceneManager.LoadScene(MenuHandler.mainMenuScene_);
+                SceneManager.LoadScene(MenuHandler.mainMenuScene_); // меню
             }
 
-            ResetBattle();
+            ResetBattle(); // сброс настроек контроллера
         }
 
-        void ResetBattle()
+        void ResetBattle() // сброс переменных
         {
             enemy = null;
             battle = false;

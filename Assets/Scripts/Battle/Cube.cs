@@ -17,62 +17,64 @@ namespace DiceyDungeonsAR.Battle
             get => value;
             set
             {
-                if (value < 7)
+                if (value < 7) // поменять картинку
                 {
                     GetComponent<Image>().sprite = LevelGraph.levelGraph.battle.cubesSprites[value];
                     this.value = value;
                 }
             }
         }
-        [NonSerialized] public ActionCard card;
 
-        public void OnDrag(PointerEventData eventData)
+        [NonSerialized] public ActionCard card; // карточка, которой принадлежит кубик
+
+        public void OnDrag(PointerEventData eventData) // перетаскивание кубика
         {
-            if (card == null && LevelGraph.levelGraph.battle.playerTurn)
+            if (card == null && LevelGraph.levelGraph.battle.playerTurn) // можно тащить, только если нет карточки и ход игрока
             {
-                Vector2 pos = eventData.position;
+                Vector2 pos = eventData.position; // где курсор/касание
                 GetComponent<RectTransform>().anchoredPosition = pos;
             }
         }
 
-        IEnumerator OnTriggerEnter2D(Collider2D collision)
+        IEnumerator OnTriggerEnter2D(Collider2D collision) // кубик соприкасается с другим
         {
-            if (Value != 0)
+            if (Value != 0) // если другой кубик не пустой, то не обрабатываем
                 yield break;
             var cube = collision.gameObject.GetComponent<Cube>();
-            if (cube == null)
+            if (cube == null) // конец, если коснулись не кубика
                 yield break;
 
-            bool accept;
-            if (card.slots.Length == 1)
+            bool accept; // принять второй кубик?
+            if (card.slots.Length == 1) // если у карточки 1 слот, то проверим кубик на условие
                 accept = card.condition.Check(cube.Value);
             else
             {
+                // взять противоположный слот (возможно, уже со значением)
                 var otherCube = card.slots[1] == this ? card.slots[0] : card.slots[1];
-                accept = card.condition.Check(cube.Value, otherCube.Value);
+                accept = card.condition.Check(cube.Value, otherCube.Value); // проверка обоих слотов
             }
 
-            if (accept)
+            if (accept) // если приняли
             {
-                Value = cube.Value;
+                Value = cube.Value; // пустой кубик (этот) получает значение
 
                 BattleController battle = LevelGraph.levelGraph.battle;
                 for (int i = 0; i < battle.cubes.Count; i++)
                     if (battle.cubes[i] == cube)
-                        battle.cubes[i] = null;
+                        battle.cubes[i] = null; // найти использованный кубик в списке и заменить его на null
 
-                Destroy(cube.gameObject);
+                Destroy(cube.gameObject); // уничтожить использованный кубик
                 if (transform.childCount != 0)
-                    Destroy(transform.GetChild(0).gameObject); // delete condition description
+                    Destroy(transform.GetChild(0).gameObject); // уничтожить описание условия
 
                 if (!battle.playerTurn)
-                    yield return new WaitForSeconds(0.5f); // wait instead of anim [temp]
+                    yield return new WaitForSeconds(0.5f); // подождать, чтобы карточка не исчезла сразу (временно, вместо анимации)
                 else
-                    yield return null; // wait for destroying cube
+                    yield return null; // подождать уничтожения кубика
 
-                card.TryAction();
+                card.TryToDoAction(); // попробовать выполнить действие
                 if (new List<Cube>(FindObjectsOfType<Cube>()).FindAll(c => c.card == null).Count == 0)
-                    battle.turnEnded = true;
+                    battle.turnEnded = true; // закончить ход, если не осталось "свободных" кубиков
             }
         }
 
@@ -80,38 +82,31 @@ namespace DiceyDungeonsAR.Battle
         {
             Cube c = Instantiate(LevelGraph.levelGraph.battle.cubePrefab);
 
-            var tr = (RectTransform)c.transform;
+            var tr = (RectTransform)c.transform; // трансформ 2d графики
             tr.SetParent(parent);
-            tr.anchorMin = tr.anchorMax = Vector2.zero;
+            tr.anchorMin = tr.anchorMax = Vector2.zero; // по умольчанию кубик стоит в (0; 0)
             tr.anchoredPosition = Vector2.zero;
 
             c.Value = value;
-            c.card = card;
+            c.card = card; // карточка, которой принадлежит кубик
             if (value == 0 && card.condition.type != (ConditionType.None | ConditionType.EvOd | ConditionType.Doubles))
             {
+                // если число - 0 (пустой кубик на карточке), и у карточки есть определённое условие, то добавить описание
                 var textObj = new GameObject("Condition");
 
                 var textTr = textObj.AddComponent<RectTransform>();
                 textTr.SetParent(tr);
-                textTr.anchorMin = textTr.anchorMax = Vector2.one / 2;
+                textTr.anchorMin = Vector2.zero;
+                textTr.anchorMax = Vector2.one; // якоря в углах кубика
+                textTr.offsetMin = textTr.offsetMax = Vector2.zero; // нет отступа (вся площадь кубика)
                 textTr.anchoredPosition = Vector2.zero;
-                //textTr.sizeDelta = new Vector2(tr.sizeDelta.x, tr.sizeDelta.y * 2 / 3);
 
                 var text = textObj.AddComponent<TextMeshProUGUI>();
                 text.fontSize = 14;
-                text.alignment = TextAlignmentOptions.Center;
-                text.enableKerning = false;
+                text.alignment = TextAlignmentOptions.Center; // по центру
+                text.enableKerning = false; // вредный параметр
             }
             return c;
-        }
-
-        void Start()
-        {
-            if (value == 0 && card.condition.type != (ConditionType.None | ConditionType.EvOd | ConditionType.Doubles))
-            {
-                var tr = (RectTransform)transform;
-                ((RectTransform)tr.GetChild(0)).sizeDelta = new Vector2(tr.sizeDelta.x, tr.sizeDelta.y * 2 / 3);
-            }
         }
     }
 }

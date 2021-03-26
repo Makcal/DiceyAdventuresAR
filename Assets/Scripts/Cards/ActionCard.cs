@@ -25,7 +25,7 @@ namespace DiceyDungeonsAR.Battle
                 tmpTr.GetComponent<TextMeshProUGUI>().text = $"{value} осталось";
             }
         }
-        public Color Color
+        public Color32 Color
         {
             get => GetComponent<Image>().color;
             set
@@ -43,7 +43,7 @@ namespace DiceyDungeonsAR.Battle
             return (byte)(slots[0].Value + (slotsCount ? slots[1].Value : 0));
         }
 
-        public bool TryAction()
+        public bool TryToDoAction()
         {
             foreach (var c in slots)
                 if (c.Value == 0)
@@ -66,15 +66,13 @@ namespace DiceyDungeonsAR.Battle
             return true;
         }
 
-        static T CreateCard<T>(bool size, bool slotsCount, Condition condition, byte uses, Color color, string text, string bonus) where T : ActionCard
+        static T CreateCard<T>(bool size, bool slotsCount, Condition condition, byte uses, Color32 color, string text, string bonus) where T : ActionCard
         {
             RectTransform tr = Instantiate(LevelGraph.levelGraph.battle.cardPrefab);
             var canvasTr = GameObject.FindGameObjectWithTag("Canvas").transform;
             tr.SetParent(canvasTr);
             tr.sizeDelta = new Vector2(200, size ? 200 : 130);
 
-            color /= 255;
-            color.a = 1;
             tr.GetComponent<Image>().color = color;
 
             T card = tr.gameObject.AddComponent<T>();
@@ -140,7 +138,7 @@ namespace DiceyDungeonsAR.Battle
 
         static public ChangeDiceCard CreateChangeDiceCard(byte uses = 3)
         {
-            var diceCard = CreateCard<ChangeDiceCard>(true, false, Condition.TrueCond, uses, new Color(123, 123, 123), "Перебросить кубик", "");
+            var diceCard = CreateCard<ChangeDiceCard>(true, false, Condition.TrueCond, uses, new Color32(123, 123, 123, 255), "Перебросить кубик", "");
             return diceCard;
         }
         static public DoubleDamageCard CreateDoubleDamageCard(CardDescription description)

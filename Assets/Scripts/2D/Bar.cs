@@ -9,9 +9,9 @@ namespace DiceyDungeonsAR.UI
 	public class Bar : MonoBehaviour
 	{
 		[NonSerialized] public float maxValue = 100;
-		public float startValue = 0;
-		public Color mainColor = new Color(255, 110, 110);
-		public Color backgroundColor = new Color(140, 43, 43);
+		[NonSerialized] public float startValue = 0;
+		public Color32 mainColor = new Color32(255, 110, 110, 255);
+		public Color32 backgroundColor = new Color32(140, 43, 43, 255);
 		Slider slider;
 
 		public float MaxValue
@@ -38,12 +38,10 @@ namespace DiceyDungeonsAR.UI
 		{
 			slider = GetComponent<Slider>();
 
-			var color = mainColor / 255;
-			color.a = 1;
+			var color = mainColor;
             slider.fillRect.GetComponent<Image>().color = color;
 
-			color = backgroundColor / 255;
-			color.a = 1;
+			color = backgroundColor;
 			slider.transform.GetChild(0).GetComponent<Image>().color = color;
 
             MaxValue = maxValue;

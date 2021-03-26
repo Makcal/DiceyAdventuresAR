@@ -5,12 +5,13 @@ namespace DiceyDungeonsAR.Enemies
     public class Boss_1 : Enemy
     {
         public override string Name { get; } = "Кристаллина";
+        protected override int StartHealth { get; } = 55;
+        public override int CubesCount { get; } = 4;
         public override int Level { get; } = 6;
-        public override int MaxHealth { get; } = 55;
 
-        public override void FillInventory()
+        protected override void FillInventory()
         {
-            Cards[0, 0] = new CardDescription()
+            inventory[0, 0] = new CardDescription()
             {
                 action = CardAction.Damage,
                 bonus = new Bonus(),

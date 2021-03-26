@@ -5,19 +5,20 @@ namespace DiceyDungeonsAR.Enemies
     public class Level3_1 : Enemy
     {
         public override string Name { get; } = "Банка ужасов";
+        protected override int StartHealth { get; } = 34;
+        public override int CubesCount { get; } = 3;
         public override int Level { get; } = 3;
-        public override int MaxHealth { get; } = 34;
 
-        public override void FillInventory()
+        protected override void FillInventory()
         {
-            Cards[0, 0] = new CardDescription()
+            inventory[0, 0] = new CardDescription()
             {
                 action = CardAction.Damage,
                 bonus = new Bonus() { type = BonusType.Poison },
                 condition = new Condition() { type = ConditionType.Min, number = 4 },
             };
 
-            Cards[1, 0] = new CardDescription()
+            inventory[1, 0] = new CardDescription()
             {
                 action = CardAction.Damage,
                 bonus = new Bonus() { type = BonusType.Poison },

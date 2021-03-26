@@ -10,26 +10,26 @@ namespace DiceyDungeonsAR.Battle
         //public Func<int, int> func;
         public byte value;
 
-        public Color GetColor()
+        public Color32 GetColor()
         {
             switch (type)
             {
                 case BonusType.Thorns:
                 case BonusType.Heal:
-                    return new Color(90, 150, 110);
+                    return new Color32(90, 150, 110, 255);
                 case BonusType.Freeze:
-                    return new Color(115, 200, 255);
+                    return new Color32(115, 200, 255, 255);
                 case BonusType.Weaken:
-                    return new Color(255, 150, 70);
+                    return new Color32(255, 150, 70, 255);
                 case BonusType.Curse:
                 case BonusType.Lock:
                 case BonusType.Poison:
-                    return new Color(180, 160, 240);
+                    return new Color32(180, 160, 240, 255);
                 case BonusType.ReUse:
                 case BonusType.Shock:
-                    return new Color(210, 180, 70);
+                    return new Color32(210, 180, 70, 255);
                 default:
-                    return new Color(255, 110, 110);
+                    return new Color32(255, 110, 110, 255);
             }
         }
 

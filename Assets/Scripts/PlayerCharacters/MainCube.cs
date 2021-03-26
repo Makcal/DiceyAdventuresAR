@@ -5,7 +5,8 @@ namespace DiceyDungeonsAR.GameObjects.Players
 {
     public class MainCube : Player
     {
-        public override int StartHealth { get; } = 24;
-        public override int UpgradeHealth { get; } = 4;
+        public override string Name { get; } = "Воин";
+        protected override int StartHealth { get; } = 24;
+        protected override int UpgradeHealth { get; } = 4;
     }
 }

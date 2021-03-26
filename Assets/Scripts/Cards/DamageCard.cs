@@ -10,9 +10,9 @@ namespace DiceyDungeonsAR.Battle
         {
             var battle = LevelGraph.levelGraph.battle;
             if (battle.playerTurn)
-                battle.enemy.DealDamage(GetSum());
+                battle.enemy.GetDamage(GetSum());
             else
-                battle.player.DealDamage(GetSum());
+                battle.player.GetDamage(GetSum());
         }
     }
 }

@@ -9,7 +9,7 @@ public class AppearingAnim : MonoBehaviour
     RectTransform transf;
     float canvasHeight;
 
-    public Color color;
+    public Color32 color;
     public float period = 1;
     public float yOffset = 0;
 
@@ -59,10 +59,12 @@ public class AppearingAnim : MonoBehaviour
 
         float a = Mathf.Min((Time.time - startTime) * 2 / period, 2);
 
-        grapic.color = new Color(color.r, color.g, color.b, a > 1 ? 2 - a : a);
+        grapic.color = new Color(color.r / 255, color.g / 255, color.b / 255, a > 1 ? 2 - a : a);
 
-        var pos = new Vector2();
-        pos.y = yOffset * canvasHeight / 515 * a / 2;
+        var pos = new Vector2
+        {
+            y = yOffset * canvasHeight / 515 * a / 2
+        };
         transf.offsetMin = transf.offsetMax = pos;
 
         if (a == 2)

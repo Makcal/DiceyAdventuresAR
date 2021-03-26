@@ -31,12 +31,12 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         IEnumerator Start()
         {
-            levelGraph = this;
-            battle = GetComponent<BattleController>();
+            levelGraph = this; // быстрая ссылка
+            battle = GetComponent<BattleController>(); // ссылка на контроллер битвы
 
-            GenerateLevel();
+            GenerateLevel(); // генерация уровня
 
-            player = FindObjectOfType<Player>();
+            player = FindObjectOfType<Player>(); // поиск игрока
             if (player == null)
             {
                 Debug.LogWarning("Player wasn't found");
@@ -44,14 +44,15 @@ namespace DiceyDungeonsAR.MyLevelGraph
             }
 
             yield return null; // подождать инициализацию полей, чтобы покрасить цвет первых полей (= meshRenderer, ждать Start один кадр)
-            player.Initialize();
+            player.Initialize(); // инициализация игрока
         }
 
         public void GenerateLevel()
         {
             Leaf.MIN_SIZE = MIN_LEAF_SIZE;
-            var root = new Leaf(new Vector2(-MAP_RADIUS, -MAP_RADIUS), new Vector2(MAP_RADIUS * 2, MAP_RADIUS * 2)); // "корень" для всех остальных листьев
-            leaves.Add(root);
+
+            var root = new Leaf(new Vector2(-MAP_RADIUS, -MAP_RADIUS), new Vector2(MAP_RADIUS * 2, MAP_RADIUS * 2));
+            leaves.Add(root); // "корень" для всех остальных листьев
 
             // снова и снова проходим по каждому листу, пока больше не останется листьев, которые можно разрезать
             List<Leaf> toBeChecked = new List<Leaf>(leaves); // очередь для проверки новых листев
@@ -94,34 +95,32 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 {
                     AddEdge(leaf.GetNearestField(conn), conn.GetNearestField(leaf));// перебираем связи листов и создаём рёбра
                 }
+
+            fields[UnityEngine.Random.Range(1, fields.Count)].PlacedItem = Instantiate(enemies3Level[0]);
         }
 
         public Field AddField(Vector2 pos)
         {
-            return AddField(pos.x, pos.y);
+            return AddField(pos.x, pos.y); // через вектор
         }
 
         public Field AddField(float x, float z)
         {
-            var field = Instantiate(fieldPrefab, transform).GetComponentInChildren<Field>();
-            field.Initialize(this, x, 0, z);
+            var field = Instantiate(fieldPrefab, transform).GetComponentInChildren<Field>(); // создать поля и найти его компонент
+            field.Initialize(this, x, 0, z); // первичная настройка поля
             return field;
         }
  
-        public Field FindField(string vertexName)
+        public Field FindField(string vertexName) // поиск по названию
         {
             foreach (var f in fields)
-            {
-                if (f.name.Equals(vertexName))
-                {
+                if (f.name == vertexName)
                     return f;
-                }
-            }
  
             return null;
         }
  
-        public Edge AddEdge(string firstName, string secondName, int weight = 0)
+        public Edge AddEdge(string firstName, string secondName, int weight = 0) // соединить поля по имени
         {
             var f1 = FindField(firstName);
             var f2 = FindField(secondName);
@@ -129,7 +128,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             return AddEdge(f1, f2, weight);
         }
         
-        public Edge AddEdge(Field first, Field second, int weight = 0)
+        public Edge AddEdge(Field first, Field second, int weight = 0) // соединить поля
         {
             if (fields.Contains(first) && fields.Contains(second) && ! first.ConnectedFields().Contains(second))
             {
@@ -142,36 +141,37 @@ namespace DiceyDungeonsAR.MyLevelGraph
             return null;
         }
 
-        public Edge AddEdge(int firstIndex, int secondIndex, int weight = 0)
+        public Edge AddEdge(int firstIndex, int secondIndex, int weight = 0) // соединить поля по номеру в списке
         {
-            if (Mathf.Max(firstIndex, secondIndex) < fields.Count && Mathf.Min(firstIndex, secondIndex) >= 0)
+            if (Mathf.Max(firstIndex, secondIndex) < fields.Count && Mathf.Min(firstIndex, secondIndex) >= 0) // проверка границ индексов
                 return AddEdge(fields[firstIndex], fields[secondIndex], weight);
             else
                 return null;
         }
 
-        public IEnumerator StartBattle(Enemy enemy)
+        public IEnumerator StartBattle(Enemy enemy) // начать битву
         {
+            // создать всплывающее сообщение
             AppearingAnim msg = AppearingAnim.CreateMsg("StartBattleMsg", new Vector2(0.21f, 0.37f), new Vector2(0.78f, 0.68f), "Битва начинается");
             msg.color = Color.red;
             msg.yOffset = 50;
             msg.period = 2;
             msg.Play();
 
-            battle.SetUpOpponents(enemy);
+            battle.SetUpOpponents(enemy); // настройка оппонентов (увеличить и поставить)
 
             for (int i = 2; i < transform.childCount-1; i++)
-                transform.GetChild(i).gameObject.SetActive(false);
+                transform.GetChild(i).gameObject.SetActive(false); // выключить всё, кроме перых двух детей уровня (земли и игрока)
 
-            player.transform.GetChild(0).gameObject.SetActive(false);
+            player.transform.GetChild(0).gameObject.SetActive(false); // временно спрятать игрока и противника
             enemy.transform.GetChild(0).gameObject.SetActive(false);
 
-            yield return new WaitForSeconds(2.0f);
+            yield return new WaitForSeconds(2.0f); // подождать 2 секунды
 
-            player.transform.GetChild(0).gameObject.SetActive(true);
+            player.transform.GetChild(0).gameObject.SetActive(true); // они появились
             enemy.transform.GetChild(0).gameObject.SetActive(true);
 
-            StartCoroutine(battle.StartBattle());
+            StartCoroutine(battle.StartBattle()); // битва начинается
         }
     }
 }

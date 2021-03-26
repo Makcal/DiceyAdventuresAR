@@ -18,7 +18,8 @@ namespace DiceyDungeonsAR.Battle
         [NonSerialized] public Enemy enemy; // враг
         [NonSerialized] public Player player; // игрок
 
-        [NonSerialized] public List<Cube> cubes; // кубики
+        [NonSerialized] public List<Cube> cubes; // кубики на текущем ходу
+        private List<ActionCard> cards; // карточки
 
         bool battle = false; // идёт ли битва
         [NonSerialized] public bool playerTurn = true; // ход игрока?
@@ -61,7 +62,7 @@ namespace DiceyDungeonsAR.Battle
                 {
                     button.GetComponent<Button>().interactable = true; // можно нажать на кнопку
 
-                    CreateCards(player.inventory); // создаём карточки из инвентаря игрока
+                    cards = CreateCards(player.inventory); // создаём карточки из инвентаря игрока
                     cubes = CreateCubes(Mathf.Min(player.Level + 2, 5), true); // кубики для игрока по формуле, но не больше 5
 
                     yield return new WaitUntil(() => LevelGraph.levelGraph.battle.turnEnded); // ждать окончания хода
@@ -70,7 +71,7 @@ namespace DiceyDungeonsAR.Battle
                 {
                     button.GetComponent<Button>().interactable = false; // нельзя нажать на кнопку (не твой ход)
 
-                    CreateCards(enemy.inventory); // создаём карточки из инвентаря врага
+                    cards = CreateCards(enemy.inventory); // создаём карточки из инвентаря врага
                     cubes = CreateCubes(enemy.CubesCount, false); // кубики для врага
 
                     var cor = StartCoroutine(EnemyTurn()); // начать ход врага
@@ -81,10 +82,11 @@ namespace DiceyDungeonsAR.Battle
                 turnEnded = false; // сбрасываем переменную
                 playerTurn = !playerTurn; // смена хода
 
-                foreach (var с in FindObjectsOfType<ActionCard>())
-                    Destroy(с.gameObject); // уничтожить все карточки
-                foreach (var c in FindObjectsOfType<Cube>())
-                    Destroy(c.gameObject); // уничтожить все кубики
+                // ?. - проверка на null
+                foreach (var с in cards)
+                    Destroy(с?.gameObject); // уничтожить все карточки
+                foreach (var c in cubes)
+                    Destroy(c?.gameObject); // уничтожить все кубики
 
                 yield return null;
             }
@@ -116,27 +118,31 @@ namespace DiceyDungeonsAR.Battle
             return cubes;
         }
 
-        void CreateCards(CardDescription[,] cards) // создать карточки из массива описаний
+        List<ActionCard> CreateCards(CardDescription[,] descriptions) // создать карточки из массива описаний
         {
-            for (byte j = 0; j < 2; j++) // 0 - основной инвентарь, 1 - ряд маленьких карточек (если на 0 стоит тоже маленькая)
-                for (byte i = 0; i < cards.GetUpperBound(0) + 1; i++) // проход по ряду
-                    if (cards[i, j] != null) // есть описание
+            var cards = new List<ActionCard>();
+            for (byte j = 0; j < 2; j++)
+                // 0 - основной ряд (большие и маленькие)
+                // 1 - ряд маленьких карточек (если на ряде 0 стоит тоже маленькая)
+                for (byte i = 0; i < descriptions.GetUpperBound(0) + 1; i++) // проход по ряду
+                    if (descriptions[i, j] != null) // есть описание
                     {
                         ActionCard card;
-                        switch (cards[i, j].action) // зависит от действия карточки
+                        switch (descriptions[i, j].action) // зависит от действия карточки
                         {
                             case CardAction.Damage:
-                                card = ActionCard.CreateDamageCard(cards[i, j]); // урон
+                                card = ActionCard.CreateDamageCard(descriptions[i, j]); // урон
                                 break;
                             case CardAction.ChangeDice:
-                                card = ActionCard.CreateChangeDiceCard(cards[i, j].uses); // перебросить
+                                card = ActionCard.CreateChangeDiceCard(descriptions[i, j].uses); // перебросить
                                 break;
                             case CardAction.DoubleDamage:
-                                card = ActionCard.CreateDoubleDamageCard(cards[i, j]); // двойной урон
+                                card = ActionCard.CreateDoubleDamageCard(descriptions[i, j]); // двойной урон
                                 break;
                             default: // не реализовано
-                                throw new NotImplementedException($"{cards[i, j].action} action hasn't been implemented yet");
+                                throw new NotImplementedException($"{descriptions[i, j].action} action hasn't been implemented yet");
                         }
+                        cards.Add(card);
 
                         var tr = (RectTransform)card.transform; // трансформ карточки
                         var width = tr.rect.width * tr.localScale.x; // ширина карточки с учётом масштаба
@@ -146,6 +152,7 @@ namespace DiceyDungeonsAR.Battle
                         // 0.04f*canvasWidth + width*0.5f - общий сдвиг от края экрана
                         tr.anchoredPosition = new Vector2(0.04f*canvasWidth + width*0.5f + (width + 0.04f*canvasWidth)*i, 0);
                     }
+            return cards;
         }
 
         public IEnumerator EndBattle(bool win) // конец битвы
@@ -190,70 +197,77 @@ namespace DiceyDungeonsAR.Battle
             cubes = null;
         }
 
-        IEnumerator EnemyTurn()
+        IEnumerator EnemyTurn() // ход врага (корутина)
         {
-            var cards = new List<ActionCard>(FindObjectsOfType<ActionCard>());
+            // сортировка по приоритету. Если c1 - c2 > 0, то считается, что c2 > c1, чтобы сортировалось по убыванию (наоборот)
             cards.Sort((c1, c2) => c1.condition.GetPriority() - c2.condition.GetPriority());
 
-            yield return new WaitForSeconds(0.75f);
+            yield return new WaitForSeconds(0.75f); // пауза на "раздумья"
 
             foreach (var card in cards)
             {
-                var cubes = new List<Cube>(FindObjectsOfType<Cube>());
-                cubes = GetActiveCubes(cubes);
-                var suitableCubes = new List<Cube>();
+                cubes = GetActiveCubes(cubes); // отфильтровать и отсортировать список кубиков
+                var suitableCubes = new List<Cube>(); // удовлетворяющие кубики
 
-                if (card.condition.type == ConditionType.Doubles && card.slotsCount)
+                if (card.condition.type == ConditionType.Doubles && card.slotsCount) // карточка с условием двойнушек
                 {
-                    for (byte i = 6; i > 0; i--)
-                        if (cubes.FindAll(c => c.Value == i).Count >= 2)
-                            suitableCubes.AddRange(cubes.FindAll(c => c.Value == i).GetRange(0, 2));
+                    for (byte i = 6; i > 0; i--) // от 6 до 1
+                    {
+                        List<Cube> found = cubes.FindAll(c => c.Value == i); // все кубики с одинаковым числом
+                        if (found.Count >= 2) // есть хотя бы два таких
+                        {
+                            suitableCubes.AddRange(found.GetRange(0, 2)); // добавляем в список подходящих
+                            break; // готово
+                        }
+                    }
                     if (suitableCubes.Count == 0)
-                        continue;
+                        continue; // пропустить эту карточку, если не найдено подходящих кубиков
                 }
-                else if (card.slotsCount)
+                else if (card.slotsCount) // карточка с двумя слотами без условия
                 {
                     if (cubes.Count >= 2)
-                        suitableCubes.AddRange(cubes.GetRange(0, 2));
+                        suitableCubes.AddRange(cubes.GetRange(0, 2)); // просто два самых больших (первых в списке)
                     else
-                        continue;
+                        continue; // недостаточно кубиков
                 }
                 else
                 {
-                    var cube = cubes.Find(c => card.condition.Check(c.Value));
+                    var cube = cubes.Find(c => card.condition.Check(c.Value)); // найти первый кубик, что удовлетворяет условию
                     if (cube == null)
-                        continue;
+                        continue; // нет таких кубиков
                     suitableCubes.Add(cube);
                 }
-
-                List<Vector3> startPoses = suitableCubes.ConvertAll<Vector3>(c => c.transform.position);
+                
                 for (var i = 0; i < suitableCubes.Count; i++)
                 {
-                    float startTime = Time.time;
-                    while (suitableCubes[i])
+                    Vector3 startPose = suitableCubes[i].transform.position; // стартовая позиция
+                    float startTime = Time.time; // стартовое время
+
+                    while (suitableCubes[i]) // пока куб (есть, существует, не "съела" карточка)
                     {
-                        if (suitableCubes[i] && card)
+                        if (suitableCubes[i] && card) // если куб и карточка всё ещё существуют
                             suitableCubes[i].transform.position = Vector3.Lerp(
-                                startPoses[i],
-                                new List<Cube>(card.slots).FindAll(c => c.Value == 0)[0].transform.position,
-                                (Time.time - startTime) / 1.0f
-                            );
+                                startPose,
+                                // позиция первого пустого кубика в карточке
+                                new List<Cube>(card.slots).Find(c => c.Value == 0).transform.position,
+                                (Time.time - startTime) / 1.0f // отношение пройденного времени к полному теоретическому (1 секунда)
+                            ); // приближаем кубик к слоту в карточке для активации
                         yield return null;
                     }
                 }
 
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.5f); // пауза после каждой карточки
             }
 
-            yield return new WaitForSeconds(0.75f);
+            yield return new WaitForSeconds(0.75f); // пауза после хода
             turnEnded = true;
         }
 
         List<Cube> GetActiveCubes(List<Cube> cubes)
         {
-            cubes = new List<Cube>(cubes);
-            cubes.RemoveAll(c => c.card != null || c == null);
-            cubes.Sort((c1, c2) => c2.Value - c1.Value);
+            cubes = new List<Cube>(cubes); // клонируем список, чтобы не менять данный список
+            cubes.RemoveAll(c => c.card != null || c == null); // убрать из списка, если привязан к карточке или нет кубика вовсе
+            cubes.Sort((c1, c2) => c2.Value - c1.Value); // сортировка по числу на кубике
             return cubes;
         }
     }

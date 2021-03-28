@@ -1,11 +1,11 @@
 ﻿namespace DiceyDungeonsAR.Battle
 {
-    public class CardDescription
+    public class CardDescription // описание карточек (чтобы сохранять в инвентаре)
     {
-        public CardAction action;
-        public bool size = true, slotsCount = false;
-        public byte uses = 1;
-        public Condition condition = Condition.TrueCond;
-        public Bonus bonus = Bonus.NoneBonus;
+        public CardAction action; // тип карточки
+        public bool size = true, slotsCount = false; // размер и кол-во слотов
+        public byte uses = 1; // использования
+        public Condition condition; // структуры не обязательно создавать словом new
+        public Bonus bonus;
     }
 }

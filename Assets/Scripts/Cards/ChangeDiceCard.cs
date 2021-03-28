@@ -10,19 +10,16 @@ namespace DiceyDungeonsAR.Battle
             var battle = LevelGraph.levelGraph.battle;
 
             for (byte i = 0; i < battle.cubes.Count; i++)
-                if (battle.cubes[i] == null)
+                if (battle.cubes[i] == null) // найти первый пробел в списке кубиков
                 {
-                    var canvasTr = (RectTransform)GameObject.FindGameObjectWithTag("Canvas").transform;
-                    var c = Cube.CreateCube(canvasTr, (byte)(Random.Range(0, 6) + 1));
+                    var cube = Cube.CreateCube((byte)(Random.Range(0, 6) + 1)); // создать один кубик
+                    var tr = (RectTransform)cube.transform; // трансформ
 
-                    var tr = c.GetComponent<RectTransform>();
-                    tr.localScale *= 0.12f * canvasTr.sizeDelta.y / tr.sizeDelta.y;
-                    var anchors = new Vector2(0.4f, 0.1f);
-                    var xOffset = tr.sizeDelta.x * tr.localScale.x * 1.3f * i;
-                    var pos = new Vector2(xOffset + canvasTr.sizeDelta.x * anchors.x, canvasTr.sizeDelta.y * anchors.y);
-                    tr.anchoredPosition = pos;
+                    var xOffset = tr.localScale.x * (tr.rect.width * 1.3f) * i;
+                    var pos = new Vector2(xOffset + battle.canvasTr.sizeDelta.x * 0.4f, battle.canvasTr.sizeDelta.y * 0.1f);
+                    tr.anchoredPosition = pos; // вставить кубик на нужное место по формулам из BattleController
 
-                    battle.cubes[i] = c;
+                    battle.cubes[i] = cube; // заполнить пробел
                     break;
                 }
         }

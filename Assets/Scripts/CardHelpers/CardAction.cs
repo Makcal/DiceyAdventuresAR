@@ -1,16 +1,17 @@
 ﻿namespace DiceyDungeonsAR.Battle
 {
-    public enum CardAction
+    public enum CardAction // перечисление действий (классы) карточек (Damage по умолчанию)
     {
-        Damage,
-        DoubleDamage,
-        ChangeDice,
-        Curse,
-        Thorns,
-        Poison,
-        Freeze,
-        NewDices,
-        Shield,
-        Blind,
+        Damage, // урон
+        DoubleDamage, // двойной урон
+        ChangeDice, // перебросить
+        // не реализованы:
+        Curse, // проклянуть
+        Thorns, // шипы
+        Poison, // яд
+        Freeze, // заморозить
+        NewDices, // получить новые кубики
+        Shield, // щит
+        Blind, // ослепить
     }
 }

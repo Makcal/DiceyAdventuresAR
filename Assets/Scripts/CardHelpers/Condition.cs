@@ -1,19 +1,11 @@
 ﻿namespace DiceyDungeonsAR.Battle
 {
-    public struct Condition
+    public struct Condition // условие
     {
-        public ConditionType type;
-        public byte number;
+        public ConditionType type; // тип
+        public byte number; // число к условию
 
-        public static Condition TrueCond 
-        { 
-            get
-            {
-                return new Condition();
-            }
-        }
-
-        public string GetDesc()
+        public string GetDesc() // текстовые описания условия
         {
             switch (type)
             {
@@ -32,7 +24,7 @@
             }
         }
 
-        public bool Check(byte n)
+        public bool Check(byte n) // подходит ли число условию
         {
             switch (type)
             {

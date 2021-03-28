@@ -13,13 +13,13 @@ namespace DiceyDungeonsAR.Battle
 {
     public class BattleController : MonoBehaviour
     {
-        RectTransform canvasTr; // быстрая ссылка на трансформ канваса
+        [NonSerialized] public RectTransform canvasTr; // быстрая ссылка на трансформ канваса
 
         [NonSerialized] public Enemy enemy; // враг
         [NonSerialized] public Player player; // игрок
 
         [NonSerialized] public List<Cube> cubes; // кубики на текущем ходу
-        private List<ActionCard> cards; // карточки
+        [NonSerialized] public List<ActionCard> cards; // карточки
 
         bool battle = false; // идёт ли битва
         [NonSerialized] public bool playerTurn = true; // ход игрока?
@@ -82,11 +82,12 @@ namespace DiceyDungeonsAR.Battle
                 turnEnded = false; // сбрасываем переменную
                 playerTurn = !playerTurn; // смена хода
 
-                // ?. - проверка на null
-                foreach (var с in cards)
-                    Destroy(с?.gameObject); // уничтожить все карточки
+                foreach (var c in cards)
+                    if (c)
+                        Destroy(c.gameObject); // уничтожить все карточки
                 foreach (var c in cubes)
-                    Destroy(c?.gameObject); // уничтожить все кубики
+                    if (c)
+                        Destroy(c.gameObject); // уничтожить все кубики
 
                 yield return null;
             }
@@ -94,26 +95,23 @@ namespace DiceyDungeonsAR.Battle
             Destroy(button.gameObject); // уничтожить кнопку
         }
 
-        public List<Cube> CreateCubes(int count, bool toPlayer) // создать n кубиков
+        List<Cube> CreateCubes(int count, bool toPlayer) // создать n кубиков
         {
             var cubes = new List<Cube>();
             for (int i = 0; i < count; i++)
             {
-                var c = Cube.CreateCube(canvasTr, (byte)(UnityEngine.Random.Range(0, 6) + 1)); // создать кубик со случайным числом
-
-                var tr = c.GetComponent<RectTransform>(); // трансформ 2d графики
-                // во сколько раз 0.12 от высоты экрана (кубик по формуле) больше стандартной высоты куба
-                tr.localScale *= (0.12f * canvasTr.sizeDelta.y) / tr.sizeDelta.y;
+                var cube = Cube.CreateCube((byte)(UnityEngine.Random.Range(0, 6) + 1)); // создать кубик со случайным числом
+                var tr = cube.GetComponent<RectTransform>(); // трансформ 2d графики
 
                 var anchors = toPlayer ? new Vector2(0.4f, 0.1f) : new Vector2(0.6f, 0.9f); // якорь (точка отсчёта координат)
                 var xOffset = tr.localScale.x * (tr.rect.width * 1.3f) * i * (toPlayer ? 1 : -1); // сдвиг кубика от якоря
                 // (tr.rect.width * 1.3f) - ширина кубика с небольшим пробелом, i раз отступ, localScale - множитель размера
-                // у врага порядок справа налево
+                // у врага порядок справа налево (умножить на -1)
                 var pos = new Vector2(xOffset + canvasTr.sizeDelta.x * anchors.x, canvasTr.sizeDelta.y * anchors.y);
                 tr.anchoredPosition = pos;
                 // устанавливаем позицию кубика относительно якорей на канвасе плюс отступ
 
-                cubes.Add(c);
+                cubes.Add(cube);
             }
             return cubes;
         }
@@ -266,7 +264,7 @@ namespace DiceyDungeonsAR.Battle
         List<Cube> GetActiveCubes(List<Cube> cubes)
         {
             cubes = new List<Cube>(cubes); // клонируем список, чтобы не менять данный список
-            cubes.RemoveAll(c => c.card != null || c == null); // убрать из списка, если привязан к карточке или нет кубика вовсе
+            cubes.RemoveAll(c => c == null || c.card != null); // убрать из списка, если нет кубика вовсе или привязан к карточке
             cubes.Sort((c1, c2) => c2.Value - c1.Value); // сортировка по числу на кубике
             return cubes;
         }

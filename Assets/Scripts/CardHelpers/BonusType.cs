@@ -1,17 +1,17 @@
 ﻿namespace DiceyDungeonsAR.Battle
 {
-    public enum BonusType
+    public enum BonusType // перечисление типов бонусов
     {
         None,
-        Thorns,
-        Poison,
-        Freeze,
-        Heal,
-        Fire,
-        Weaken,
-        Curse,
-        ReUse,
-        Lock,
-        Shock,
+        Thorns, // шипы
+        Poison, // яд
+        Freeze, // заморозка
+        Heal, // лечение
+        Fire, // поджог
+        Weaken, // слабость
+        Curse, // проклятие
+        ReUse, // переиспользование
+        Lock, // блокировка
+        Shock, // шок
     }
 }

@@ -9,10 +9,12 @@ using System.Collections;
 
 namespace DiceyDungeonsAR.Battle
 {
-    public class Cube : MonoBehaviour, IDragHandler
+    public class Cube : MonoBehaviour, IDragHandler // интерфейс для перетаскивания
     {
+        [NonSerialized] public ActionCard card; // карточка, которой принадлежит кубик
+
         byte value;
-        public byte Value 
+        public byte Value // значение кубика (0 - пустой слот)
         {
             get => value;
             set
@@ -25,8 +27,6 @@ namespace DiceyDungeonsAR.Battle
             }
         }
 
-        [NonSerialized] public ActionCard card; // карточка, которой принадлежит кубик
-
         public void OnDrag(PointerEventData eventData) // перетаскивание кубика
         {
             if (card == null && LevelGraph.levelGraph.battle.playerTurn) // можно тащить, только если нет карточки и ход игрока
@@ -38,7 +38,7 @@ namespace DiceyDungeonsAR.Battle
 
         IEnumerator OnTriggerEnter2D(Collider2D collision) // кубик соприкасается с другим
         {
-            if (Value != 0) // если другой кубик не пустой, то не обрабатываем
+            if (Value != 0) // если этот кубик не пустой, то не обрабатываем (обрабатываем только от лица слота)
                 yield break;
             var cube = collision.gameObject.GetComponent<Cube>();
             if (cube == null) // конец, если коснулись не кубика
@@ -59,11 +59,12 @@ namespace DiceyDungeonsAR.Battle
                 Value = cube.Value; // пустой кубик (этот) получает значение
 
                 BattleController battle = LevelGraph.levelGraph.battle;
+
                 for (int i = 0; i < battle.cubes.Count; i++)
                     if (battle.cubes[i] == cube)
                         battle.cubes[i] = null; // найти использованный кубик в списке и заменить его на null
-
                 Destroy(cube.gameObject); // уничтожить использованный кубик
+
                 if (transform.childCount != 0)
                     Destroy(transform.GetChild(0).gameObject); // уничтожить описание условия
 
@@ -73,25 +74,40 @@ namespace DiceyDungeonsAR.Battle
                     yield return null; // подождать уничтожения кубика
 
                 card.TryToDoAction(); // попробовать выполнить действие
-                if (new List<Cube>(FindObjectsOfType<Cube>()).FindAll(c => c.card == null).Count == 0)
-                    battle.turnEnded = true; // закончить ход, если не осталось "свободных" кубиков
+                if (battle.cubes.FindAll(c => c != null).Count == 0)
+                    battle.turnEnded = true; // закончить ход, если не осталось кубиков
             }
         }
 
-        static public Cube CreateCube(Transform parent, byte value = 0, ActionCard card = null)
+        public static Cube CreateCube(byte value) // свободный кубик
         {
-            Cube c = Instantiate(LevelGraph.levelGraph.battle.cubePrefab);
+            return CreateCube(LevelGraph.levelGraph.battle.canvasTr, value, null);
+        }
+
+        public static Cube CreateCube(Transform parent, ActionCard card) // слот для карточки
+        {
+            return CreateCube(parent, 0, card);
+        }
+
+        static Cube CreateCube(Transform parent, byte value, ActionCard card) // создать кубик
+        {
+            BattleController battle = LevelGraph.levelGraph.battle;
+
+            Cube c = Instantiate(battle.cubePrefab);
 
             var tr = (RectTransform)c.transform; // трансформ 2d графики
             tr.SetParent(parent);
             tr.anchorMin = tr.anchorMax = Vector2.zero; // по умольчанию кубик стоит в (0; 0)
             tr.anchoredPosition = Vector2.zero;
 
+            var width = 0.12f * battle.canvasTr.sizeDelta.y; // теоритическая ширина кубика - 12% высоты канваса
+            tr.localScale *= width / tr.sizeDelta.y; // нужный масштаб для кубика
+
             c.Value = value;
             c.card = card; // карточка, которой принадлежит кубик
-            if (value == 0 && card.condition.type != (ConditionType.None | ConditionType.EvOd | ConditionType.Doubles))
+            if (value == 0 && card?.condition.type != (ConditionType.None | ConditionType.EvOd | ConditionType.Doubles))
             {
-                // если число - 0 (пустой кубик на карточке), и у карточки есть определённое условие, то добавить описание
+                // если число - 0 (слот карточки), и у карточки есть обычное условие, то добавить объект для текста
                 var textObj = new GameObject("Condition");
 
                 var textTr = textObj.AddComponent<RectTransform>();

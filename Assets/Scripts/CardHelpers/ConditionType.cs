@@ -1,11 +1,14 @@
-﻿public enum ConditionType
+﻿namespace DiceyDungeonsAR.Battle
 {
-    None,
-    Max,
-    Min,
-    Even,
-    Odd,
-    EvOd,
-    Number,
-    Doubles,
+    public enum ConditionType // перечисление типов условий (None по умолчанию)
+    {
+        None,
+        Max, // максимальное число
+        Min, // минимальное число
+        Even, // чётное
+        Odd, // нечётное
+        EvOd, // два варианта (не реализовано)
+        Number, // конкретное число
+        Doubles, // двойнушки (равные числа)
+    }
 }

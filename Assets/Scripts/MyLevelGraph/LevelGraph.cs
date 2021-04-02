@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Random;
 using DiceyDungeonsAR.GameObjects.Players;
 using DiceyDungeonsAR.GameObjects;
 using DiceyDungeonsAR.Enemies;
@@ -27,6 +28,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         [NonSerialized] public readonly List<Field> fields = new List<Field>(); // список полей
         [NonSerialized] public Player player; // ссылка на игрока
+        [NonSerialized] public Field startField; // первое поле игрока
         [NonSerialized] public BattleController battle; // ссылка на контроллер битвы
 
         IEnumerator Start()
@@ -47,7 +49,15 @@ namespace DiceyDungeonsAR.MyLevelGraph
             player.Initialize(); // инициализация игрока
         }
 
+        public void Restart() { UnityEngine.SceneManagement.SceneManager.LoadScene(1); }
+
         public void GenerateLevel()
+        {
+            GenerateMainPath();
+            CompleteGeneration();
+        }
+
+        void GenerateMainPath() // основа
         {
             Leaf.MIN_SIZE = MIN_LEAF_SIZE;
 
@@ -87,24 +97,44 @@ namespace DiceyDungeonsAR.MyLevelGraph
             foreach (var leaf in leaves)
             {
                 if (leaf.rightChild == null && leaf.leftChild == null && leaf.fieldPos != null)
-                     leaf.field = AddField((Vector2)leaf.fieldPos); // создаём поле
+                {
+                    leaf.field = CreateField((Vector2)leaf.fieldPos); // создаём поле
+                    fields.Add(leaf.field);
+                }
             }
 
             foreach (var leaf in leaves)
                 foreach (var conn in leaf.connections)
                 {
-                    AddEdge(leaf.GetNearestField(conn), conn.GetNearestField(leaf));// перебираем связи листов и создаём рёбра
+                    AddEdge(leaf.GetNearestField(conn), conn.GetNearestField(leaf)); // перебираем связи листов и создаём рёбра
                 }
-
-            fields[UnityEngine.Random.Range(1, fields.Count)].PlacedItem = Instantiate(enemies3Level[0]);
         }
 
-        public Field AddField(Vector2 pos)
+        void CompleteGeneration() // мелкие штрихи и объекты
         {
-            return AddField(pos.x, pos.y); // через вектор
+            List<Field> operatedFields; // копия списка, чтобы не менять основной
+
+            operatedFields = fields.FindAll(f => f.edges.Count == 1); // конечные поля графа (есть "вход", нет "выхода"; одно ребро)
+
+            startField = operatedFields[Range(0, operatedFields.Count)];
+            operatedFields.Remove(startField);
+
+            Field exitField = operatedFields[Range(0, operatedFields.Count)]; // случайное поле для выхода
+            exitField.PlacedItem = Instantiate(exitPrefab); // выход
+            operatedFields.Remove(exitField); // сюда уже ничего не добавить
+            foreach (var f in operatedFields)
+            {
+
+            }
+
         }
 
-        public Field AddField(float x, float z)
+        public Field CreateField(Vector2 pos)
+        {
+            return CreateField(pos.x, pos.y); // через вектор
+        }
+
+        public Field CreateField(float x, float z)
         {
             var field = Instantiate(fieldPrefab, transform).GetComponentInChildren<Field>(); // создать поля и найти его компонент
             field.Initialize(this, x, 0, z); // первичная настройка поля

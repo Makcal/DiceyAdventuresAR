@@ -67,7 +67,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
             CreateXPBar(new Vector2(0.068f, 0.067f), new Vector2(0.24f, 0.121f));
             CreateXPIcon(new Vector2(0.003f, 0.067f), new Vector2(0.064f, 0.121f));
 
-            currentField = targetField = levelGraph.fields[0]; // устанавливаем игрока на первое место
+            currentField = targetField = levelGraph.startField; // устанавливаем игрока на первое место
             transform.parent = levelGraph.transform; // игрок принадлежит уровню
             transform.SetSiblingIndex(1); // объект земли и игрока должны стоять первыми (после идут поля и рёбра)
 

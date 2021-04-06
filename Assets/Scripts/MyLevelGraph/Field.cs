@@ -9,19 +9,19 @@ namespace DiceyDungeonsAR.MyLevelGraph
 {
     public class Field : MonoBehaviour, ISelectableObject
     {
-        [NonSerialized] new public string name;
-        public readonly List<Edge> edges = new List<Edge>();
-        LevelGraph level;
+        [NonSerialized] new public string name; // имя поля
+        public List<Edge> Edges { get; } = new List<Edge>(); // список соединений
 
-        private bool attainable = false;
-        private Item placedItem = null;
-        [SerializeField] Material defaultMaterial, attainableMaterial, unattainableMaterial;
+        [SerializeField] Material defaultMaterial, attainableMaterial, unattainableMaterial; // покраска
+        float unattainableTime = 0; // время красного цвета
+
+        LevelGraph level; // ссылка на уровень
         MeshRenderer meshRenderer;
-        float unattainableTime = 0;
 
-        public bool IsSelected { get; set; } = false;
+        public bool IsSelected { get; set; } = false; // интерфейс
 
-        public Item PlacedItem
+        Item placedItem = null;
+        public Item PlacedItem // предмет, лежащий на поле
         {
             get => placedItem;
             set
@@ -29,7 +29,14 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 if (placedItem != null)
                     Destroy(placedItem.gameObject);
                 placedItem = value;
-                value.field = this;
+
+                if (value == null)
+                {
+                    print("LOL");
+                    return;
+                }
+
+                value.field = this; // стартовые параметры
                 value.transform.parent = transform.parent;
                 value.transform.localScale = Vector3.one;
                 value.transform.localPosition = new Vector3(0, 2 * transform.localScale.y, 0);
@@ -37,13 +44,14 @@ namespace DiceyDungeonsAR.MyLevelGraph
             }
         }
 
+        private bool attainable = false; // можно сейчас перейти на это поле за один ход?
         public bool Attainable
         {
             get => attainable;
             set
             {
                 attainable = value;
-                meshRenderer.material = value ? attainableMaterial : defaultMaterial;
+                meshRenderer.material = value ? attainableMaterial : defaultMaterial; // перекрасить поле
             }
         }
 
@@ -83,13 +91,13 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         public void AddEdge(Edge newEdge)
         {
-            edges.Add(newEdge); // занести в список
+            Edges.Add(newEdge); // занести в список
         }
 
         public List<Field> ConnectedFields()
         {
             var fields = new List<Field>();
-            foreach (var e in edges)
+            foreach (var e in Edges)
             {
                 fields.Add(e.startField == this ? e.connectedField : e.startField); // если первое поле равно этому, то взять второе,
                 // иначе первое (противоположное текущему полю)
@@ -104,9 +112,9 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 f.Attainable = false;
             foreach (var f in attainableFields) // соседние поля в зелёный
                 f.Attainable = true;
-            foreach (var e in level.player.currentField.edges) // прошлые рёбра в стандартный
+            foreach (var e in level.player.currentField.Edges) // прошлые рёбра в стандартный
                 e.Attainable = false;
-            foreach (var e in edges) // соседние рёбра в зелёный
+            foreach (var e in Edges) // соседние рёбра в зелёный
                 e.Attainable = true;
         }
 

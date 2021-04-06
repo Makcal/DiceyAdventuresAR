@@ -72,7 +72,7 @@ namespace DiceyDungeonsAR.Battle
                     button.GetComponent<Button>().interactable = false; // нельзя нажать на кнопку (не твой ход)
 
                     cards = CreateCards(enemy.inventory); // создаём карточки из инвентаря врага
-                    cubes = CreateCubes(enemy.CubesCount, false); // кубики для врага
+                    cubes = CreateCubes(Mathf.Min(enemy.CubesCount, 3), false); // кубики для врага
 
                     var cor = StartCoroutine(EnemyTurn()); // начать ход врага
                     yield return new WaitUntil(() => LevelGraph.levelGraph.battle.turnEnded); // ждать окончания хода

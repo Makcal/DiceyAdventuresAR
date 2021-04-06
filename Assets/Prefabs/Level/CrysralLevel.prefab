@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f550e158b05bec94b8b93ed41581ed82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  difficulty: 1
   MAX_LEAF_SIZE: 2
   MIN_LEAF_SIZE: 1
   MAP_RADIUS: 2.1
@@ -66,6 +67,8 @@ MonoBehaviour:
   - {fileID: 2789891614794769866, guid: a90fed74fcd184740af621eb45ec0858, type: 3}
   enemies3Level:
   - {fileID: 7732188589979046596, guid: 8d38082663e091e42a6e98c10f461596, type: 3}
+  enemies4Level: []
+  enemies5Level: []
   bosses:
   - {fileID: -6126131248385985984, guid: 6dbf574f1c8d0b24bb09dae92e113dcd, type: 3}
 --- !u!114 &-3272388025939004110

@@ -12,6 +12,8 @@ namespace DiceyDungeonsAR.MyLevelGraph
 {
     public class LevelGraph : MonoBehaviour
     {
+        public byte difficulty;
+        
         public float MAX_LEAF_SIZE = 2f, MIN_LEAF_SIZE = 1f; // константы для размеров деления листов
         public float MAP_RADIUS; // радиус карты
         readonly List<Leaf> leaves = new List<Leaf>(); // список всех листьев
@@ -22,7 +24,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
         [SerializeField] Exit exitPrefab;
         [SerializeField] GameObject fieldPrefab;
         [SerializeField] Edge edgePrefab;
-        [SerializeField] List<EnemyItem> enemies1Level, enemies2Level, enemies3Level, bosses;
+        [SerializeField] List<EnemyItem> enemies1Level, enemies2Level, enemies3Level, enemies4Level, enemies5Level, bosses;
 
         static public LevelGraph levelGraph; // статическая переменная для более быстрого обращения к главному скрипту (LevelGraph.levelGraph = this)
 
@@ -114,19 +116,55 @@ namespace DiceyDungeonsAR.MyLevelGraph
         {
             List<Field> operatedFields; // копия списка, чтобы не менять основной
 
-            operatedFields = fields.FindAll(f => f.edges.Count == 1); // конечные поля графа (есть "вход", нет "выхода"; одно ребро)
+            operatedFields = fields.FindAll(f => f.Edges.Count == 1); // "концы" поля графа (есть "вход", нет "выхода"; одно ребро)
 
-            startField = operatedFields[Range(0, operatedFields.Count)];
+            startField = operatedFields[Range(0, operatedFields.Count)]; // поле для игрока
             operatedFields.Remove(startField);
 
             Field exitField = operatedFields[Range(0, operatedFields.Count)]; // случайное поле для выхода
             exitField.PlacedItem = Instantiate(exitPrefab); // выход
-            operatedFields.Remove(exitField); // сюда уже ничего не добавить
+            operatedFields.Remove(exitField);
+
             foreach (var f in operatedFields)
             {
-
+                if (value < 0.55) // 55% - яблоко
+                {
+                    f.PlacedItem = Instantiate(applePrefab);
+                }
+                else if (value < 0.2) // 20% - сундук
+                {
+                    f.PlacedItem = Instantiate(chestPrefab);
+                }
             }
 
+            operatedFields = fields.FindAll(f => f.Edges.Count > 1);
+
+            foreach (var f in operatedFields)
+            {
+                if (value < 0.35f) // шанс 35% на врага
+                {
+                    var enemiesTypes = new List<List<EnemyItem>> { enemies1Level, enemies2Level, enemies3Level, enemies4Level, enemies5Level };
+                    List<EnemyItem> enemiesList = null;
+                    switch (difficulty) // выбор уровня врагов
+                    {
+                        case 1:
+                            enemiesList = enemiesTypes[0]; // на первом уровне только слабые враги
+                            break;
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                            enemiesList = value < 0.5f ? enemiesTypes[difficulty] : enemiesTypes[difficulty - 1]; // 50/50 шанс враг силы уровня или чуть слабее
+                            break;
+                        default:
+                            if (difficulty != 6) // не босс
+                                Debug.LogWarning("Invalid level difficulty");
+                            break;
+                    }
+
+                    f.PlacedItem = enemiesList?[Range(0, enemiesList.Count)]; // случайный враг из списка
+                }
+            }
         }
 
         public Field CreateField(Vector2 pos)

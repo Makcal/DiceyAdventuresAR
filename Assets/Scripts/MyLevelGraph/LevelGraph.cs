@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Random;
@@ -13,7 +14,8 @@ namespace DiceyDungeonsAR.MyLevelGraph
     public class LevelGraph : MonoBehaviour
     {
         public byte difficulty;
-        
+        [SerializeField] float enemyChance;
+
         public float MAX_LEAF_SIZE = 2f, MIN_LEAF_SIZE = 1f; // константы для размеров деления листов
         public float MAP_RADIUS; // радиус карты
         readonly List<Leaf> leaves = new List<Leaf>(); // список всех листьев
@@ -95,14 +97,11 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
             // затем рекурсивно проходим по каждому листу и создаём в каждом поле
             root.CalculateFieldPositions();
-            
+
             foreach (var leaf in leaves)
             {
                 if (leaf.rightChild == null && leaf.leftChild == null && leaf.fieldPos != null)
-                {
                     leaf.field = CreateField((Vector2)leaf.fieldPos); // создаём поле
-                    fields.Add(leaf.field);
-                }
             }
 
             foreach (var leaf in leaves)
@@ -127,44 +126,55 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
             foreach (var f in operatedFields)
             {
-                if (value < 0.55) // 55% - яблоко
+                if (value < 0.55f) // 55% - яблоко
                 {
                     f.PlacedItem = Instantiate(applePrefab);
                 }
-                else if (value < 0.2) // 20% - сундук
+                else if (value < 0.2f) // 20% - сундук
                 {
                     f.PlacedItem = Instantiate(chestPrefab);
                 }
             }
 
-            operatedFields = fields.FindAll(f => f.Edges.Count > 1);
+
+            operatedFields = fields.FindAll(f => f.Edges.Count > 1); // остальные поля для врагов
+
+            Field requiredEnemyField = operatedFields[Range(0, operatedFields.Count)]; // один враг точно должен быть, делаем вручную без шансов
+            requiredEnemyField.PlacedItem = Instantiate(ChooseEnemy());
+            operatedFields.Remove(requiredEnemyField);
 
             foreach (var f in operatedFields)
             {
-                if (value < 0.35f) // шанс 35% на врага
-                {
-                    var enemiesTypes = new List<List<EnemyItem>> { enemies1Level, enemies2Level, enemies3Level, enemies4Level, enemies5Level };
-                    List<EnemyItem> enemiesList = null;
-                    switch (difficulty) // выбор уровня врагов
-                    {
-                        case 1:
-                            enemiesList = enemiesTypes[0]; // на первом уровне только слабые враги
-                            break;
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
-                            enemiesList = value < 0.5f ? enemiesTypes[difficulty] : enemiesTypes[difficulty - 1]; // 50/50 шанс враг силы уровня или чуть слабее
-                            break;
-                        default:
-                            if (difficulty != 6) // не босс
-                                Debug.LogWarning("Invalid level difficulty");
-                            break;
-                    }
-
-                    f.PlacedItem = enemiesList?[Range(0, enemiesList.Count)]; // случайный враг из списка
-                }
+                if (value < enemyChance) // шанс на врага задаётся внешне
+                    f.PlacedItem = Instantiate(ChooseEnemy());
             }
+        }
+
+        EnemyItem ChooseEnemy() // выбор врага
+        {
+            var enemiesTypes = new List<List<EnemyItem>> { enemies1Level, enemies2Level, enemies3Level, enemies4Level, enemies5Level };
+            List<EnemyItem> enemiesList = null;
+            switch (difficulty) // выбор уровня врагов
+            {
+                case 1:
+                    enemiesList = enemiesTypes[0]; // на первом уровне только слабые враги
+                    break;
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    enemiesList = value < 0.5f ? enemiesTypes[difficulty] : enemiesTypes[difficulty - 1]; // 50/50 шанс враг силы уровня или чуть слабее
+                    break;
+                default:
+                    if (difficulty != 6) // не босс
+                        Debug.LogWarning("Invalid level difficulty");
+                    break;
+            }
+
+            if (enemiesList != null)
+                return enemiesList[Range(0, enemiesList.Count)]; // случайный враг из списка
+            else
+                return null;
         }
 
         public Field CreateField(Vector2 pos)
@@ -240,6 +250,16 @@ namespace DiceyDungeonsAR.MyLevelGraph
             enemy.transform.GetChild(0).gameObject.SetActive(true);
 
             StartCoroutine(battle.StartBattle()); // битва начинается
+        }
+
+        List<Field> DijkstrasAlgorithm(Field start, Field target)
+        {
+            var graph = fields.ToDictionary(f => f, f => float.PositiveInfinity);
+            var path = new List<Field>();
+
+            graph[start] = 0;
+
+            return path;
         }
     }
 }

@@ -30,7 +30,7 @@ namespace DiceyDungeonsAR.GameObjects.Players
                 XPBar.CurrentValue = value; // обновить шкалу
             }
         }
-        public int maxXP = 2;
+        int maxXP = 2;
         public int MaxXP // свойство максимального опыта
         {
             get => maxXP;

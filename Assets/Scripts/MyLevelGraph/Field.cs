@@ -32,7 +32,6 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
                 if (value == null)
                 {
-                    print("LOL");
                     return;
                 }
 

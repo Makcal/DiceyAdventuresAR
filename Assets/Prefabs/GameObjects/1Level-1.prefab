@@ -25,7 +25,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1649755836761875649}
-  m_LocalRotation: {x: 0, y: 0.6755902, z: 0, w: 0.7372774}
+  m_LocalRotation: {x: 0, y: 0.9781476, z: 0, w: -0.20791163}
   m_LocalPosition: {x: 0, y: 0.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -57,7 +57,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3f9f8ab783138343abe797cda308d05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthSprite: {fileID: 0}
+  healthSprite: {fileID: -1863859237976802683, guid: 120cc155de6f1a64391dcb1059321e50,
+    type: 3}
 --- !u!1001 &9128937192451889106
 PrefabInstance:
   m_ObjectHideFlags: 0

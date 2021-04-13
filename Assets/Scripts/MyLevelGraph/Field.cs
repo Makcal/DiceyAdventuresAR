@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -93,7 +94,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             Edges.Add(newEdge); // занести в список
         }
 
-        public List<Field> ConnectedFields()
+        public List<Field> ConnectedFields() // соседние поля
         {
             var fields = new List<Field>();
             foreach (var e in Edges)
@@ -102,6 +103,13 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 // иначе первое (противоположное текущему полю)
             }
             return fields;
+        }
+
+        public Dictionary<Edge, Field> ConnectedEdgesWithFields() // соответствие ребро - его сосед
+        {
+            // если первое поле ребра равно this, то взять второе,
+            // иначе первое (противоположное текущему полю)
+            return Edges.ToDictionary(e => e, e => e.startField == this ? e.connectedField : e.startField); ;
         }
 
         public void MarkAttainable()

@@ -8,7 +8,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
         public Material attainableMaterial, defaultMaterial;
 
         [NonSerialized] public Field startField, connectedField;
-        [NonSerialized] public int edgeWeight;
+        [NonSerialized] public int weight;
         private bool attainable;
 
         public bool Attainable 
@@ -25,7 +25,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
         {
             this.startField = startField;
             this.connectedField = connectedField;
-            edgeWeight = weight;
+            this.weight = weight;
 
             transform.parent = level.transform;
 

@@ -120,7 +120,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             startField = operatedFields[Range(0, operatedFields.Count)]; // поле для игрока
             operatedFields.Remove(startField);
 
-            Field exitField = operatedFields[Range(0, operatedFields.Count)]; // случайное поле для выхода
+            Field exitField = DijkstrasAlgorithm(startField).Max; // случайное поле для выхода
             exitField.PlacedItem = Instantiate(exitPrefab); // выход
             operatedFields.Remove(exitField);
 
@@ -206,7 +206,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             return AddEdge(f1, f2, weight);
         }
         
-        public Edge AddEdge(Field first, Field second, int weight = 0) // соединить поля
+        public Edge AddEdge(Field first, Field second, int weight = 1) // соединить поля
         {
             if (fields.Contains(first) && fields.Contains(second) && ! first.ConnectedFields().Contains(second))
             {
@@ -252,14 +252,26 @@ namespace DiceyDungeonsAR.MyLevelGraph
             StartCoroutine(battle.StartBattle()); // битва начинается
         }
 
-        List<Field> DijkstrasAlgorithm(Field start, Field target)
+        Dictionary<Field, float> DijkstrasAlgorithm(Field start)
         {
-            var graph = fields.ToDictionary(f => f, f => float.PositiveInfinity);
-            var path = new List<Field>();
+            var graph = fields.ToDictionary(f => f, f => float.PositiveInfinity); // ближайшее расстояние от старта до каждого поля (беск. - неизвестно)
+            var notVisited = new List<Field>(fields); // список непосещённых полей
+            graph[start] = 0; // до старта расстояние - 0
 
-            graph[start] = 0;
+            Field next;
+            while (notVisited.Count > 0)
+            {
+                next = notVisited.OrderBy(f => graph[f]).First(); // сортировка непосещённых по удалённости и выбор ближайшего к старту
 
-            return path;
+                foreach (KeyValuePair<Edge, Field> pair in next.ConnectedEdgesWithFields()) // для каждого соседа
+                {
+                    float newDistance = pair.Key.weight + graph[next]; // новое расстояние до соседа - дистанция до поля + дорога от поля к соседу
+                    if (notVisited.Contains(pair.Value) && newDistance < graph[pair.Value]) // если сосед не посещён и обнаружена дорога короче известной
+                        graph[pair.Value] = newDistance; // новая дорога
+                }
+            }
+
+            return graph;
         }
     }
 }

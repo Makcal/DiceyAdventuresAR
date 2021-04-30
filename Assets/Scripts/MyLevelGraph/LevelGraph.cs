@@ -14,7 +14,6 @@ namespace DiceyDungeonsAR.MyLevelGraph
     public class LevelGraph : MonoBehaviour
     {
         public byte difficulty;
-        [SerializeField] float enemyChance;
 
         public float MAX_LEAF_SIZE = 2f, MIN_LEAF_SIZE = 1f; // константы для размеров деления листов
         public float MAP_RADIUS; // радиус карты
@@ -113,14 +112,14 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         void CompleteGeneration() // мелкие штрихи и объекты
         {
-            List<Field> operatedFields; // копия списка, чтобы не менять основной
+            List<Field> operatedFields; // список полей для обработки (копия нужна, чтобы не менялся основной список по ссылке)
 
-            operatedFields = fields.FindAll(f => f.Edges.Count == 1); // "концы" поля графа (есть "вход", нет "выхода"; одно ребро)
+            operatedFields = fields.FindAll(f => f.Edges.Count == 1); // "концы" графа (поля с одной связью)
 
-            startField = operatedFields[Range(0, operatedFields.Count)]; // поле для игрока
-            operatedFields.Remove(startField);
+            startField = operatedFields[Range(0, operatedFields.Count)]; // случайное поле для игрока
+            operatedFields.Remove(startField); // больше ничего не поставить на это поле
 
-            Field exitField = DijkstrasAlgorithm(startField).Max; // случайное поле для выхода
+            Field exitField = DijkstrasAlgorithm(startField).OrderBy(pair => pair.Value).Last().Key; // случайное поле для выхода
             exitField.PlacedItem = Instantiate(exitPrefab); // выход
             operatedFields.Remove(exitField);
 
@@ -135,18 +134,14 @@ namespace DiceyDungeonsAR.MyLevelGraph
                     f.PlacedItem = Instantiate(chestPrefab);
                 }
             }
-
-
+            
             operatedFields = fields.FindAll(f => f.Edges.Count > 1); // остальные поля для врагов
 
-            Field requiredEnemyField = operatedFields[Range(0, operatedFields.Count)]; // один враг точно должен быть, делаем вручную без шансов
-            requiredEnemyField.PlacedItem = Instantiate(ChooseEnemy());
-            operatedFields.Remove(requiredEnemyField);
-
-            foreach (var f in operatedFields)
+            for (int i = 0; i < Mathf.Round(fields.Count * 0.29f); i++)
             {
-                if (value < enemyChance) // шанс на врага задаётся внешне
-                    f.PlacedItem = Instantiate(ChooseEnemy());
+                Field f = operatedFields[Range(0, operatedFields.Count)];
+                f.PlacedItem = Instantiate(ChooseEnemy()); // создание врага
+                operatedFields.Remove(f); // больше с этим полем не работаем
             }
         }
 
@@ -163,7 +158,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 case 3:
                 case 4:
                 case 5:
-                    enemiesList = value < 0.5f ? enemiesTypes[difficulty] : enemiesTypes[difficulty - 1]; // 50/50 шанс враг силы уровня или чуть слабее
+                    enemiesList = value < 0.5f ? enemiesTypes[difficulty] : enemiesTypes[difficulty - 1]; // 50/50 шанс на врага сложности уровня или чуть слабее
                     break;
                 default:
                     if (difficulty != 6) // не босс
@@ -252,7 +247,7 @@ namespace DiceyDungeonsAR.MyLevelGraph
             StartCoroutine(battle.StartBattle()); // битва начинается
         }
 
-        Dictionary<Field, float> DijkstrasAlgorithm(Field start)
+        Dictionary<Field, float> DijkstrasAlgorithm(Field start) // приписывает каждому полю длину кратчайшего пути к нему от старта
         {
             var graph = fields.ToDictionary(f => f, f => float.PositiveInfinity); // ближайшее расстояние от старта до каждого поля (беск. - неизвестно)
             var notVisited = new List<Field>(fields); // список непосещённых полей

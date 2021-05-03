@@ -10,6 +10,7 @@ namespace DiceyDungeonsAR.GameObjects
     {
         public override void UseByPlayer(Player player)
         {
+            player.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
             StartCoroutine(EndGame());
         }
 

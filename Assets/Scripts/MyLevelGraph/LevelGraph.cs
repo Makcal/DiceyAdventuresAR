@@ -108,6 +108,28 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 {
                     AddEdge(leaf.GetNearestField(conn), conn.GetNearestField(leaf)); // перебираем связи листов и создаём рёбра
                 }
+
+            // небольшая смена связей для разнообразия графа: "поворот" ребра к другому полю, чтобы получить новое конеченое поле
+            // и сделать граф более ветвистым, вместо одной линии
+            List<Field> operatedFields = fields.FindAll(l => l.Edges.Count == 2); // "проходные" поля с двумя связями
+            Field toChange = operatedFields[Range(0, operatedFields.Count)]; // случайное
+            List<Field> connected = toChange.ConnectedFields(); // два соседа
+
+            int neighbour; // номер соседа, чтобы сменить связь
+            if (connected[0].Edges.Count == 1)
+                neighbour = 0; // сменить связь с конечным соседом
+            else if (connected[1].Edges.Count == 1)
+                neighbour = 1;
+            else
+                neighbour = Range(0, 2); // если ни один из соседов не конечный, то выбрать случайного
+            int second = (neighbour == 1) ? 0 : 1; // номер второго соседа, на которого переводится связь
+            
+            AddEdge(connected[neighbour], connected[second]); // перевод связи на второго соседа
+
+            Edge oldEdge = toChange.Edges.Find(e => e.HasField(connected[neighbour]));
+            connected[neighbour].Edges.Remove(oldEdge); // удалить старую связь
+            toChange.Edges.Remove(oldEdge);
+            Destroy(oldEdge.gameObject);
         }
 
         void CompleteGeneration() // мелкие штрихи и объекты
@@ -117,31 +139,33 @@ namespace DiceyDungeonsAR.MyLevelGraph
             operatedFields = fields.FindAll(f => f.Edges.Count == 1); // "концы" графа (поля с одной связью)
 
             startField = operatedFields[Range(0, operatedFields.Count)]; // случайное поле для игрока
-            operatedFields.Remove(startField); // больше ничего не поставить на это поле
+            operatedFields.Remove(startField); // больше ничего нельзя ставить на это поле
 
-            Field exitField = DijkstrasAlgorithm(startField).OrderBy(pair => pair.Value).Last().Key; // случайное поле для выхода
+            Field exitField = DijkstrasAlgorithm(startField).OrderBy(pair => pair.Value).Last().Key; // самое удалённое поле от старта
             exitField.PlacedItem = Instantiate(exitPrefab); // выход
             operatedFields.Remove(exitField);
 
-            foreach (var f in operatedFields)
+            if (operatedFields.Count > 0)
             {
-                if (value < 0.55f) // 55% - яблоко
-                {
-                    f.PlacedItem = Instantiate(applePrefab);
-                }
-                else if (value < 0.2f) // 20% - сундук
-                {
-                    f.PlacedItem = Instantiate(chestPrefab);
-                }
+                Field chestField = operatedFields[Range(0, operatedFields.Count)]; // случайное поле
+                chestField.PlacedItem = Instantiate(chestPrefab); // по одному сундуку на каждый уровень
+                operatedFields.Remove(chestField);
             }
-            
-            operatedFields = fields.FindAll(f => f.Edges.Count > 1); // остальные поля для врагов
 
-            for (int i = 0; i < Mathf.Round(fields.Count * 0.29f); i++)
+            operatedFields = fields.FindAll(f => f.Edges.Count > 1); // поля для врагов
+            for (int i = 0; i < Mathf.Round(fields.Count * 0.29f); i++) // кол-во врагов = 29% от числа всех полей
             {
                 Field f = operatedFields[Range(0, operatedFields.Count)];
                 f.PlacedItem = Instantiate(ChooseEnemy()); // создание врага
                 operatedFields.Remove(f); // больше с этим полем не работаем
+            }
+
+            operatedFields = fields.FindAll(f => f.PlacedItem == null); // свободные поля для яблок
+            for (int i = 0; i < Mathf.Round(fields.Count * 0.14f); i++) // на 14% полей можно яблочки расставить
+            {
+                Field f = operatedFields[Range(0, operatedFields.Count)]; // аналогично врагам
+                f.PlacedItem = Instantiate(applePrefab);
+                operatedFields.Remove(f);
             }
         }
 
@@ -249,7 +273,8 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         Dictionary<Field, float> DijkstrasAlgorithm(Field start) // приписывает каждому полю длину кратчайшего пути к нему от старта
         {
-            var graph = fields.ToDictionary(f => f, f => float.PositiveInfinity); // ближайшее расстояние от старта до каждого поля (беск. - неизвестно)
+            // https://ru.wikipedia.org/wiki/Алгоритм_Дейкстры
+            var graph = fields.ToDictionary(f => f, f => float.PositiveInfinity); // ближайшие расстояния от старта до каждого поля (беск. - неизвестно)
             var notVisited = new List<Field>(fields); // список непосещённых полей
             graph[start] = 0; // до старта расстояние - 0
 
@@ -258,12 +283,17 @@ namespace DiceyDungeonsAR.MyLevelGraph
             {
                 next = notVisited.OrderBy(f => graph[f]).First(); // сортировка непосещённых по удалённости и выбор ближайшего к старту
 
+                if (graph[next] == float.PositiveInfinity) // самое ближайшее расстояние из непосещённых - бесконечность
+                    break; // значит до этого момента мы ни разу не смогли добраться до этого поля, значит, граф несвязный (состоит из частей)
+
                 foreach (KeyValuePair<Edge, Field> pair in next.ConnectedEdgesWithFields()) // для каждого соседа
                 {
                     float newDistance = pair.Key.weight + graph[next]; // новое расстояние до соседа - дистанция до поля + дорога от поля к соседу
-                    if (notVisited.Contains(pair.Value) && newDistance < graph[pair.Value]) // если сосед не посещён и обнаружена дорога короче известной
-                        graph[pair.Value] = newDistance; // новая дорога
+                    if (notVisited.Contains(pair.Value) && newDistance < graph[pair.Value]) // если сосед не посещён и обнаружена дорога, короче известной
+                        graph[pair.Value] = newDistance; // записать новое значение кратчайшего расстояния
                 }
+
+                notVisited.Remove(next); // поле считается посещённым
             }
 
             return graph;

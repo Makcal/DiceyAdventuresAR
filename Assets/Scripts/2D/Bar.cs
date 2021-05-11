@@ -1,9 +1,9 @@
 ﻿using System;
-using DiceyDungeonsAR.MyLevelGraph;
+using DiceyAdventuresAR.MyLevelGraph;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DiceyDungeonsAR.UI
+namespace DiceyAdventuresAR.UI
 {
 	[RequireComponent(typeof(Slider))]
 	public class Bar : MonoBehaviour

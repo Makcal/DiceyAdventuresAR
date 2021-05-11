@@ -1,13 +1,13 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using DiceyDungeonsAR.MyLevelGraph;
+using DiceyAdventuresAR.MyLevelGraph;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using System.Collections;
 
-namespace DiceyDungeonsAR.Battle
+namespace DiceyAdventuresAR.Battle
 {
     public class Cube : MonoBehaviour, IDragHandler // интерфейс для перетаскивания
     {

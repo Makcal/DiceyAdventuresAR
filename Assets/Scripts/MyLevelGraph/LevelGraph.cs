@@ -3,13 +3,13 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Random;
-using DiceyDungeonsAR.GameObjects.Players;
-using DiceyDungeonsAR.GameObjects;
-using DiceyDungeonsAR.Enemies;
+using DiceyAdventuresAR.GameObjects.Players;
+using DiceyAdventuresAR.GameObjects;
+using DiceyAdventuresAR.Enemies;
 using System.Collections;
-using DiceyDungeonsAR.Battle;
+using DiceyAdventuresAR.Battle;
 
-namespace DiceyDungeonsAR.MyLevelGraph
+namespace DiceyAdventuresAR.MyLevelGraph
 {
     public class LevelGraph : MonoBehaviour
     {

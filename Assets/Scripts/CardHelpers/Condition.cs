@@ -1,4 +1,4 @@
-﻿namespace DiceyDungeonsAR.Battle
+﻿namespace DiceyAdventuresAR.Battle
 {
     public struct Condition // условие
     {

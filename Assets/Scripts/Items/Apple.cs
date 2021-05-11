@@ -1,6 +1,6 @@
-﻿using DiceyDungeonsAR.GameObjects.Players;
+﻿using DiceyAdventuresAR.GameObjects.Players;
 
-namespace DiceyDungeonsAR.GameObjects
+namespace DiceyAdventuresAR.GameObjects
 {
     public class Apple : Item
     {

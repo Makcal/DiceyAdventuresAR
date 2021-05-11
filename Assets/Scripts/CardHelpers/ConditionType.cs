@@ -1,4 +1,4 @@
-﻿namespace DiceyDungeonsAR.Battle
+﻿namespace DiceyAdventuresAR.Battle
 {
     public enum ConditionType // перечисление типов условий (None по умолчанию)
     {

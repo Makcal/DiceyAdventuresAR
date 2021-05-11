@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using DiceyDungeonsAR.MyLevelGraph;
+using DiceyAdventuresAR.MyLevelGraph;
 using TMPro;
 
-namespace DiceyDungeonsAR.Battle
+namespace DiceyAdventuresAR.Battle
 {
     // карточка действия
     public abstract class ActionCard : MonoBehaviour

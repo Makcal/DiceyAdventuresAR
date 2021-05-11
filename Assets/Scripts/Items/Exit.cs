@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using DiceyDungeonsAR.GameObjects.Players;
-using DiceyDungeonsAR.UI;
+using DiceyAdventuresAR.GameObjects.Players;
+using DiceyAdventuresAR.UI;
 
-namespace DiceyDungeonsAR.GameObjects
+namespace DiceyAdventuresAR.GameObjects
 {
     public class Exit : Item
     {

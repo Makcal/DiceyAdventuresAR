@@ -1,4 +1,4 @@
-﻿namespace DiceyDungeonsAR.Battle
+﻿namespace DiceyAdventuresAR.Battle
 {
     public enum CardAction // перечисление действий (классы) карточек (Damage по умолчанию)
     {

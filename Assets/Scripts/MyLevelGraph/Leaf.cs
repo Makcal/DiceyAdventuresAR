@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace DiceyDungeonsAR.MyLevelGraph
+namespace DiceyAdventuresAR.MyLevelGraph
 {
     public class Leaf
     {

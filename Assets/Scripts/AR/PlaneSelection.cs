@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-namespace DiceyDungeonsAR.AR
+namespace DiceyAdventuresAR.AR
 {
     public class PlaneSelection : MonoBehaviour
     {

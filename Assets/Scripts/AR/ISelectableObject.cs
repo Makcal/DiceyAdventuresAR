@@ -1,4 +1,4 @@
-﻿namespace DiceyDungeonsAR.AR
+﻿namespace DiceyAdventuresAR.AR
 {
     public interface ISelectableObject
     {

@@ -1,12 +1,12 @@
 ﻿using System;
 using UnityEngine;
-using DiceyDungeonsAR.MyLevelGraph;
-using DiceyDungeonsAR.Battle;
-using DiceyDungeonsAR.UI;
+using DiceyAdventuresAR.MyLevelGraph;
+using DiceyAdventuresAR.Battle;
+using DiceyAdventuresAR.UI;
 using System.Collections;
 using UnityEngine.UI;
 
-namespace DiceyDungeonsAR.GameObjects.Players
+namespace DiceyAdventuresAR.GameObjects.Players
 {
     public abstract class Player : Character
     {

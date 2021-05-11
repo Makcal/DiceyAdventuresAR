@@ -2,14 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DiceyDungeonsAR.MyLevelGraph;
-using DiceyDungeonsAR.Enemies;
-using DiceyDungeonsAR.GameObjects.Players;
+using DiceyAdventuresAR.MyLevelGraph;
+using DiceyAdventuresAR.Enemies;
+using DiceyAdventuresAR.GameObjects.Players;
 using UnityEngine.UI;
-using DiceyDungeonsAR.UI;
+using DiceyAdventuresAR.UI;
 using UnityEngine.SceneManagement;
 
-namespace DiceyDungeonsAR.Battle
+namespace DiceyAdventuresAR.Battle
 {
     public class BattleController : MonoBehaviour
     {
@@ -72,7 +72,7 @@ namespace DiceyDungeonsAR.Battle
                     button.GetComponent<Button>().interactable = false; // нельзя нажать на кнопку (не твой ход)
 
                     cards = CreateCards(enemy.inventory); // создаём карточки из инвентаря врага
-                    cubes = CreateCubes(Mathf.Min(enemy.CubesCount, 3), false); // кубики для врага
+                    cubes = CreateCubes(Mathf.Min(enemy.cubesCount, 3), false); // кубики для врага
 
                     var cor = StartCoroutine(EnemyTurn()); // начать ход врага
                     yield return new WaitUntil(() => LevelGraph.levelGraph.battle.turnEnded); // ждать окончания хода
@@ -175,7 +175,7 @@ namespace DiceyDungeonsAR.Battle
 
                 player.transform.localScale /= 2; // возврат игрока на место
                 player.transform.position = player.currentField.transform.position + new Vector3(0, player.currentField.transform.localScale.y, 0);
-                StartCoroutine(player.AddXP(enemy.Level)); // дать опыт
+                StartCoroutine(player.AddXP(enemy.level)); // дать опыт
             }
             else
             {

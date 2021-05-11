@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
-using DiceyDungeonsAR.GameObjects.Players;
-using DiceyDungeonsAR.MyLevelGraph;
-using DiceyDungeonsAR.Enemies;
+using DiceyAdventuresAR.GameObjects.Players;
+using DiceyAdventuresAR.MyLevelGraph;
+using DiceyAdventuresAR.Enemies;
 
-namespace DiceyDungeonsAR.GameObjects
+namespace DiceyAdventuresAR.GameObjects
 {
     public class EnemyItem : Item
     {

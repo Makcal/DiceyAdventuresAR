@@ -1,22 +1,22 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using DiceyDungeonsAR.MyLevelGraph;
-using DiceyDungeonsAR.UI;
-using DiceyDungeonsAR.Battle;
+using DiceyAdventuresAR.MyLevelGraph;
+using DiceyAdventuresAR.UI;
+using DiceyAdventuresAR.Battle;
 
-namespace DiceyDungeonsAR.GameObjects
+namespace DiceyAdventuresAR.GameObjects
 {
     public abstract class Character : MonoBehaviour
     {
         // общие параметры классов персонажа (abstract нужен, чтобы каждый присвоил своё значение)
-        public abstract string Name { get; } // имя персонажа
-        protected abstract int StartHealth { get; } // начальное (максимальное) здоровье
+        public string Name { get; } // имя персонажа
+        [SerializeField] protected int StartHealth; // начальное (максимальное) здоровье
 
         protected LevelGraph levelGraph; // быстрая ссылка на уровень
         protected Transform canvasTr; // быстрая ссылка на трансформ канваса
 
-        public Sprite healthSprite; // иконка жизней
+        [SerializeField] private Sprite healthSprite; // иконка жизней
         protected Bar healthBar; // шкала жизней
         protected GameObject healthIcon; // иконка жизней
         protected Text nameText; // текст с именем персонажа

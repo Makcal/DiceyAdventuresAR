@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
-using DiceyDungeonsAR.Battle;
-using DiceyDungeonsAR.GameObjects.Players;
+using DiceyAdventuresAR.Battle;
+using DiceyAdventuresAR.GameObjects.Players;
 
-namespace DiceyDungeonsAR.GameObjects
+namespace DiceyAdventuresAR.GameObjects
 {
     public class Chest : Item
     {

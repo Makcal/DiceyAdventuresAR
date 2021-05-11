@@ -1,6 +1,6 @@
-﻿using DiceyDungeonsAR.MyLevelGraph;
+﻿using DiceyAdventuresAR.MyLevelGraph;
 
-namespace DiceyDungeonsAR.Battle
+namespace DiceyAdventuresAR.Battle
 {
     public class DoubleDamageCard : ActionCard
     {

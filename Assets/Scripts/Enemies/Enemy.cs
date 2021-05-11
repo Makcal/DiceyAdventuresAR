@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
-using DiceyDungeonsAR.MyLevelGraph;
+using DiceyAdventuresAR.MyLevelGraph;
 using System.Collections;
-using DiceyDungeonsAR.GameObjects;
+using DiceyAdventuresAR.GameObjects;
 
-namespace DiceyDungeonsAR.Enemies
+namespace DiceyAdventuresAR.Enemies
 {
-    abstract public class Enemy : Character
+    public class Enemy : Character
     {
-        public abstract int CubesCount { get; } // кол-во кубиков
-        public abstract int Level { get; } // уровень сложности врага (определяется в наследниках)
+        public int cubesCount = 3; // кол-во кубиков
+        public int level; // уровень сложности врага (определяется в наследниках)
 
         public override void Initialize()
         {
@@ -48,6 +48,11 @@ namespace DiceyDungeonsAR.Enemies
         {
             yield return StartCoroutine(LevelGraph.levelGraph.battle.EndBattle(true)); // окончить битву
             StartCoroutine(base.Death());
+        }
+
+        protected override void FillInventory()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

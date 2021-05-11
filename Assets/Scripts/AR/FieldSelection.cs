@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using DiceyDungeonsAR.MyLevelGraph;
+using DiceyAdventuresAR.MyLevelGraph;
 
 public class FieldSelection : MonoBehaviour
 {
@@ -11,13 +11,13 @@ public class FieldSelection : MonoBehaviour
 
     IEnumerator Check()
     {
-        Field lastField = null;
+        FieldClickHandler lastField = null;
 
         while (true)
         {
             if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit))
             {
-                var field = hit.collider.GetComponent<Field>();
+                var field = hit.collider.GetComponent<FieldClickHandler>();
                 if (field != null && lastField != field)
                 {
                     field.OnSelectEnter();

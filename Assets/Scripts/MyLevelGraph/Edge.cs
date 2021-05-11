@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace DiceyDungeonsAR.MyLevelGraph
+namespace DiceyAdventuresAR.MyLevelGraph
 {
     public class Edge : MonoBehaviour
     {

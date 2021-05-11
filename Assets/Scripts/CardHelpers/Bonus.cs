@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace DiceyDungeonsAR.Battle
+namespace DiceyAdventuresAR.Battle
 {
     public struct Bonus // бонус (не реализован)
     {

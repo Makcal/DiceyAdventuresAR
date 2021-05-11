@@ -3,12 +3,12 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DiceyDungeonsAR.GameObjects;
-using DiceyDungeonsAR.AR;
+using DiceyAdventuresAR.GameObjects;
+using DiceyAdventuresAR.AR;
 
-namespace DiceyDungeonsAR.MyLevelGraph
+namespace DiceyAdventuresAR.MyLevelGraph
 {
-    public class Field : MonoBehaviour, ISelectableObject
+    public class Field : MonoBehaviour
     {
         [NonSerialized] new public string name; // имя поля
         public List<Edge> Edges { get; } = new List<Edge>(); // список соединений
@@ -18,8 +18,6 @@ namespace DiceyDungeonsAR.MyLevelGraph
 
         LevelGraph level; // ссылка на уровень
         MeshRenderer meshRenderer;
-
-        public bool IsSelected { get; set; } = false; // интерфейс
 
         Item placedItem = null;
         public Item PlacedItem // предмет, лежащий на поле
@@ -67,21 +65,6 @@ namespace DiceyDungeonsAR.MyLevelGraph
             level.fields.Add(this); // занести в список полей
 
             transform.parent.localPosition = new Vector3(x, y, z) * 1f;
-        }
-
-        void OnMouseDown()
-        {
-            OnSelectEnter(); // типа выделения для тестирования на компьютере
-        }
-
-        public void OnSelectEnter()
-        {
-            level.player.TryToPlacePlayer(this); // при выделении посавить игрока
-        }
-
-        public void OnSelectExit()
-        {
-            MarkAsUnattainable(false); // когда выделение (AR камера) выходит, убрать красный
         }
 
         public override string ToString()

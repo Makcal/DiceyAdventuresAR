@@ -1,9 +1,9 @@
 ﻿using System;
-using DiceyDungeonsAR.MyLevelGraph;
-using DiceyDungeonsAR.GameObjects.Players;
+using DiceyAdventuresAR.MyLevelGraph;
+using DiceyAdventuresAR.GameObjects.Players;
 using UnityEngine;
 
-namespace DiceyDungeonsAR.GameObjects
+namespace DiceyAdventuresAR.GameObjects
 {
     public abstract class Item : MonoBehaviour
     {

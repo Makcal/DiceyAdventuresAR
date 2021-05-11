@@ -1,4 +1,4 @@
-﻿namespace DiceyDungeonsAR.Battle
+﻿namespace DiceyAdventuresAR.Battle
 {
     public class CardDescription // описание карточек (чтобы сохранять в инвентаре)
     {

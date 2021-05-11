@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using DiceyDungeonsAR.MyLevelGraph;
+using DiceyAdventuresAR.MyLevelGraph;
 
-namespace DiceyDungeonsAR.Battle
+namespace DiceyAdventuresAR.Battle
 {
     public class SkipTurn : MonoBehaviour
     {

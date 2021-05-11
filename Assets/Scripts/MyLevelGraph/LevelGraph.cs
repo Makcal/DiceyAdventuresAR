@@ -182,8 +182,10 @@ namespace DiceyDungeonsAR.MyLevelGraph
                 case 3:
                 case 4:
                 case 5:
-                    enemiesList = value < 0.5f ? enemiesTypes[difficulty] : enemiesTypes[difficulty - 1]; // 50/50 шанс на врага сложности уровня или чуть слабее
+                    enemiesList = value < 0.5f ? enemiesTypes[difficulty - 1] : enemiesTypes[difficulty - 2]; // 50/50 шанс на врага сложности уровня или чуть слабее
                     break;
+                case 6:
+                    throw new NotImplementedException("Boss");
                 default:
                     if (difficulty != 6) // не босс
                         Debug.LogWarning("Invalid level difficulty");

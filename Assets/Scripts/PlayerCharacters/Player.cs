@@ -72,7 +72,7 @@ namespace DiceyAdventuresAR.GameObjects.Players
             transform.SetSiblingIndex(1); // объект земли и игрока должны стоять первыми (после идут поля и рёбра)
 
             // позиция игрока над его полем (стоит на поле)
-            transform.position = currentField.transform.position + new Vector3(0, 1f * currentField.transform.localScale.y, 0);
+            transform.position = currentField.transform.GetChild(0).position + new Vector3(0, 1f * currentField.transform.GetChild(0).localScale.y, 0);
             transform.localRotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0); // случайный поворот
             currentField.MarkAttainable(); // покрасить соседние поля
         }
@@ -114,11 +114,11 @@ namespace DiceyAdventuresAR.GameObjects.Players
         {
             if (targetField != currentField) // цель отличается от текущего поля (есть куда идти)
             {
-                var offset = new Vector3(0, 1f * targetField.transform.localScale.y, 0); // сдвиг вверх, чтобы стоять НА поле
+                var offset = new Vector3(0, 1f * targetField.transform.GetChild(0).localScale.y, 0); // сдвиг вверх, чтобы стоять НА поле
 
                 transform.position = Vector3.Lerp(
-                    targetField.transform.position,
-                    currentField.transform.position,
+                    targetField.transform.GetChild(0).position,
+                    currentField.transform.GetChild(0).position,
                     (targetTime - Time.time) / 0.3f // 0.3 - выделенное время на весь путь, разница - времени осталось времени идти
                     // в самом начале осталось идти 0.3, отношение - 1, берём текущее положение
                     // с течение времени отношение уменьшается и, позиция игрока сближается с целью и достигает при отношении, равном 0
@@ -147,7 +147,7 @@ namespace DiceyAdventuresAR.GameObjects.Players
 
             field.MarkAttainable(); // покрасить новые соседние поля
 
-            var targetPosition = field.transform.position;
+            var targetPosition = field.transform.GetChild(0).position;
             targetPosition.y = transform.position.y; // целевая позиция, но y текущий
             // смотреть по направлению текущая позиция -> целевая позиция
             transform.rotation = Quaternion.LookRotation(targetPosition - transform.position);

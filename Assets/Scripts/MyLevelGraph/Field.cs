@@ -35,9 +35,9 @@ namespace DiceyAdventuresAR.MyLevelGraph
                 }
 
                 value.field = this; // стартовые параметры
-                value.transform.parent = transform.parent;
+                value.transform.parent = transform;
                 value.transform.localScale = Vector3.one;
-                value.transform.localPosition = new Vector3(0, 2 * transform.localScale.y, 0);
+                value.transform.localPosition = new Vector3(0, 2 * transform.GetChild(0).localScale.y, 0);
                 value.transform.localRotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0);
             }
         }
@@ -55,7 +55,7 @@ namespace DiceyAdventuresAR.MyLevelGraph
 
         private void Start()
         {
-            meshRenderer = GetComponent<MeshRenderer>();
+            meshRenderer = GetComponentInChildren<MeshRenderer>();
         }
 
         public void Initialize(LevelGraph level, float x, float y, float z)
@@ -64,7 +64,7 @@ namespace DiceyAdventuresAR.MyLevelGraph
             name = (level.fields.Count + 1).ToString(); // имя поля - номер поля по порядку
             level.fields.Add(this); // занести в список полей
 
-            transform.parent.localPosition = new Vector3(x, y, z) * 1f;
+            transform.localPosition = new Vector3(x, y, z) * 1f;
         }
 
         public override string ToString()

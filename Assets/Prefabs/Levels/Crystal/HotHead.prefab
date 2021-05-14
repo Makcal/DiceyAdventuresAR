@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2789891614794769866}
   - component: {fileID: 3144938100351585250}
   m_Layer: 0
-  m_Name: 2Level-1
+  m_Name: HotHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57,8 +57,118 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55e9a325c82e5784cb70e8b3d234e46c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  charName: "\u0413\u043E\u0440\u044F\u0447\u0430\u044F \u0433\u043E\u043B\u043E\u0432\u0430"
+  startHealth: 26
   healthSprite: {fileID: -1863859237976802683, guid: 120cc155de6f1a64391dcb1059321e50,
     type: 3}
+  cubesCount: 4
+  level: 2
+  mainSlots:
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  extraSlots:
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
 --- !u!1001 &1216918562023341195
 PrefabInstance:
   m_ObjectHideFlags: 0

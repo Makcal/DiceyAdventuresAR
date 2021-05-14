@@ -1,5 +1,6 @@
 ﻿namespace DiceyAdventuresAR.Battle
 {
+    [System.Serializable]
     public class CardDescription // описание карточек (чтобы сохранять в инвентаре)
     {
         public CardAction action; // тип карточки

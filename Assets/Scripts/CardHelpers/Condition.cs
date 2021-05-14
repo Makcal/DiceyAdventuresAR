@@ -1,5 +1,6 @@
 ﻿namespace DiceyAdventuresAR.Battle
 {
+    [System.Serializable]
     public struct Condition // условие
     {
         public ConditionType type; // тип

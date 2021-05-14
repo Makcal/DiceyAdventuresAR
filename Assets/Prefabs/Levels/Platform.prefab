@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 35890312028622735}
   - component: {fileID: 5311243095242385780}
   - component: {fileID: 1879683308525038541}
-  - component: {fileID: 7438355180739645667}
+  - component: {fileID: 2728960741182407125}
   m_Layer: 0
   m_Name: Platform
   m_TagString: Untagged
@@ -96,7 +96,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.0000001, y: 2, z: 1.0000002}
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!114 &7438355180739645667
+--- !u!114 &2728960741182407125
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,15 +105,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2230048600026806405}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb143e7c6c063cf42947c497cd45570f, type: 3}
+  m_Script: {fileID: 11500000, guid: a3ba8e1b25029f34e842013857679e70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: 
-  Edges: []
-  defaultMaterial: {fileID: 2100000, guid: 29e15270621f1874bb0f240dbee0e132, type: 2}
-  attainableMaterial: {fileID: 2100000, guid: 5e9693c6b3efe7940821ec076f27f9d4, type: 2}
-  unattainableMaterial: {fileID: 2100000, guid: ec8fb93a9454ef94cbc3eb18125fc20c,
-    type: 2}
 --- !u!1 &4966657414095696368
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,6 +117,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1940701995608085133}
+  - component: {fileID: 3977258168527866299}
   m_Layer: 0
   m_Name: Platform
   m_TagString: Untagged
@@ -145,3 +140,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3977258168527866299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4966657414095696368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb143e7c6c063cf42947c497cd45570f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultMaterial: {fileID: 2100000, guid: 29e15270621f1874bb0f240dbee0e132, type: 2}
+  attainableMaterial: {fileID: 2100000, guid: 5e9693c6b3efe7940821ec076f27f9d4, type: 2}
+  unattainableMaterial: {fileID: 2100000, guid: ec8fb93a9454ef94cbc3eb18125fc20c,
+    type: 2}

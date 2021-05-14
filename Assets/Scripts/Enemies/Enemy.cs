@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
-using DiceyAdventuresAR.MyLevelGraph;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using DiceyAdventuresAR.MyLevelGraph;
 using DiceyAdventuresAR.GameObjects;
+using DiceyAdventuresAR.Battle;
 
 namespace DiceyAdventuresAR.Enemies
 {
@@ -9,6 +12,19 @@ namespace DiceyAdventuresAR.Enemies
     {
         public int cubesCount = 3; // кол-во кубиков
         public int level; // уровень сложности врага (определяется в наследниках)
+        [SerializeField] CardDescription[] mainSlots = new CardDescription[4]; // нижний ряд для маленьких и больших карточек
+        [SerializeField] CardDescription[] extraSlots = new CardDescription[4]; // верхний ряд только для маленьких карточек
+
+        void OnValidate()
+        {
+            if (mainSlots.Length != 4)
+                Array.Resize(ref mainSlots, 4);
+            if (extraSlots.Length != 4)
+                Array.Resize(ref extraSlots, 4);
+            //for (int i = 0; i < 4; i++)
+            //    if (mainSlots[i] != null)
+            //        extraSlots[i] = null;
+        }
 
         public override void Initialize()
         {
@@ -52,7 +68,7 @@ namespace DiceyAdventuresAR.Enemies
 
         protected override void FillInventory()
         {
-            throw new System.NotImplementedException();
+            //inventory = 
         }
     }
 }

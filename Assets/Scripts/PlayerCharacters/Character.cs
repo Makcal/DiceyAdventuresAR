@@ -10,16 +10,18 @@ namespace DiceyAdventuresAR.GameObjects
     public abstract class Character : MonoBehaviour
     {
         // общие параметры классов персонажа (abstract нужен, чтобы каждый присвоил своё значение)
-        public string Name { get; } // имя персонажа
-        [SerializeField] protected int StartHealth; // начальное (максимальное) здоровье
+        [SerializeField] string charName; // имя персонажа
+        [SerializeField] int startHealth; // начальное (максимальное) здоровье
 
-        protected LevelGraph levelGraph; // быстрая ссылка на уровень
-        protected Transform canvasTr; // быстрая ссылка на трансформ канваса
+        protected static LevelGraph levelGraph; // быстрая ссылка на уровень
+        protected static Transform canvasTr; // быстрая ссылка на трансформ канваса
 
         [SerializeField] private Sprite healthSprite; // иконка жизней
         protected Bar healthBar; // шкала жизней
         protected GameObject healthIcon; // иконка жизней
         protected Text nameText; // текст с именем персонажа
+
+        public readonly CardDescription[,] inventory = new CardDescription[4, 2]; // инвентарь с описаниями карточек
 
         int health; // здоровье
         public int Health
@@ -43,14 +45,11 @@ namespace DiceyAdventuresAR.GameObjects
             }
         }
 
-        public readonly CardDescription[,] inventory = new CardDescription[4, 2]; // инвентарь с описаниями карточек
-
         public virtual void Initialize() // первичная настройка персонажа, вместо конструктора (он недоступен из-за Unity)
         {
             levelGraph = LevelGraph.levelGraph; // получаем уровень
             canvasTr = GameObject.FindGameObjectWithTag("Canvas").transform; // ищем канвас для 2d графики
-
-            health = maxHealth = StartHealth; // задать начальное здоровье (без свойств Health и MaxHealth, так как полоски ещё не созданы)
+            health = maxHealth = startHealth; // задать начальное здоровье (без свойств Health и MaxHealth, так как полоски ещё не созданы)
             FillInventory(); // придумываем карточки персонажу
         }
 
@@ -83,7 +82,7 @@ namespace DiceyAdventuresAR.GameObjects
 
         protected void CreateNameText(Vector2 lowerLeftTextCornerPos, Vector2 topRightTextCornerPos)
         {
-            var obj = new GameObject(Name, typeof(Outline)); // создаём объект текста сразу с обводкой
+            var obj = new GameObject(charName, typeof(Outline)); // создаём объект текста сразу с обводкой
 
             var tr = obj.AddComponent<RectTransform>(); // компонент 2d трансформа
             tr.SetParent(canvasTr); // вся 2d графика принадлежит канвасу
@@ -93,7 +92,7 @@ namespace DiceyAdventuresAR.GameObjects
             tr.offsetMin = tr.offsetMax = Vector2.zero; // нет отступов, углы прямоугольника совпадают с якорями
 
             nameText = obj.AddComponent<Text>(); // компонент текста
-            nameText.text = Name;
+            nameText.text = charName;
             nameText.font = Resources.GetBuiltinResource<Font>("Arial.ttf"); // получить шрифт
             nameText.alignment = TextAnchor.LowerLeft;
             nameText.resizeTextForBestFit = true; // автоподбор максимального размера

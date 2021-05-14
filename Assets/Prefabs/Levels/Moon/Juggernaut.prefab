@@ -44,9 +44,117 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cacd65c3d2600c49a8b770eb55faadb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  charName: 
+  startHealth: 0
   healthSprite: {fileID: 0}
   cubesCount: 3
   level: 0
+  mainSlots:
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  extraSlots:
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
 --- !u!1001 &7413211697278643176
 PrefabInstance:
   m_ObjectHideFlags: 0

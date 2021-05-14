@@ -174,7 +174,7 @@ namespace DiceyAdventuresAR.Battle
                     transform.GetChild(i).gameObject.SetActive(true); // включаем поля и рёбра уровня
 
                 player.transform.localScale /= 2; // возврат игрока на место
-                player.transform.position = player.currentField.transform.position + new Vector3(0, player.currentField.transform.localScale.y, 0);
+                player.transform.position = player.currentField.transform.GetChild(0).position + new Vector3(0, player.currentField.transform.GetChild(0).localScale.y, 0);
                 StartCoroutine(player.AddXP(enemy.level)); // дать опыт
             }
             else

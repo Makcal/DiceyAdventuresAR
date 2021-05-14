@@ -1,8 +1,8 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DiceyAdventuresAR.Battle
 {
+    [System.Serializable]
     public struct Bonus // бонус (не реализован)
     {
         public BonusType type; // тип

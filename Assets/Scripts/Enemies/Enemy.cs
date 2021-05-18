@@ -11,7 +11,7 @@ namespace DiceyAdventuresAR.Enemies
     public class Enemy : Character
     {
         public int cubesCount = 3; // кол-во кубиков
-        public int level; // уровень сложности врага (определяется в наследниках)
+        public int level = 1; // уровень сложности врага (определяется в наследниках)
         [SerializeField] CardDescription[] mainSlots = new CardDescription[4]; // нижний ряд для маленьких и больших карточек
         [SerializeField] CardDescription[] extraSlots = new CardDescription[4]; // верхний ряд только для маленьких карточек
 
@@ -21,6 +21,7 @@ namespace DiceyAdventuresAR.Enemies
                 Array.Resize(ref mainSlots, 4);
             if (extraSlots.Length != 4)
                 Array.Resize(ref extraSlots, 4);
+            print(mainSlots[3] == new CardDescription());
             //for (int i = 0; i < 4; i++)
             //    if (mainSlots[i] != null)
             //        extraSlots[i] = null;

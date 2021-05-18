@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4155588070013974951}
+  - component: {fileID: 6247252153462331843}
+  - component: {fileID: 3527032656982016037}
   m_Layer: 0
   m_Name: Droid
   m_TagString: Untagged
@@ -31,6 +33,142 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6247252153462331843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1579861185086649990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e943b2ef405289c4c8481d245e61780c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3527032656982016037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1579861185086649990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cacd65c3d2600c49a8b770eb55faadb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charName: "\u0414\u0440\u043E\u0438\u0434"
+  startHealth: 12
+  healthSprite: {fileID: -1863859237976802683, guid: 120cc155de6f1a64391dcb1059321e50,
+    type: 3}
+  cubesCount: 3
+  level: 1
+  mainSlots:
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  extraSlots:
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
 --- !u!1001 &3935419875088103268
 PrefabInstance:
   m_ObjectHideFlags: 0

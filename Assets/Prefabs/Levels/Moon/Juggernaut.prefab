@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6553137354923318403}
   - component: {fileID: -1549084770331148728}
-  - component: {fileID: -258274604261270937}
+  - component: {fileID: 806772674348244563}
   m_Layer: 0
   m_Name: Juggernaut
   m_TagString: Untagged
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e943b2ef405289c4c8481d245e61780c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-258274604261270937
+--- !u!114 &806772674348244563
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,17 +54,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 8125725930348172667}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3f9f8ab783138343abe797cda308d05, type: 3}
+  m_Script: {fileID: 11500000, guid: 9cacd65c3d2600c49a8b770eb55faadb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   charName: "\u0414\u0436\u0430\u0433\u0433\u0435\u0440\u043D\u0430\u0443\u0442"
   startHealth: 40
   healthSprite: {fileID: -1863859237976802683, guid: 120cc155de6f1a64391dcb1059321e50,
     type: 3}
-  cubesCount: 4
-  level: 3
   mainSlots:
-  - action: 0
+  - action: 2
     size: 1
     slotsCount: 0
     uses: 1
@@ -169,6 +167,8 @@ MonoBehaviour:
         type: 0
         number: 0
       value: 0
+  cubesCount: 1
+  level: 4
 --- !u!1001 &7413211697278643176
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -214,7 +214,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
         type: 3}
@@ -224,7 +224,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
         type: 3}
@@ -239,7 +239,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
         type: 3}

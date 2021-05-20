@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5051430187382733006}
   - component: {fileID: -5631811139631272719}
-  - component: {fileID: 723869383231184929}
+  - component: {fileID: 8411187556666634344}
   m_Layer: 0
   m_Name: Slug
   m_TagString: Untagged
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e943b2ef405289c4c8481d245e61780c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &723869383231184929
+--- !u!114 &8411187556666634344
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,38 +54,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 4538625894990331887}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3f9f8ab783138343abe797cda308d05, type: 3}
+  m_Script: {fileID: 11500000, guid: 9cacd65c3d2600c49a8b770eb55faadb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   charName: "\u0421\u043B\u0438\u0437\u0435\u043D\u044C"
   startHealth: 25
   healthSprite: {fileID: -1863859237976802683, guid: 120cc155de6f1a64391dcb1059321e50,
     type: 3}
-  cubesCount: 3
-  level: 2
   mainSlots:
-  - action: 0
-    size: 1
+  - action: 1
+    size: 0
     slotsCount: 0
     uses: 1
     condition:
-      type: 0
+      type: 4
       number: 0
     bonus:
-      type: 0
+      type: 1
       condition:
         type: 0
         number: 0
-      value: 0
-  - action: 0
-    size: 1
+      value: 1
+  - action: 1
+    size: 0
     slotsCount: 0
     uses: 1
     condition:
-      type: 0
+      type: 4
       number: 0
     bonus:
-      type: 0
+      type: 1
       condition:
         type: 0
         number: 0
@@ -169,6 +167,8 @@ MonoBehaviour:
         type: 0
         number: 0
       value: 0
+  cubesCount: 3
+  level: 2
 --- !u!1001 &623917988496502102
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -214,22 +214,22 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 5ce514bf28cbf704c8252499bfae09e6,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071066
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5ce514bf28cbf704c8252499bfae09e6,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5ce514bf28cbf704c8252499bfae09e6,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.707107
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5ce514bf28cbf704c8252499bfae09e6,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5ce514bf28cbf704c8252499bfae09e6,
         type: 3}
@@ -239,7 +239,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 5ce514bf28cbf704c8252499bfae09e6,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5ce514bf28cbf704c8252499bfae09e6,
         type: 3}

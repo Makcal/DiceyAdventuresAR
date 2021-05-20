@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using DiceyAdventuresAR.MyLevelGraph;
@@ -10,18 +11,21 @@ namespace DiceyAdventuresAR.GameObjects
     public abstract class Character : MonoBehaviour
     {
         // общие параметры классов персонажа (abstract нужен, чтобы каждый присвоил своё значение)
-        [SerializeField] string charName; // имя персонажа
+        public string charName; // имя персонажа
         [SerializeField] int startHealth; // начальное (максимальное) здоровье
 
         protected static LevelGraph levelGraph; // быстрая ссылка на уровень
         protected static Transform canvasTr; // быстрая ссылка на трансформ канваса
 
-        [SerializeField] private Sprite healthSprite; // иконка жизней
+        [SerializeField] private Sprite healthSprite; // картинка для жизней
         protected Bar healthBar; // шкала жизней
-        protected GameObject healthIcon; // иконка жизней
+        protected Image healthIcon; // иконка жизней
         protected Text nameText; // текст с именем персонажа
 
         public readonly CardDescription[,] inventory = new CardDescription[4, 2]; // инвентарь с описаниями карточек
+        // [i, 0] - главная линия, [i, 1] - вторая линия маленьких карточек
+        [SerializeField] CardDescription[] mainSlots = new CardDescription[4]; // нижний ряд для маленьких и больших карточек
+        [SerializeField] CardDescription[] extraSlots = new CardDescription[4]; // верхний ряд только для маленьких карточек
 
         int health; // здоровье
         public int Health
@@ -43,6 +47,14 @@ namespace DiceyAdventuresAR.GameObjects
                 maxHealth = value; // новый максимум
                 healthBar.MaxValue = value; // отразить изменения на шкале
             }
+        }
+
+        void OnValidate()
+        {
+            if (mainSlots.Length != 4)
+                Array.Resize(ref mainSlots, 4);
+            if (extraSlots.Length != 4)
+                Array.Resize(ref extraSlots, 4);
         }
 
         public virtual void Initialize() // первичная настройка персонажа, вместо конструктора (он недоступен из-за Unity)
@@ -77,7 +89,8 @@ namespace DiceyAdventuresAR.GameObjects
             imgTr.offsetMin = imgTr.offsetMax = Vector2.zero; // сначала углы прямоугольника совпадают с якорями (нет отступа)
             imgTr.sizeDelta = new Vector2(imgTr.rect.height, 0); // ширина прямоугольника увеличивается вправо на высоту (квадрат)
 
-            img.AddComponent<Image>().sprite = healthSprite; // установка картинки
+            healthIcon = img.AddComponent<Image>();
+            healthIcon.sprite = healthSprite; // установка картинки
         }
 
         protected void CreateNameText(Vector2 lowerLeftTextCornerPos, Vector2 topRightTextCornerPos)
@@ -100,13 +113,21 @@ namespace DiceyAdventuresAR.GameObjects
             nameText.resizeTextMinSize = 2;
         }
 
-        protected abstract void FillInventory(); // метод для заполнения инвентаря описаниями карточек
+        void FillInventory() // метод для заполнения инвентаря описаниями карточек
+        {
+            for (int i = 0; i < inventory.GetUpperBound(0) + 1; i++)
+            {
+                inventory[i, 0] = mainSlots[i].action != CardAction.None ? mainSlots[i] : null; // null если действия нет по умолчанию
+                inventory[i, 1] = !mainSlots[i].size && extraSlots[i].action != CardAction.None ? extraSlots[i] : null;
+                // дополнительная карточка, только если у основной карточки маленький размер
+            }
+        }
 
         public virtual IEnumerator Death() // смерть
         {
-            Destroy(healthBar);
-            Destroy(healthIcon);
-            Destroy(nameText);
+            Destroy(healthBar.gameObject);
+            Destroy(healthIcon.gameObject);
+            Destroy(nameText.gameObject);
             Destroy(gameObject);
             yield break;
         }

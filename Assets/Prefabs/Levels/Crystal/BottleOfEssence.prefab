@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8908360214411609227}
   - component: {fileID: 7732188589979046596}
-  - component: {fileID: -4654407932562884898}
+  - component: {fileID: -2639433836360350021}
   m_Layer: 0
   m_Name: BottleOfEssence
   m_TagString: Untagged
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e943b2ef405289c4c8481d245e61780c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-4654407932562884898
+--- !u!114 &-2639433836360350021
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,30 +54,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 5367243258897954022}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49ee49a13dc055c4b85e05a29b364c20, type: 3}
+  m_Script: {fileID: 11500000, guid: 9cacd65c3d2600c49a8b770eb55faadb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   charName: "\u0411\u0430\u043D\u043A\u0430 \u0443\u0436\u0430\u0441\u043E\u0432"
   startHealth: 34
   healthSprite: {fileID: -1863859237976802683, guid: 120cc155de6f1a64391dcb1059321e50,
     type: 3}
-  cubesCount: 3
-  level: 3
   mainSlots:
-  - action: 0
+  - action: 1
     size: 1
     slotsCount: 0
     uses: 1
     condition:
-      type: 0
-      number: 0
+      type: 2
+      number: 4
     bonus:
-      type: 0
+      type: 2
       condition:
         type: 0
         number: 0
       value: 0
-  - action: 0
+  - action: 1
     size: 1
     slotsCount: 0
     uses: 1
@@ -85,7 +83,7 @@ MonoBehaviour:
       type: 0
       number: 0
     bonus:
-      type: 0
+      type: 2
       condition:
         type: 0
         number: 0
@@ -169,6 +167,8 @@ MonoBehaviour:
         type: 0
         number: 0
       value: 0
+  cubesCount: 3
+  level: 3
 --- !u!1001 &7989671581368942394
 PrefabInstance:
   m_ObjectHideFlags: 0

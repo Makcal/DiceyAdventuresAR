@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2978219973824667374}
   - component: {fileID: -6126131248385985984}
-  - component: {fileID: -6169921746530103650}
+  - component: {fileID: -4610622080535105298}
   m_Layer: 0
   m_Name: CrystalBoss
   m_TagString: Untagged
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e943b2ef405289c4c8481d245e61780c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-6169921746530103650
+--- !u!114 &-4610622080535105298
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,22 +54,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1871687443467734394}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4a3986a9a563304b83683601b0a661d, type: 3}
+  m_Script: {fileID: 11500000, guid: 9cacd65c3d2600c49a8b770eb55faadb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   charName: "\u041A\u0440\u0438\u0441\u0442\u0430\u043B\u043B\u0438\u043D\u0430"
-  startHealth: 55
+  startHealth: 78
   healthSprite: {fileID: -1863859237976802683, guid: 120cc155de6f1a64391dcb1059321e50,
     type: 3}
-  cubesCount: 4
-  level: 6
   mainSlots:
-  - action: 0
+  - action: 1
     size: 1
     slotsCount: 0
     uses: 1
     condition:
-      type: 0
+      type: 4
       number: 0
     bonus:
       type: 0
@@ -169,6 +167,8 @@ MonoBehaviour:
         type: 0
         number: 0
       value: 0
+  cubesCount: 4
+  level: 6
 --- !u!1001 &1766506792447856064
 PrefabInstance:
   m_ObjectHideFlags: 0

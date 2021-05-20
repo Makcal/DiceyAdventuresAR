@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7495849937133746894}
   - component: {fileID: -1428132897452489610}
-  - component: {fileID: -568231131955517594}
+  - component: {fileID: 959347840244847451}
   m_Layer: 0
   m_Name: HeadHunterBoss
   m_TagString: Untagged
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e943b2ef405289c4c8481d245e61780c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-568231131955517594
+--- !u!114 &959347840244847451
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,38 +54,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 1819142466228837112}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3f9f8ab783138343abe797cda308d05, type: 3}
+  m_Script: {fileID: 11500000, guid: 9cacd65c3d2600c49a8b770eb55faadb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charName: 
-  startHealth: 14
+  charName: "\u041E\u0445\u043E\u0442\u043D\u0438\u043A \u0437\u0430 \u0433\u043E\u043B\u043E\u0432\u0430\u043C\u0438"
+  startHealth: 51
   healthSprite: {fileID: -1863859237976802683, guid: 120cc155de6f1a64391dcb1059321e50,
     type: 3}
-  cubesCount: 3
-  level: 1
   mainSlots:
-  - action: 0
+  - action: 1
     size: 1
     slotsCount: 0
     uses: 1
     condition:
-      type: 0
+      type: 3
       number: 0
     bonus:
-      type: 0
+      type: 2
       condition:
         type: 0
         number: 0
       value: 0
-  - action: 0
+  - action: 1
     size: 1
     slotsCount: 0
     uses: 1
     condition:
-      type: 0
+      type: 4
       number: 0
     bonus:
-      type: 0
+      type: 6
       condition:
         type: 0
         number: 0
@@ -169,6 +167,8 @@ MonoBehaviour:
         type: 0
         number: 0
       value: 0
+  cubesCount: 5
+  level: 6
 --- !u!1001 &2751452081065111662
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -214,7 +214,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 93753715dc6937547b3faeb679f08e77,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 93753715dc6937547b3faeb679f08e77,
         type: 3}
@@ -224,7 +224,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 93753715dc6937547b3faeb679f08e77,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 93753715dc6937547b3faeb679f08e77,
         type: 3}
@@ -239,7 +239,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 93753715dc6937547b3faeb679f08e77,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -180
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 93753715dc6937547b3faeb679f08e77,
         type: 3}

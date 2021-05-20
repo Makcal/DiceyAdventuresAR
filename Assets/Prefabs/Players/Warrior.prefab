@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6993069201601709809}
-  - component: {fileID: 6272089263733026126}
+  - component: {fileID: -5479973349142429109}
   m_Layer: 0
-  m_Name: MainCube
+  m_Name: Warrior
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6272089263733026126
+--- !u!114 &-5479973349142429109
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,12 +41,121 @@ MonoBehaviour:
   m_GameObject: {fileID: 6993069201601709808}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0416eea2432d4544bb3da2981ab0cdf, type: 3}
+  m_Script: {fileID: 11500000, guid: 23425676f9149f24383b6481bd10b965, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  charName: "\u0412\u043E\u0438\u043D"
+  startHealth: 24
   healthSprite: {fileID: -1863859237976802683, guid: 120cc155de6f1a64391dcb1059321e50,
     type: 3}
+  mainSlots:
+  - action: 1
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 3
+    size: 1
+    slotsCount: 0
+    uses: 3
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  extraSlots:
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
+  - action: 0
+    size: 1
+    slotsCount: 0
+    uses: 1
+    condition:
+      type: 0
+      number: 0
+    bonus:
+      type: 0
+      condition:
+        type: 0
+        number: 0
+      value: 0
   XPSprite: {fileID: 0}
+  upgradeHealth: 4
 --- !u!1001 &6993069201111483996
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@
 {
     public enum CardAction // перечисление действий (классы) карточек (Damage по умолчанию)
     {
+        None, // нет карточки
         Damage, // урон
         DoubleDamage, // двойной урон
         ChangeDice, // перебросить

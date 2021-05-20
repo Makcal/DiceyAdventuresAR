@@ -1,19 +1,19 @@
 ﻿using System;
 using UnityEngine;
 using DiceyAdventuresAR.MyLevelGraph;
-using DiceyAdventuresAR.Battle;
 using DiceyAdventuresAR.UI;
 using System.Collections;
 using UnityEngine.UI;
 
 namespace DiceyAdventuresAR.GameObjects.Players
 {
-    public abstract class Player : Character
+    public class Player : Character
     {
-        protected abstract int UpgradeHealth { get; } // общий параметр у каждого наследника (повышение максимума здоровья)
+        [SerializeField] Sprite XPSprite; // иконка и шкала опыта
+        GameObject XP_Icon;
+        Bar XP_Bar;
 
-        public Sprite XPSprite; // иконка и шкала опыта
-        Bar XPBar;
+        [SerializeField] private int upgradeHealth; // повышение максимума здоровья за уровень
 
         [NonSerialized] public Field currentField = null; // текущее поле
         Field targetField = null; // поле, на которое сейчас игрок идёт
@@ -21,15 +21,18 @@ namespace DiceyAdventuresAR.GameObjects.Players
 
         // опыт и уровень
         public int Level { get; private set; } = 1; // уровень
-        private int experience = 0;
+
+        int experience = 0;
         public int Experience // свойство опыта
         {
             get => experience;
-            private set {
+            private set 
+            {
                 experience = value;
-                XPBar.CurrentValue = value; // обновить шкалу
+                XP_Bar.CurrentValue = value; // обновить шкалу
             }
         }
+
         int maxXP = 2;
         public int MaxXP // свойство максимального опыта
         {
@@ -37,7 +40,7 @@ namespace DiceyAdventuresAR.GameObjects.Players
             private set
             {
                 maxXP = value;
-                XPBar.MaxValue = value; // обновить шкалу
+                XP_Bar.MaxValue = value; // обновить шкалу
             }
         }
 
@@ -45,7 +48,7 @@ namespace DiceyAdventuresAR.GameObjects.Players
         public int Coins  // монеты (не реализованы)
         {
             get => coins;
-            set
+            private set
             {
                 coins = value;
             }
@@ -80,26 +83,26 @@ namespace DiceyAdventuresAR.GameObjects.Players
         void CreateXPBar(Vector2 lowerLeftBarCornerPos, Vector2 topRightBarCornerPos)
         {
             // создаём полоску на нужных якорях (доля относительно всего экрана)
-            XPBar = Bar.CreateBar(canvasTr, lowerLeftBarCornerPos, topRightBarCornerPos);
+            XP_Bar = Bar.CreateBar(canvasTr, lowerLeftBarCornerPos, topRightBarCornerPos);
 
-            XPBar.maxValue = MaxXP; // параметры полосок
-            XPBar.startValue = 0;
-            XPBar.backgroundColor = new Color32(35, 97, 28, 255); // цвета полосок
-            XPBar.mainColor = new Color32(88, 255, 23, 255);
+            XP_Bar.maxValue = MaxXP; // параметры полосок
+            XP_Bar.startValue = 0;
+            XP_Bar.backgroundColor = new Color32(35, 97, 28, 255); // цвета полосок
+            XP_Bar.mainColor = new Color32(88, 255, 23, 255);
         }
 
         void CreateXPIcon(Vector2 lowerLeftIconCornerPos, Vector2 topRightIconCornerPos)
         {
-            healthIcon = new GameObject("XP icon"); // создаём новый объект иконки
+            XP_Icon = new GameObject("XP icon"); // создаём новый объект иконки
 
-            var imgTr = healthIcon.AddComponent<RectTransform>(); // компонент 2d трансформа
-            imgTr.SetParent(canvasTr); // вся 2d графика принадлежит канвасу
+            var XP_Tr = XP_Icon.AddComponent<RectTransform>(); // компонент 2d трансформа
+            XP_Tr.SetParent(canvasTr); // вся 2d графика принадлежит канвасу
 
-            imgTr.anchorMin = lowerLeftIconCornerPos; // устанавливаем якоря (координаты углов как доля (0-1) от всего экрана)
-            imgTr.anchorMax = topRightIconCornerPos;
-            imgTr.offsetMin = imgTr.offsetMax = Vector2.zero; // сдвиги прямоугольника от якорей - 0
+            XP_Tr.anchorMin = lowerLeftIconCornerPos; // устанавливаем якоря (координаты углов как доля (0-1) от всего экрана)
+            XP_Tr.anchorMax = topRightIconCornerPos;
+            XP_Tr.offsetMin = XP_Tr.offsetMax = Vector2.zero; // сдвиги прямоугольника от якорей - 0
 
-            var textComp = healthIcon.AddComponent<Text>(); // настройка текста (временно вместо иконки)
+            var textComp = XP_Icon.AddComponent<Text>(); // настройка текста (временно вместо иконки)
             textComp.text = "Опыт:";
             textComp.alignment = TextAnchor.MiddleCenter;
             textComp.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font; // получить шрифт
@@ -107,7 +110,7 @@ namespace DiceyAdventuresAR.GameObjects.Players
             textComp.resizeTextMinSize = 2;
             textComp.resizeTextMaxSize = 300;
 
-            healthIcon.AddComponent<Outline>(); // обводка для лучшей читаемости
+            XP_Icon.AddComponent<Outline>(); // обводка для лучшей читаемости
         }
 
         void FixedUpdate() // бесконечная проверка
@@ -174,7 +177,7 @@ namespace DiceyAdventuresAR.GameObjects.Players
             Level += 1; // плюс 1
             Experience -= MaxXP; // тратим опыт
             MaxXP += Level; // новый порог - на число уровня больше, чем предыдущий
-            MaxHealth += UpgradeHealth; // повышаем живучесть :)
+            MaxHealth += upgradeHealth; // повышаем живучесть :)
             Health = MaxHealth; // регенирируем
 
             // всплывающее сообщение
@@ -209,22 +212,10 @@ namespace DiceyAdventuresAR.GameObjects.Players
 
         public override IEnumerator Death() // смерть
         {
+            Destroy(XP_Bar.gameObject);
+            Destroy(XP_Icon.gameObject);
             yield return StartCoroutine(levelGraph.battle.EndBattle(false)); // битва окончена поражением
             StartCoroutine(base.Death());
-        }
-
-        protected override void FillInventory() // описания карточек
-        {
-            inventory[0, 0] = new CardDescription()
-            {
-                action = CardAction.Damage, // простой урон
-            };
-
-            inventory[3, 0] = new CardDescription()
-            {
-                uses = 3,
-                action = CardAction.ChangeDice, // 3 переброска
-            };
         }
     }
 }

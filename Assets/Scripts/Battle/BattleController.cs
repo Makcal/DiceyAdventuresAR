@@ -204,57 +204,61 @@ namespace DiceyAdventuresAR.Battle
 
             foreach (var card in cards)
             {
-                cubes = GetActiveCubes(cubes); // отфильтровать и отсортировать список кубиков
-                var suitableCubes = new List<Cube>(); // удовлетворяющие кубики
-
-                if (card.condition.type == ConditionType.Doubles && card.slotsCount) // карточка с условием двойнушек
+                List<Cube> suitableCubes;
+                do
                 {
-                    for (byte i = 6; i > 0; i--) // от 6 до 1
+                    cubes = GetActiveCubes(cubes); // отфильтровать и отсортировать список кубиков
+                    suitableCubes = new List<Cube>(); // удовлетворяющие кубики
+
+                    if (card.condition.type == ConditionType.Doubles && card.slotsCount) // карточка с условием двойнушек
                     {
-                        List<Cube> found = cubes.FindAll(c => c.Value == i); // все кубики с одинаковым числом
-                        if (found.Count >= 2) // есть хотя бы два таких
+                        for (byte i = 6; i > 0; i--) // от 6 до 1
                         {
-                            suitableCubes.AddRange(found.GetRange(0, 2)); // добавляем в список подходящих
-                            break; // готово
+                            List<Cube> found = cubes.FindAll(c => c.Value == i); // все кубики с одинаковым числом
+                            if (found.Count >= 2) // есть хотя бы два таких
+                            {
+                                suitableCubes.AddRange(found.GetRange(0, 2)); // добавляем в список подходящих
+                                break; // готово
+                            }
+                        }
+                        if (suitableCubes.Count == 0)
+                            break; // пропустить эту карточку, если не найдено подходящих кубиков
+                    }
+                    else if (card.slotsCount) // карточка с двумя слотами без условия
+                    {
+                        if (cubes.Count >= 2)
+                            suitableCubes.AddRange(cubes.GetRange(0, 2)); // просто два самых больших (первых в списке)
+                        else
+                            break; // недостаточно кубиков
+                    }
+                    else
+                    {
+                        var cube = cubes.Find(c => card.condition.Check(c.Value)); // найти первый кубик, что удовлетворяет условию
+                        if (cube == null)
+                            break; // нет таких кубиков
+                        suitableCubes.Add(cube);
+                    }
+
+                    for (var i = 0; i < suitableCubes.Count; i++)
+                    {
+                        Vector3 startPose = suitableCubes[i].transform.position; // стартовая позиция
+                        float startTime = Time.time; // стартовое время
+
+                        while (suitableCubes[i]) // пока куб (есть, существует, не "съела" карточка)
+                        {
+                            if (suitableCubes[i] && card) // если куб и карточка всё ещё существуют
+                                suitableCubes[i].transform.position = Vector3.Lerp(
+                                    startPose,
+                                    // позиция первого пустого кубика в карточке
+                                    new List<Cube>(card.slots).Find(c => c.Value == 0).transform.position,
+                                    (Time.time - startTime) / 1.0f // отношение пройденного времени к полному теоретическому (1 секунда)
+                                ); // приближаем кубик к слоту в карточке для активации
+                            yield return null;
                         }
                     }
-                    if (suitableCubes.Count == 0)
-                        continue; // пропустить эту карточку, если не найдено подходящих кубиков
-                }
-                else if (card.slotsCount) // карточка с двумя слотами без условия
-                {
-                    if (cubes.Count >= 2)
-                        suitableCubes.AddRange(cubes.GetRange(0, 2)); // просто два самых больших (первых в списке)
-                    else
-                        continue; // недостаточно кубиков
-                }
-                else
-                {
-                    var cube = cubes.Find(c => card.condition.Check(c.Value)); // найти первый кубик, что удовлетворяет условию
-                    if (cube == null)
-                        continue; // нет таких кубиков
-                    suitableCubes.Add(cube);
-                }
-                
-                for (var i = 0; i < suitableCubes.Count; i++)
-                {
-                    Vector3 startPose = suitableCubes[i].transform.position; // стартовая позиция
-                    float startTime = Time.time; // стартовое время
 
-                    while (suitableCubes[i]) // пока куб (есть, существует, не "съела" карточка)
-                    {
-                        if (suitableCubes[i] && card) // если куб и карточка всё ещё существуют
-                            suitableCubes[i].transform.position = Vector3.Lerp(
-                                startPose,
-                                // позиция первого пустого кубика в карточке
-                                new List<Cube>(card.slots).Find(c => c.Value == 0).transform.position,
-                                (Time.time - startTime) / 1.0f // отношение пройденного времени к полному теоретическому (1 секунда)
-                            ); // приближаем кубик к слоту в карточке для активации
-                        yield return null;
-                    }
-                }
-
-                yield return new WaitForSeconds(0.5f); // пауза после каждой карточки
+                    yield return new WaitForSeconds(0.5f); // пауза после каждой карточки
+                } while (card.Uses > 0);
             }
 
             yield return new WaitForSeconds(0.75f); // пауза после хода

@@ -152,7 +152,7 @@ namespace DiceyAdventuresAR.MyLevelGraph
                 operatedFields.Remove(chestField);
             }
 
-            operatedFields = fields.FindAll(f => f.Edges.Count > 1); // поля для врагов
+            operatedFields = fields.FindAll(f => f.Edges.Count > 1); // поля для врагов на перекрёстках
             for (int i = 0; i < Mathf.Round(fields.Count * 0.29f); i++) // кол-во врагов = 29% от числа всех полей
             {
                 Field f = operatedFields[Range(0, operatedFields.Count)];
@@ -161,6 +161,7 @@ namespace DiceyAdventuresAR.MyLevelGraph
             }
 
             operatedFields = fields.FindAll(f => f.PlacedItem == null); // свободные поля для яблок
+            operatedFields.Remove(startField); // кроме, конечно, стартового поля
             for (int i = 0; i < Mathf.Round(fields.Count * 0.14f); i++) // на 14% полей можно яблочки расставить
             {
                 Field f = operatedFields[Range(0, operatedFields.Count)]; // аналогично врагам

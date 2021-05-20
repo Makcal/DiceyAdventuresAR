@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6583642048960498187}
   - component: {fileID: 2789891614794769866}
-  - component: {fileID: 3144938100351585250}
+  - component: {fileID: 277434789052676666}
   m_Layer: 0
   m_Name: HotHead
   m_TagString: Untagged
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e943b2ef405289c4c8481d245e61780c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3144938100351585250
+--- !u!114 &277434789052676666
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,25 +54,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 207004556870668787}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55e9a325c82e5784cb70e8b3d234e46c, type: 3}
+  m_Script: {fileID: 11500000, guid: 9cacd65c3d2600c49a8b770eb55faadb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   charName: "\u0413\u043E\u0440\u044F\u0447\u0430\u044F \u0433\u043E\u043B\u043E\u0432\u0430"
   startHealth: 26
   healthSprite: {fileID: -1863859237976802683, guid: 120cc155de6f1a64391dcb1059321e50,
     type: 3}
-  cubesCount: 4
-  level: 2
   mainSlots:
-  - action: 0
+  - action: 1
     size: 1
-    slotsCount: 0
+    slotsCount: 1
     uses: 1
     condition:
-      type: 0
+      type: 7
       number: 0
     bonus:
-      type: 0
+      type: 5
       condition:
         type: 0
         number: 0
@@ -169,6 +167,8 @@ MonoBehaviour:
         type: 0
         number: 0
       value: 0
+  cubesCount: 4
+  level: 2
 --- !u!1001 &1216918562023341195
 PrefabInstance:
   m_ObjectHideFlags: 0

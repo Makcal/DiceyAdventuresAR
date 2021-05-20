@@ -167,7 +167,7 @@ MonoBehaviour:
         type: 0
         number: 0
       value: 0
-  cubesCount: 3
+  cubesCount: 2
   level: 1
 --- !u!1001 &9128937192451889106
 PrefabInstance:

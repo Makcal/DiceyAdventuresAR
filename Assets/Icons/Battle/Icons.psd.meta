@@ -13,13 +13,19 @@ TextureImporter:
     second: Fire
   - first:
       213: 1202984965197363600
-    second: Icons_3
+    second: Poison
   - first:
       213: 5543941588292853863
     second: Sword
   - first:
       213: -1863859237976802683
     second: Health
+  - first:
+      213: 7576617242518483205
+    second: XP
+  - first:
+      213: 7374845061861626600
+    second: Super
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -41,6 +47,7 @@ TextureImporter:
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
+  vTOnly: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -72,9 +79,12 @@ TextureImporter:
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  ignorePngGamma: 0
   applyGammaDecoding: 0
   platformSettings:
   - serializedVersion: 3
@@ -153,10 +163,10 @@ TextureImporter:
       name: Shock
       rect:
         serializedVersion: 2
-        x: 103
-        y: 160
-        width: 71
-        height: 60
+        x: 99
+        y: 153
+        width: 75
+        height: 75
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,7 +202,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_3
+      name: Poison
       rect:
         serializedVersion: 2
         x: 228
@@ -237,12 +247,12 @@ TextureImporter:
       name: Health
       rect:
         serializedVersion: 2
-        x: 33
-        y: 346
+        x: 34
+        y: 345
         width: 88
         height: 83
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -250,6 +260,48 @@ TextureImporter:
       bones: []
       spriteID: 58aff01f5ed3226e0800000000000000
       internalID: -1863859237976802683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: XP
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 342
+        width: 82
+        height: 81
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 501f96b4d3d852960800000000000000
+      internalID: 7576617242518483205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Super
+      rect:
+        serializedVersion: 2
+        x: 214
+        y: 342
+        width: 104
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e25ec99286b85660800000000000000
+      internalID: 7374845061861626600
       vertices: []
       indices: 
       edges: []

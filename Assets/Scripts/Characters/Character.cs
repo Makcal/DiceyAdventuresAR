@@ -17,10 +17,10 @@ namespace DiceyAdventuresAR.GameObjects
         protected static LevelGraph levelGraph; // быстрая ссылка на уровень
         protected static Transform canvasTr; // быстрая ссылка на трансформ канваса
 
-        [SerializeField] private Sprite healthSprite; // картинка для жизней
-        protected Bar healthBar; // шкала жизней
-        protected Image healthIcon; // иконка жизней
-        protected Text nameText; // текст с именем персонажа
+        [SerializeField] Sprite healthSprite; // картинка для жизней
+        Bar healthBar; // шкала жизней
+        Image healthIcon; // иконка жизней
+        Text nameText; // текст с именем персонажа
 
         public readonly CardDescription[,] inventory = new CardDescription[4, 2]; // инвентарь с описаниями карточек
         // [i, 0] - главная линия, [i, 1] - вторая линия маленьких карточек
@@ -81,13 +81,14 @@ namespace DiceyAdventuresAR.GameObjects
             var imgTr = img.AddComponent<RectTransform>(); 
             imgTr.SetParent(canvasTr);
 
-            // rect.size == sizeDelta + distanceBetweenAnchors
-            // distanceBetweenAnchors.x == (anchorMax.x - anchorMin.x) * canvasTr.sizeDelta.x
+            // sizeDelta - сумма отступов вправо двух сторон прямоугольника от соответствующих сторон якорей
+            // rect.size == sizeDelta + distanceBetweenAnchors - расстояние между углами прямоугольника (не якорями)
+            // distanceBetweenAnchors.x == (anchorMax.x - anchorMin.x) * canvasTr.sizeDelta.x - буквально расстояние между якорями
             imgTr.anchorMin = lowerLeftIconCornerPos; // устанавливаем якоря (координаты углов как доля (0-1) от всего экрана)
             imgTr.anchorMax = topRightIconCornerPos;
-            imgTr.pivot = new Vector2(0, 0.5f); // центр прямоугольника - левая сторона иконки
-            imgTr.offsetMin = imgTr.offsetMax = Vector2.zero; // сначала углы прямоугольника совпадают с якорями (нет отступа)
-            imgTr.sizeDelta = new Vector2(imgTr.rect.height, 0); // ширина прямоугольника увеличивается вправо на высоту (квадрат)
+            imgTr.pivot = new Vector2(0, 0.5f); // иконка левой стороной прилегает к якорям (y не важен, так как совпадают только x якорей)
+            imgTr.offsetMin = imgTr.offsetMax = Vector2.zero; // сначала углы прямоугольника прилегают к якорям (нет отступа)
+            imgTr.sizeDelta = new Vector2(imgTr.rect.height, 0); // ширина прямоугольника увеличивается вправо на высоту, чтобы был квадрат
 
             healthIcon = img.AddComponent<Image>();
             healthIcon.sprite = healthSprite; // установка картинки

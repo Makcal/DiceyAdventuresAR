@@ -9,8 +9,8 @@ namespace DiceyAdventuresAR.GameObjects.Players
 {
     public class Player : Character
     {
-        [SerializeField] Sprite XPSprite; // иконка и шкала опыта
-        GameObject XP_Icon;
+        [SerializeField] Sprite XP_Sprite; // иконка и шкала опыта
+        Image XP_Icon;
         Bar XP_Bar;
 
         [SerializeField] private int upgradeHealth; // повышение максимума здоровья за уровень
@@ -68,7 +68,7 @@ namespace DiceyAdventuresAR.GameObjects.Players
 
             // создаём полоску и иконку опыта
             CreateXPBar(new Vector2(0.068f, 0.067f), new Vector2(0.24f, 0.121f));
-            CreateXPIcon(new Vector2(0.003f, 0.067f), new Vector2(0.064f, 0.121f));
+            CreateXPIcon(new Vector2(0.033f, 0.067f), new Vector2(0.033f, 0.121f));
 
             currentField = targetField = levelGraph.startField; // устанавливаем игрока на первое место
             transform.parent = levelGraph.transform; // игрок принадлежит уровню
@@ -93,24 +93,22 @@ namespace DiceyAdventuresAR.GameObjects.Players
 
         void CreateXPIcon(Vector2 lowerLeftIconCornerPos, Vector2 topRightIconCornerPos)
         {
-            XP_Icon = new GameObject("XP icon"); // создаём новый объект иконки
+            var img = new GameObject("XP icon"); // создаём объект иконки
 
-            var XP_Tr = XP_Icon.AddComponent<RectTransform>(); // компонент 2d трансформа
-            XP_Tr.SetParent(canvasTr); // вся 2d графика принадлежит канвасу
+            var imgTr = img.AddComponent<RectTransform>();
+            imgTr.SetParent(canvasTr);
 
-            XP_Tr.anchorMin = lowerLeftIconCornerPos; // устанавливаем якоря (координаты углов как доля (0-1) от всего экрана)
-            XP_Tr.anchorMax = topRightIconCornerPos;
-            XP_Tr.offsetMin = XP_Tr.offsetMax = Vector2.zero; // сдвиги прямоугольника от якорей - 0
+            // sizeDelta - сумма отступов вправо двух сторон прямоугольника от соответствующих сторон якорей
+            // rect.size == sizeDelta + distanceBetweenAnchors - расстояние между углами прямоугольника (не якорями)
+            // distanceBetweenAnchors.x == (anchorMax.x - anchorMin.x) * canvasTr.sizeDelta.x - буквально расстояние между якорями
+            imgTr.anchorMin = lowerLeftIconCornerPos; // устанавливаем якоря (координаты углов как доля (0-1) от всего экрана)
+            imgTr.anchorMax = topRightIconCornerPos;
+            imgTr.pivot = new Vector2(0, 0.5f); // иконка левой стороной прилегает к якорям (y не важен, так как совпадают только x якорей)
+            imgTr.offsetMin = imgTr.offsetMax = Vector2.zero; // сначала углы прямоугольника прилегают к якорям (нет отступа)
+            imgTr.sizeDelta = new Vector2(imgTr.rect.height, 0); // ширина прямоугольника увеличивается вправо на высоту, чтобы был квадрат
 
-            var textComp = XP_Icon.AddComponent<Text>(); // настройка текста (временно вместо иконки)
-            textComp.text = "Опыт:";
-            textComp.alignment = TextAnchor.MiddleCenter;
-            textComp.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font; // получить шрифт
-            textComp.resizeTextForBestFit = true; // автоподбор максимального размера
-            textComp.resizeTextMinSize = 2;
-            textComp.resizeTextMaxSize = 300;
-
-            XP_Icon.AddComponent<Outline>(); // обводка для лучшей читаемости
+            XP_Icon = img.AddComponent<Image>();
+            XP_Icon.sprite = XP_Sprite; // установка картинки
         }
 
         void FixedUpdate() // бесконечная проверка

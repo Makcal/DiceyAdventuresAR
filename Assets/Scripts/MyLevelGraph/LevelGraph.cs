@@ -60,7 +60,7 @@ namespace DiceyAdventuresAR.MyLevelGraph
             CompleteGeneration();
         }
 
-        void GenerateMainPath() // основа
+        IEnumerator GenerateMainPath() // основа
         {
             Leaf.MIN_SIZE = MIN_LEAF_SIZE;
 
@@ -97,11 +97,17 @@ namespace DiceyAdventuresAR.MyLevelGraph
             // затем рекурсивно проходим по каждому листу и создаём в каждом поле
             root.CalculateFieldPositions();
 
+            var setters = new List<ObjectSetter>();
             foreach (var leaf in leaves)
             {
                 if (leaf.rightChild == null && leaf.leftChild == null && leaf.fieldPos != null)
+                {
                     leaf.field = CreateField((Vector2)leaf.fieldPos); // создаём поле
+                    setters.Add(leaf.field.GetComponent<ObjectSetter>());
+                }
             }
+            setters.ForEach(s => StartCoroutine(s.Set()));
+            yield return new WaitWhile(() => setters.Select(s => s.ended).Contains(false));
 
             foreach (var leaf in leaves)
                 foreach (var conn in leaf.connections)
@@ -130,6 +136,8 @@ namespace DiceyAdventuresAR.MyLevelGraph
             connected[neighbour].Edges.Remove(oldEdge); // удалить старую связь
             toChange.Edges.Remove(oldEdge);
             Destroy(oldEdge.gameObject);
+
+            yield break;
         }
 
         void CompleteGeneration() // мелкие штрихи и объекты
@@ -207,7 +215,7 @@ namespace DiceyAdventuresAR.MyLevelGraph
         public Field CreateField(float x, float z)
         {
             var field = Instantiate(fieldPrefab, transform).GetComponentInChildren<Field>(); // создать поля и найти его компонент
-            field.Initialize(this, x, 0, z); // первичная настройка поля
+            field.Initialize(this, x, 2, z); // первичная настройка поля
             return field;
         }
  

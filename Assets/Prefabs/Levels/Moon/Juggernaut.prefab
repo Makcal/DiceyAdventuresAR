@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!65 &8839223260231219921
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7647232095128737465}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.1645373, y: 0.01441699, z: 0.34492075}
+  m_Center: {x: 0.020552563, y: 0.007208495, z: -0.0014050036}
 --- !u!1 &8125725930348172667
 GameObject:
   m_ObjectHideFlags: 0
@@ -11,6 +24,7 @@ GameObject:
   - component: {fileID: 6553137354923318403}
   - component: {fileID: -1549084770331148728}
   - component: {fileID: 806772674348244563}
+  - component: {fileID: 3596285108828703683}
   m_Layer: 0
   m_Name: Juggernaut
   m_TagString: Untagged
@@ -169,6 +183,18 @@ MonoBehaviour:
       value: 0
   cubesCount: 1
   level: 4
+--- !u!114 &3596285108828703683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8125725930348172667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00e3b30e90b86014eace8de9f6096324, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7413211697278643176
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -176,6 +202,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6553137354923318403}
     m_Modifications:
+    - target: {fileID: -8913717940667829802, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8913717940667829802, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8913717940667829802, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8913717940667829802, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
         type: 3}
       propertyPath: m_RootOrder
@@ -224,7 +270,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.7071068
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
         type: 3}
@@ -239,7 +285,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 90
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
         type: 3}
@@ -251,8 +297,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: Juggernaut
       objectReference: {fileID: 0}
+    - target: {fileID: 3383299688781066532, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3383299688781066532, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3383299688781066532, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3383299688781066532, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4cab3b8ef703d9c4cb359c1b27fc872d, type: 3}
+--- !u!1 &7647232095128737465 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,
+    type: 3}
+  m_PrefabInstance: {fileID: 7413211697278643176}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7019913070003424259 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4cab3b8ef703d9c4cb359c1b27fc872d,

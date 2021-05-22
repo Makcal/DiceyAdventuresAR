@@ -8,6 +8,7 @@ using DiceyAdventuresAR.Battle;
 
 namespace DiceyAdventuresAR.GameObjects
 {
+    [RequireComponent(typeof(ObjectSetter))]
     public abstract class Character : MonoBehaviour
     {
         // общие параметры классов персонажа (abstract нужен, чтобы каждый присвоил своё значение)

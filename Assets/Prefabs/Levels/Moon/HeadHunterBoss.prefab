@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7495849937133746894}
   - component: {fileID: -1428132897452489610}
   - component: {fileID: 959347840244847451}
+  - component: {fileID: -6175413883130259510}
   m_Layer: 0
   m_Name: HeadHunterBoss
   m_TagString: Untagged
@@ -169,6 +170,44 @@ MonoBehaviour:
       value: 0
   cubesCount: 5
   level: 6
+--- !u!114 &-6175413883130259510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1819142466228837112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00e3b30e90b86014eace8de9f6096324, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &3712108603166178203
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3093540590590627135}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.28850085, y: 0.01441699, z: 0.4567662}
+  m_Center: {x: -0.31571516, y: 0.007208495, z: -0.07534276}
+--- !u!65 &5041378881163542761
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3093540590590627135}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.29455534, y: 0.01441699, z: 0.45615476}
+  m_Center: {x: 0.30153367, y: 0.007208495, z: -0.08462726}
 --- !u!1001 &2751452081065111662
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -253,6 +292,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93753715dc6937547b3faeb679f08e77, type: 3}
+--- !u!1 &3093540590590627135 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 93753715dc6937547b3faeb679f08e77,
+    type: 3}
+  m_PrefabInstance: {fileID: 2751452081065111662}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2424526950666622853 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 93753715dc6937547b3faeb679f08e77,

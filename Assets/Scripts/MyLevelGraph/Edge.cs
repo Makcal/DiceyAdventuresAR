@@ -34,12 +34,9 @@ namespace DiceyAdventuresAR.MyLevelGraph
             transform.localScale = new Vector3(1, 1, scale.z);
 
             transform.rotation = Quaternion.LookRotation(connectedField.transform.GetChild(0).position - startField.transform.GetChild(0).position);
-            var radians = transform.rotation.eulerAngles.y * Mathf.PI / 180;
 
-            var offsetX = new Vector3(scale.z / 2 * Mathf.Sin(radians), 0, 0);
-            var offsetZ = new Vector3(0, 0, scale.z / 2 * Mathf.Cos(radians));
-            transform.localPosition = startField.transform.localPosition + offsetX + offsetZ;
-            transform.localPosition -= new Vector3(0, transform.localPosition.y, 0);
+            Vector3 offset = (connectedField.transform.localPosition - startField.transform.localPosition) / 2;
+            transform.localPosition = startField.transform.localPosition + offset; // центр ребра - середина расстояния между точками
         }
 
         public bool HasField(Field field)

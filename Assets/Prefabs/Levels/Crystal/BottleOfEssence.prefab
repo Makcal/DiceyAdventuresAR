@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8908360214411609227}
   - component: {fileID: 7732188589979046596}
   - component: {fileID: -2639433836360350021}
+  - component: {fileID: -7975798972087085536}
   m_Layer: 0
   m_Name: BottleOfEssence
   m_TagString: Untagged
@@ -169,6 +170,44 @@ MonoBehaviour:
       value: 0
   cubesCount: 3
   level: 3
+--- !u!114 &-7975798972087085536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5367243258897954022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00e3b30e90b86014eace8de9f6096324, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &1189126981479349176
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7070768140296798827}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.060532346, y: 0.006551492, z: 0.0968893}
+  m_Center: {x: -0.14349909, y: -1.0997576, z: 1.0682034}
+--- !u!65 &1298713740971257111
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7070768140296798827}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.07195203, y: 0.011244072, z: 0.095668346}
+  m_Center: {x: 0.20347464, y: -1.0974108, z: 1.0688102}
 --- !u!1001 &7989671581368942394
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -253,6 +292,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b3d53deb7032e9488c0f4bffa34bca3, type: 3}
+--- !u!1 &7070768140296798827 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0b3d53deb7032e9488c0f4bffa34bca3,
+    type: 3}
+  m_PrefabInstance: {fileID: 7989671581368942394}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7596370279588829393 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0b3d53deb7032e9488c0f4bffa34bca3,

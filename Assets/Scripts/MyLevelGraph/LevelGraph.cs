@@ -39,7 +39,7 @@ namespace DiceyAdventuresAR.MyLevelGraph
             levelGraph = this; // быстрая ссылка
             battle = GetComponent<BattleController>(); // ссылка на контроллер битвы
 
-            GenerateLevel(); // генерация уровня
+            yield return StartCoroutine(GenerateLevel()); // генерация уровня
 
             player = FindObjectOfType<Player>(); // поиск игрока
             if (player == null)
@@ -52,11 +52,14 @@ namespace DiceyAdventuresAR.MyLevelGraph
             player.Initialize(); // инициализация игрока
         }
 
-        public void Restart() { UnityEngine.SceneManagement.SceneManager.LoadScene(1); }
-
-        public void GenerateLevel()
+        public void Restart()
         {
-            GenerateMainPath();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(1); 
+        }
+
+        public IEnumerator GenerateLevel()
+        {
+            yield return StartCoroutine(GenerateMainPath());
             CompleteGeneration();
         }
 
@@ -106,8 +109,8 @@ namespace DiceyAdventuresAR.MyLevelGraph
                     setters.Add(leaf.field.GetComponent<ObjectSetter>());
                 }
             }
-            setters.ForEach(s => StartCoroutine(s.Set()));
-            yield return new WaitWhile(() => setters.Select(s => s.ended).Contains(false));
+            setters.ForEach(s => StartCoroutine(s.Set())); // запускаем установщики
+            yield return new WaitUntil(() => setters.All(s => s.ended)); // ждём пока все завершаться
 
             foreach (var leaf in leaves)
                 foreach (var conn in leaf.connections)
@@ -266,18 +269,18 @@ namespace DiceyAdventuresAR.MyLevelGraph
             msg.period = 2;
             msg.Play();
 
-            battle.SetUpOpponents(enemy); // настройка оппонентов (увеличить и поставить)
-
-            for (int i = 2; i < transform.childCount-1; i++)
+            enemy.transform.parent = transform;
+            for (int i = 2; i < transform.childCount - 1; i++)
                 transform.GetChild(i).gameObject.SetActive(false); // выключить всё, кроме перых двух детей уровня (земли и игрока)
-
-            player.transform.GetChild(0).gameObject.SetActive(false); // временно спрятать игрока и противника
+            player.transform.GetChild(0).gameObject.SetActive(false); // временно спрятать модели игрока и противника
             enemy.transform.GetChild(0).gameObject.SetActive(false);
 
             yield return new WaitForSeconds(2.0f); // подождать 2 секунды
 
             player.transform.GetChild(0).gameObject.SetActive(true); // они появились
             enemy.transform.GetChild(0).gameObject.SetActive(true);
+
+            yield return StartCoroutine(battle.SetUpOpponents(enemy)); // настройка оппонентов (увеличить и поставить)
 
             StartCoroutine(battle.StartBattle()); // битва начинается
         }

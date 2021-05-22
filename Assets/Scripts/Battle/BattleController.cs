@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,18 +34,21 @@ namespace DiceyAdventuresAR.Battle
         public Bar barPrefab; // префаб полоски для скрипта Bar.cs
 
         // методы
-        public void SetUpOpponents(Enemy enemy) // подготовка
+        public IEnumerator SetUpOpponents(Enemy enemy) // подготовка
         {
             this.enemy = enemy; // ссылка на врага
-            enemy.transform.parent = LevelGraph.levelGraph.transform;
-            enemy.transform.localPosition = new Vector3(1.6f, 0, 0);
+            enemy.transform.localPosition = new Vector3(1.6f, 2, 0);
             enemy.transform.localRotation = Quaternion.LookRotation(Vector3.left, Vector3.up); // смотреть на игрока
             enemy.transform.localScale *= 2;
 
             player = LevelGraph.levelGraph.player; // ссылка на игрока
-            player.transform.localPosition = new Vector3(-1.6f, 0, 0);
+            player.transform.localPosition = new Vector3(-1.6f, 2, 0);
             player.transform.localRotation = Quaternion.LookRotation(Vector3.right, Vector3.up); // смотреть на врага
             player.transform.localScale *= 2; // сделать большими
+
+            var setters = new List<ObjectSetter> { player.GetComponent<ObjectSetter>(), enemy.GetComponent<ObjectSetter>() };
+            setters.ForEach(s => StartCoroutine(s.Set())); // запустить установщики и ждать окончания
+            yield return new WaitWhile(() => setters.Select(s => s.ended).Contains(false));
         }
 
         public IEnumerator StartBattle()

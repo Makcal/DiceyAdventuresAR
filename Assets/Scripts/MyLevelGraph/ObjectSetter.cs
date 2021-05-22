@@ -12,6 +12,7 @@ namespace DiceyAdventuresAR.MyLevelGraph
         {
             var rigidbody = gameObject.AddComponent<Rigidbody>();
             rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+            rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
 
             yield return new WaitForSeconds(1.5f);
             Destroy(rigidbody);

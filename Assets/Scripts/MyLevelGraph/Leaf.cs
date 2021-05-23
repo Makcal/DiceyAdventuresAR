@@ -140,14 +140,14 @@ namespace DiceyAdventuresAR.MyLevelGraph
                 {
                     border = Mathf.Max(z, otherLeaf.z); // z горизонтальной границы между листами
                     // сравнение полей по их удалённости от границы
-                    fields.Sort((f1, f2) => Mathf.Abs(f1.transform.parent.localPosition.z - border) > Mathf.Abs(f2.transform.parent.localPosition.z - border) ? 1 : -1);
+                    fields.Sort((f1, f2) => Mathf.Abs(f1.transform.localPosition.z - border) > Mathf.Abs(f2.transform.localPosition.z - border) ? 1 : -1);
                     return fields[0]; // на первом месте будет стоять самый ближайший
                 }
                 else if (z == otherLeaf.z)
                 {
                     border = Mathf.Max(x, otherLeaf.x); // x вертикальной границы между листами
                     // сравнение полей по их удалённости от границы
-                    fields.Sort((f1, f2) => Mathf.Abs(f1.transform.parent.localPosition.x - border) > Mathf.Abs(f2.transform.parent.localPosition.x - border) ? 1 : -1);
+                    fields.Sort((f1, f2) => Mathf.Abs(f1.transform.localPosition.x - border) > Mathf.Abs(f2.transform.localPosition.x - border) ? 1 : -1);
                     return fields[0]; // на первом месте будет стоять самый ближайший
                 }
                 else

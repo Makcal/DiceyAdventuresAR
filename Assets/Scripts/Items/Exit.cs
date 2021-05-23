@@ -29,6 +29,7 @@ namespace DiceyAdventuresAR.GameObjects
             IEnumerable<GameObject> levels = FindObjectsOfType<LevelGraph>(true).Select(lvl => lvl.gameObject);
             levels.First(obj => obj.name == "CrystalLevel").SetActive(false);
             levels.First(obj => obj.name == "MoonLevel").SetActive(true);
+            levels.First(obj => obj.name == "MoonLevel").transform.position = levels.First(obj => obj.name == "CrystalLevel").transform.position;
 
             player.transform.parent = null;
             player.GetComponentInChildren<MeshRenderer>().enabled = true;

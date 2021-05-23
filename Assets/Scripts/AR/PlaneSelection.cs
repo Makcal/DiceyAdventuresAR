@@ -61,6 +61,7 @@ namespace DiceyAdventuresAR.AR
                     {
                         placed = Instantiate(player);
                         placed = Instantiate(level, pose.position, Quaternion.identity);
+                        placed.name = "CrystalLevel";
 
                         planeManager.planePrefab = null;
                         foreach (var plane in planeManager.trackables)

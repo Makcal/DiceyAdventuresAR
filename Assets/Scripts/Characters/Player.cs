@@ -59,16 +59,19 @@ namespace DiceyAdventuresAR.GameObjects.Players
         {
             base.Initialize(); // сначала инициализируем игрока как персонажа в целом
 
-            // создаём надпись героя
-            CreateNameText(new Vector2(0.068f, 0.185f), new Vector2(0.177f, 0.251f));
+            if (XP_Bar == null) // игрок инициализируется первый раз
+            {
+                // создаём надпись героя
+                CreateNameText(new Vector2(0.068f, 0.185f), new Vector2(0.177f, 0.251f));
 
-            // создаём полоску и иконку здоровья
-            CreateHealthBar(new Vector2(0.068f, 0.131f), new Vector2(0.24f, 0.185f));
-            CreateHealthIcon(new Vector2(0.033f, 0.131f), new Vector2(0.033f, 0.185f));
+                // создаём полоску и иконку здоровья
+                CreateHealthBar(new Vector2(0.068f, 0.131f), new Vector2(0.24f, 0.185f));
+                CreateHealthIcon(new Vector2(0.033f, 0.131f), new Vector2(0.033f, 0.185f));
 
-            // создаём полоску и иконку опыта
-            CreateXPBar(new Vector2(0.068f, 0.067f), new Vector2(0.24f, 0.121f));
-            CreateXPIcon(new Vector2(0.033f, 0.067f), new Vector2(0.033f, 0.121f));
+                // создаём полоску и иконку опыта
+                CreateXPBar(new Vector2(0.068f, 0.067f), new Vector2(0.24f, 0.121f));
+                CreateXPIcon(new Vector2(0.033f, 0.067f), new Vector2(0.033f, 0.121f));
+            }
 
             currentField = targetField = levelGraph.startField; // устанавливаем игрока на первое место
             transform.parent = levelGraph.transform; // игрок принадлежит уровню

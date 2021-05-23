@@ -62,8 +62,11 @@ namespace DiceyAdventuresAR.GameObjects
         {
             levelGraph = LevelGraph.levelGraph; // получаем уровень
             canvasTr = GameObject.FindGameObjectWithTag("Canvas").transform; // ищем канвас для 2d графики
-            health = maxHealth = startHealth; // задать начальное здоровье (без свойств Health и MaxHealth, так как полоски ещё не созданы)
-            FillInventory(); // придумываем карточки персонажу
+            if (health == 0) // игрок инициализируется первый раз
+            {
+                health = maxHealth = startHealth; // задать начальное здоровье (без свойств Health и MaxHealth, так как полоски ещё не созданы)
+                FillInventory(); // придумываем карточки персонажу
+            }
         }
 
         protected void CreateHealthBar(Vector2 lowerLeftBarCornerPos, Vector2 topRightBarCornerPos)

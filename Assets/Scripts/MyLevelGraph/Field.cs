@@ -38,7 +38,13 @@ namespace DiceyAdventuresAR.MyLevelGraph
                 value.transform.parent = transform;
                 value.transform.localScale = Vector3.one;
                 value.transform.localPosition = new Vector3(0, 2 * transform.GetChild(0).localScale.y, 0);
-                value.transform.localRotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0);
+                if (placedItem is Exit)
+                {
+                    float exitRotation = Quaternion.LookRotation(ConnectedFields()[0].transform.position - transform.position).eulerAngles.y;
+                    value.transform.localRotation = Quaternion.Euler(0, exitRotation, 0);
+                }
+                else
+                    value.transform.localRotation = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0);
             }
         }
 

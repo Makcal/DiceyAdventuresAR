@@ -98,7 +98,7 @@ namespace DiceyAdventuresAR.Battle
                 else
                     // если маленькая карточка, то кубик выше середины (0.5; 0.61), чтобы оставить место на текст снизу
                     cubeTr.anchorMin = cubeTr.anchorMax = new Vector2(0.5f, size ? 0.5f : 0.61f);
-                cubeTr.anchoredPosition = Vector2.zero; // нет конкретной позиции по умолчанию
+                cubeTr.anchoredPosition = Vector2.zero; // позиция от якоря - 0
 
                 card.slots[i] = cube; // записываем в массив
 

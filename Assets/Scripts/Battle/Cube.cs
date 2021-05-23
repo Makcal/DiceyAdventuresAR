@@ -100,12 +100,15 @@ namespace DiceyAdventuresAR.Battle
             tr.anchorMin = tr.anchorMax = Vector2.zero; // по умольчанию кубик стоит в (0; 0)
             tr.anchoredPosition = Vector2.zero;
 
-            var width = 0.12f * battle.canvasTr.sizeDelta.y; // теоритическая ширина кубика - 12% высоты канваса
-            tr.localScale *= width / tr.sizeDelta.y; // нужный масштаб для кубика
+            if (value != 0)
+            {
+                var width = 0.12f * battle.canvasTr.sizeDelta.y; // теоритическая ширина кубика - 12% высоты канваса
+                tr.localScale *= width / tr.sizeDelta.y; // нужный масштаб для кубика
+            }
 
             c.Value = value;
             c.card = card; // карточка, которой принадлежит кубик
-            if (value == 0 && card?.condition.type != (ConditionType.None | ConditionType.EvOd | ConditionType.Doubles))
+            if (value == 0 && card.condition.type != (ConditionType.None | ConditionType.EvOd | ConditionType.Doubles))
             {
                 // если число - 0 (слот карточки), и у карточки есть обычное условие, то добавить объект для текста
                 var textObj = new GameObject("Condition");

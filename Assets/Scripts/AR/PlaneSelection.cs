@@ -12,6 +12,7 @@ namespace DiceyAdventuresAR.AR
         Camera arcamera;
         public GameObject level, player;
         GameObject placed = null;
+        public GameObject guide1, guide2;
 
         // Start is called before the first frame update
         void Start()
@@ -21,9 +22,25 @@ namespace DiceyAdventuresAR.AR
             arcamera = transform.Find("AR Camera").GetComponent<Camera>();
             //Instantiate(player);
             //Instantiate(level, new Vector3(0, 0, 0), Quaternion.identity);
+
+            ARSession.stateChanged += ChangeHint;
         }
 
-        // Update is called once per frame
+        private void ChangeHint(ARSessionStateChangedEventArgs obj)
+        {
+            if (obj.state == ARSessionState.SessionTracking)
+            {
+                guide1?.SetActive(false);
+                guide2?.SetActive(true);
+            }
+            else if (obj.state == ARSessionState.Ready || obj.state == ARSessionState.SessionInitializing)
+            {
+                guide1?.SetActive(true);
+                guide2?.SetActive(false);
+            }
+        }
+
+        // Update is called once per frame  
         void Update()
         {
             if (Input.touchCount > 0)
@@ -62,6 +79,9 @@ namespace DiceyAdventuresAR.AR
                         placed = Instantiate(player);
                         placed = Instantiate(level, pose.position, Quaternion.identity);
                         placed.name = "CrystalLevel";
+
+                        Destroy(GameObject.Find("Guide1"));
+                        Destroy(GameObject.Find("Guide2"));
 
                         planeManager.planePrefab = null;
                         foreach (var plane in planeManager.trackables)
